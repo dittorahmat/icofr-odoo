@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Data awal untuk sequence -->
+    <record id="seq_type_icofr_control" model="ir.sequence">
+        <field name="name">Icofr Control</field>
+        <field name="code">icofr.control</field>
+        <field name="prefix">CTRL/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_type_icofr_risk" model="ir.sequence">
+        <field name="name">Icofr Risk</field>
+        <field name="code">icofr.risk</field>
+        <field name="prefix">RISK/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_type_icofr_finding" model="ir.sequence">
+        <field name="name">Icofr Finding</field>
+        <field name="code">icofr.finding</field>
+        <field name="prefix">FIND/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_type_icofr_action_plan" model="ir.sequence">
+        <field name="name">Icofr Action Plan</field>
+        <field name="code">icofr.action.plan</field>
+        <field name="prefix">ACT/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_type_icofr_pojk_report" model="ir.sequence">
+        <field name="name">Icofr POJK Report</field>
+        <field name="code">icofr.pojk.report</field>
+        <field name="prefix">POJK/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_type_icofr_testing_schedule" model="ir.sequence">
+        <field name="name">Icofr Testing Schedule</field>
+        <field name="code">icofr.testing.schedule</field>
+        <field name="prefix">SCHD/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_type_icofr_process" model="ir.sequence">
+        <field name="name">Icofr Process</field>
+        <field name="code">icofr.process</field>
+        <field name="prefix">PROC/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+</odoo>

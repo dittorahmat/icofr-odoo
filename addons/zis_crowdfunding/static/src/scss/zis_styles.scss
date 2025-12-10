@@ -1,0 +1,82 @@
+/* Custom styles for ZIS Crowdfunding */
+.zis-donation-form .card {
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.zis-donation-form .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.zis-progress-animated {
+    position: relative;
+    overflow: hidden;
+    height: 30px;
+    border-radius: 15px;
+    background-color: #e9ecef;
+}
+
+.zis-progress-animated .progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    transition: width 1s ease-in-out;
+}
+
+.zis-counter {
+    font-weight: bold;
+    font-size: 1.5em;
+    transition: all 1s ease;
+}
+
+.zis-donation-card {
+    border-left: 5px solid #28a745;
+}
+
+.zis-detail-card {
+    border-top: 3px solid #007bff;
+}
+
+.zis-callout {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.zis-animated-bg {
+    background-size: 400% 400%;
+    animation: gradient 4s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Badge styles */
+.badge-primary {
+    background-color: #007bff;
+}
+
+.badge-info {
+    background-color: #17a2b8;
+}
+
+.badge-success {
+    background-color: #28a745;
+}

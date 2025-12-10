@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Dashboard Views -->
+    <record id="view_icofr_dashboard_form" model="ir.ui.view">
+        <field name="name">icofr.dashboard.form</field>
+        <field name="model">icofr.control</field>
+        <field name="arch" type="xml">
+            <form string="Dashboard ICORF" create="false" edit="false">
+                <header>
+                    <button name="action_refresh_dashboard" type="object" string="Refresh Data" class="oe_highlight"/>
+                    <button name="action_export_dashboard_data" type="object" string="Export Data"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Dashboard ICORF</h1>
+                    </div>
+
+                    <div class="row mt16">
+                        <div class="col-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="card-title"><field name="total_controls" readonly="1"/></h3>
+                                    <p class="card-text">Total Kontrol</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="card-title"><field name="effective_controls" readonly="1"/></h3>
+                                    <p class="card-text">Kontrol Efektif</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="card-title"><field name="total_risks" readonly="1"/></h3>
+                                    <p class="card-text">Total Risiko</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h3 class="card-title"><field name="high_risks" readonly="1"/></h3>
+                                    <p class="card-text">Risiko Tinggi</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt16">
+                        <div class="col-12">
+                            <group string="Statistik Real-Time">
+                                <group>
+                                    <field name="compliance_rate" widget="percentage" string="Rata-rata Kepatuhan"/>
+                                </group>
+                                <group>
+                                    <field name="upcoming_tests_count" string="Pengujian Mendatang (30 Hari)"/>
+                                    <field name="overdue_tests_count" string="Pengujian Terlambat"/>
+                                </group>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="row mt16">
+                        <div class="col-6">
+                            <group string="Ringkasan Kontrol">
+                                <field name="control_summary_ids" readonly="1" nolabel="1"/>
+                            </group>
+                        </div>
+                        <div class="col-6">
+                            <group string="Risiko Terbaru">
+                                <field name="recent_risks_ids" readonly="1" nolabel="1"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="row mt16">
+                        <div class="col-12">
+                            <group string="Pengujian Terjadwal">
+                                <field name="scheduled_testing_ids" readonly="1" nolabel="1"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <div class="row mt16">
+                        <div class="col-12">
+                            <group string="Status Kontrol Terbaru">
+                                <field name="recent_control_status_ids" readonly="1" nolabel="1"/>
+                            </group>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action untuk Dashboard -->
+    <record id="action_icofr_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard ICORF</field>
+        <field name="res_model">icofr.control</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_icofr_dashboard_form"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Dashboard ICORF
+            </p><p>
+                Dashboard ini memberikan ringkasan status kontrol internal,
+                risiko, dan pengujian yang sedang berlangsung.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu untuk Dashboard -->
+    <menuitem id="menu_icofr_dashboard"
+              name="Dashboard"
+              action="action_icofr_dashboard"
+              sequence="10"
+              parent="menu_icofr_root"/>
+</odoo>

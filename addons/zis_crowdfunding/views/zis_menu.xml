@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="zis_main_menu" name="ZIS Management" sequence="10"/>
+    
+    <menuitem id="zis_campaign_menu" name="Campaigns" parent="zis_main_menu" sequence="10"/>
+    <menuitem id="zis_donation_menu" name="Donations" parent="zis_main_menu" sequence="20"/>
+    <menuitem id="zis_distribution_menu" name="Distributions" parent="zis_main_menu" sequence="30"/>
+    <menuitem id="zis_category_menu" name="Categories" parent="zis_main_menu" sequence="40"/>
+    
+    <record id="zis_campaign_action" model="ir.actions.act_window">
+        <field name="name">ZIS Campaigns</field>
+        <field name="res_model">zis.campaign</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="zis_campaign_list_menu" action="zis_campaign_action" parent="zis_campaign_menu"/>
+    
+    <record id="zis_donation_action" model="ir.actions.act_window">
+        <field name="name">ZIS Donations</field>
+        <field name="res_model">zis.donation</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="zis_donation_list_menu" action="zis_donation_action" parent="zis_donation_menu"/>
+    
+    <record id="zis_distribution_action" model="ir.actions.act_window">
+        <field name="name">ZIS Distributions</field>
+        <field name="res_model">zis.distribution</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="zis_distribution_list_menu" action="zis_distribution_action" parent="zis_distribution_menu"/>
+    
+    <record id="zis_category_action" model="ir.actions.act_window">
+        <field name="name">ZIS Categories</field>
+        <field name="res_model">zis.category</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="zis_category_list_menu" action="zis_category_action" parent="zis_category_menu"/>
+</odoo>

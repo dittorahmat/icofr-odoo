@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_icofr_control,icofr.control,model_icofr_control,base.group_user,1,1,1,1
+access_icofr_risk,icofr.risk,model_icofr_risk,base.group_user,1,1,1,1
+access_icofr_testing,icofr.testing,model_icofr_testing,base.group_user,1,1,1,1
+access_icofr_certification,icofr.certification,model_icofr_certification,base.group_user,1,1,1,1
+access_icofr_workflow,icofr.workflow,model_icofr_workflow,base.group_user,1,1,1,1
+access_icofr_notification,icofr.notification,model_icofr_notification,base.group_user,1,1,1,1
+access_icofr_finding,icofr.finding,model_icofr_finding,base.group_user,1,1,1,1
+access_icofr_action_plan,icofr.action.plan,model_icofr_action_plan,base.group_user,1,1,1,1
+access_icofr_pojk_report,icofr.pojk.report,model_icofr_pojk_report,base.group_user,1,1,1,1
+access_icofr_testing_schedule,icofr.testing.schedule,model_icofr_testing_schedule,base.group_user,1,1,1,1
+access_icofr_workflow_log,icofr.workflow.log,model_icofr_workflow_log,base.group_user,1,1,1,1

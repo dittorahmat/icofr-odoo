@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- View kalender untuk semua aktivitas ICORF -->
+    <record id="view_icofr_activity_calendar" model="ir.ui.view">
+        <field name="name">icofr.activity.calendar</field>
+        <field name="model">icofr.testing.schedule</field>
+        <field name="arch" type="xml">
+            <calendar string="Kalender Aktivitas ICORF" date_start="next_scheduled_date" color="tester_id" mode="month" event_open_popup="true">
+                <field name="name"/>
+                <field name="control_id"/>
+                <field name="tester_id"/>
+                <field name="frequency"/>
+                <field name="description"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Aksi untuk kalender aktivitas ICORF -->
+    <record id="action_icofr_activity_calendar" model="ir.actions.act_window">
+        <field name="name">Kalender Aktivitas ICORF</field>
+        <field name="res_model">icofr.testing.schedule</field>
+        <field name="view_mode">calendar,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Kalender Aktivitas ICORF
+            </p><p>
+                Kalender ini menampilkan semua aktivitas terjadwal termasuk 
+                pengujian kontrol, penilaian risiko, dan sertifikasi.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Tambahkan ke menu utama -->
+    <menuitem id="menu_icofr_calendar" 
+              name="Kalender" 
+              action="action_icofr_activity_calendar" 
+              sequence="55"
+              parent="menu_icofr_root"/>
+</odoo>

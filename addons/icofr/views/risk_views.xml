@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Icofr Risk Views -->
+    <record id="view_icofr_risk_list" model="ir.ui.view">
+        <field name="name">icofr.risk.list</field>
+        <field name="model">icofr.risk</field>
+        <field name="arch" type="xml">
+            <list string="Risiko Finansial">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="risk_category"/>
+                <field name="owner_id"/>
+                <field name="status"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_icofr_risk_form" model="ir.ui.view">
+        <field name="name">icofr.risk.form</field>
+        <field name="model">icofr.risk</field>
+        <field name="arch" type="xml">
+            <form string="Risiko Finansial">
+                <header>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <h2>
+                            <field name="code"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="risk_category"/>
+                            <field name="risk_type"/>
+                            <field name="owner_id"/>
+                        </group>
+                        <group>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Deskripsi">
+                            <field name="description"/>
+                            <field name="objective"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_icofr_risk_search" model="ir.ui.view">
+        <field name="name">icofr.risk.search</field>
+        <field name="model">icofr.risk</field>
+        <field name="arch" type="xml">
+            <search string="Risiko Finansial">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action untuk Icofr Risk -->
+    <record id="action_icofr_risk" model="ir.actions.act_window">
+        <field name="name">Risiko Finansial</field>
+        <field name="res_model">icofr.risk</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan risiko finansial pertama anda!
+            </p><p>
+                Risiko finansial digunakan untuk mengidentifikasi dan mengelola 
+                potensi ancaman terhadap akurasi laporan keuangan.
+            </p>
+        </field>
+    </record>
+</odoo>

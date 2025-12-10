@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Views untuk Icofr Finding -->
+    <record id="view_icofr_finding_tree" model="ir.ui.view">
+        <field name="name">icofr.finding.tree</field>
+        <field name="model">icofr.finding</field>
+        <field name="arch" type="xml">
+            <list string="Temuan ICORF">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="finding_type"/>
+                <field name="severity_level"/>
+                <field name="status"/>
+                <field name="owner_id"/>
+                <field name="due_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_icofr_finding_form" model="ir.ui.view">
+        <field name="name">icofr.finding.form</field>
+        <field name="model">icofr.finding</field>
+        <field name="arch" type="xml">
+            <form string="Temuan ICORF">
+                <header>
+                    <button name="action_close_finding" type="object" string="Tutup Temuan" invisible="status == 'closed'"/>
+                    <button name="action_reopen_finding" type="object" string="Buka Kembali" invisible="status != 'closed'"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <h2>
+                            <field name="code"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="finding_type"/>
+                            <field name="severity_level"/>
+                            <field name="owner_id"/>
+                            <field name="certification_id"/>
+                        </group>
+                        <group>
+                            <field name="control_id"/>
+                            <field name="risk_id"/>
+                            <field name="due_date"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Detail Temuan">
+                            <field name="description"/>
+                            <group>
+                                <field name="impact_assessment"/>
+                                <field name="root_cause"/>
+                            </group>
+                        </page>
+                        <page string="Rencana Tindakan">
+                            <field name="action_plan_ids"/>
+                        </page>
+                        <page string="Rekomendasi">
+                            <field name="recommendation"/>
+                        </page>
+                        <page string="Bukti">
+                            <field name="evidence_attachment_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Catatan">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_icofr_finding_search" model="ir.ui.view">
+        <field name="name">icofr.finding.search</field>
+        <field name="model">icofr.finding</field>
+        <field name="arch" type="xml">
+            <search string="Temuan ICORF">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="finding_type"/>
+                <field name="severity_level"/>
+                <field name="status"/>
+                <field name="owner_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action untuk Icofr Finding -->
+    <record id="action_icofr_finding" model="ir.actions.act_window">
+        <field name="name">Temuan ICORF</field>
+        <field name="res_model">icofr.finding</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan temuan pertama anda!
+            </p><p>
+                Temuan digunakan untuk mendokumentasikan isu yang ditemukan 
+                selama proses sertifikasi atau audit kontrol internal.
+            </p>
+        </field>
+    </record>
+
+    <!-- Views untuk Icofr Action Plan -->
+    <record id="view_icofr_action_plan_tree" model="ir.ui.view">
+        <field name="name">icofr.action.plan.tree</field>
+        <field name="model">icofr.action.plan</field>
+        <field name="arch" type="xml">
+            <list string="Rencana Tindakan ICORF">
+                <field name="name"/>
+                <field name="finding_id"/>
+                <field name="status"/>
+                <field name="action_owner_id"/>
+                <field name="target_completion_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_icofr_action_plan_form" model="ir.ui.view">
+        <field name="name">icofr.action.plan.form</field>
+        <field name="model">icofr.action.plan</field>
+        <field name="arch" type="xml">
+            <form string="Rencana Tindakan ICORF">
+                <header>
+                    <button name="action_mark_in_progress" type="object" string="Dalam Proses" invisible="status in ['completed', 'in_progress']"/>
+                    <button name="action_mark_completed" type="object" string="Selesai" invisible="status != 'in_progress'"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="finding_id"/>
+                            <field name="certification_id"/>
+                            <field name="action_owner_id"/>
+                        </group>
+                        <group>
+                            <field name="target_completion_date"/>
+                            <field name="actual_completion_date"/>
+                            <field name="status"/>
+                            <field name="priority"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Detail Tindakan">
+                            <field name="description"/>
+                            <field name="implementation_steps"/>
+                        </page>
+                        <page string="Sumber Daya">
+                            <group>
+                                <field name="responsible_department"/>
+                                <field name="resource_requirement"/>
+                                <field name="cost_estimate"/>
+                            </group>
+                        </page>
+                        <page string="Pemeriksaan Efektivitas">
+                            <field name="effectiveness_check"/>
+                        </page>
+                        <page string="Bukti">
+                            <field name="evidence_attachment_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Catatan">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_icofr_action_plan_search" model="ir.ui.view">
+        <field name="name">icofr.action.plan.search</field>
+        <field name="model">icofr.action.plan</field>
+        <field name="arch" type="xml">
+            <search string="Rencana Tindakan ICORF">
+                <field name="name"/>
+                <field name="finding_id"/>
+                <field name="status"/>
+                <field name="action_owner_id"/>
+                <field name="priority"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action untuk Icofr Action Plan -->
+    <record id="action_icofr_action_plan" model="ir.actions.act_window">
+        <field name="name">Rencana Tindakan ICORF</field>
+        <field name="res_model">icofr.action.plan</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan rencana tindakan pertama anda!
+            </p><p>
+                Rencana tindakan digunakan untuk mengatasi temuan yang 
+                diidentifikasi dalam proses sertifikasi atau audit.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Tambahkan field ke view certification -->
+    <record id="view_icofr_certification_form_extended" model="ir.ui.view">
+        <field name="name">icofr.certification.form.extended</field>
+        <field name="model">icofr.certification</field>
+        <field name="inherit_id" ref="view_icofr_certification_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Temuan dan Rencana Tindakan">
+                    <group>
+                        <group string="Temuan">
+                            <field name="finding_ids" nolabel="1"/>
+                        </group>
+                        <group string="Rencana Tindakan">
+                            <field name="action_plan_ids" nolabel="1"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+    
+    <!-- Tambahkan menu item -->
+    <menuitem id="menu_icofr_finding" 
+              name="Temuan" 
+              action="action_icofr_finding" 
+              sequence="35"
+              parent="menu_icofr_compliance"/>
+              
+    <menuitem id="menu_icofr_action_plan" 
+              name="Rencana Tindakan" 
+              action="action_icofr_action_plan" 
+              sequence="40"
+              parent="menu_icofr_compliance"/>
+</odoo>

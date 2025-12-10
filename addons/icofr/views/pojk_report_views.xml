@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Views untuk Icofr POJK Report -->
+    <record id="view_icofr_pojk_report_tree" model="ir.ui.view">
+        <field name="name">icofr.pojk.report.tree</field>
+        <field name="model">icofr.pojk.report</field>
+        <field name="arch" type="xml">
+            <list string="Laporan POJK 15/2024">
+                <field name="name"/>
+                <field name="reporting_period"/>
+                <field name="fiscal_year"/>
+                <field name="report_date"/>
+                <field name="status"/>
+                <field name="effectiveness_percentage" widget="percentage"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_icofr_pojk_report_form" model="ir.ui.view">
+        <field name="name">icofr.pojk.report.form</field>
+        <field name="model">icofr.pojk.report</field>
+        <field name="arch" type="xml">
+            <form string="Laporan POJK 15/2024">
+                <header>
+                    <button name="action_submit_report" type="object" string="Submit Laporan" invisible="status != 'draft'"/>
+                    <button name="action_approve_report" type="object" string="Setujui Laporan" invisible="status != 'submitted'"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="print_report" type="object" string="Cetak Laporan" class="oe_stat_button" icon="fa-print"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="reporting_period"/>
+                            <field name="fiscal_year"/>
+                            <field name="report_date"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group>
+                            <field name="prepared_by_id"/>
+                            <field name="reviewed_by_id"/>
+                            <field name="approved_by_id"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Metrik Utama">
+                            <group>
+                                <group string="Kontrol Internal">
+                                    <field name="total_controls"/>
+                                    <field name="effective_controls"/>
+                                    <field name="effectiveness_percentage" widget="percentage"/>
+                                </group>
+                                <group string="Risiko">
+                                    <field name="total_risks"/>
+                                    <field name="high_risks"/>
+                                </group>
+                                <group string="Temuan">
+                                    <field name="total_findings"/>
+                                    <field name="closed_findings"/>
+                                    <field name="pending_findings"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Penilaian Kerangka Kerja">
+                            <field name="framework_description"/>
+                            <group>
+                                <field name="control_environment_assessment"/>
+                                <field name="risk_assessment_practices"/>
+                                <field name="control_activity_effectiveness"/>
+                                <field name="information_communication_quality"/>
+                                <field name="monitoring_activity_results"/>
+                            </group>
+                        </page>
+                        <page string="Temuan dan Respon">
+                            <group>
+                                <field name="significant_deficiencies_detail"/>
+                                <field name="material_weaknesses_detail"/>
+                                <field name="management_response_detail"/>
+                            </group>
+                        </page>
+                        <page string="Tindakan Perbaikan">
+                            <field name="improvement_actions"/>
+                        </page>
+                        <page string="Kepatuhan dan Catatan">
+                            <group>
+                                <field name="compliance_status"/>
+                                <field name="compliance_notes"/>
+                            </group>
+                        </page>
+                        <page string="Lampiran">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Catatan Tambahan">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_icofr_pojk_report_search" model="ir.ui.view">
+        <field name="name">icofr.pojk.report.search</field>
+        <field name="model">icofr.pojk.report</field>
+        <field name="arch" type="xml">
+            <search string="Laporan POJK 15/2024">
+                <field name="name"/>
+                <field name="reporting_period"/>
+                <field name="fiscal_year"/>
+                <field name="status"/>
+                <field name="prepared_by_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action untuk Icofr POJK Report -->
+    <record id="action_icofr_pojk_report" model="ir.actions.act_window">
+        <field name="name">Laporan POJK 15/2024</field>
+        <field name="res_model">icofr.pojk.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan laporan POJK 15/2024 pertama anda!
+            </p><p>
+                Laporan ini memenuhi persyaratan pelaporan sesuai 
+                Peraturan Otoritas Jasa Keuangan No. 15 Tahun 2024 
+                tentang Integritas Pelaporan Keuangan Bank.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Tambahkan menu item -->
+    <menuitem id="menu_icofr_pojk_report" 
+              name="Laporan POJK" 
+              action="action_icofr_pojk_report" 
+              sequence="45"
+              parent="menu_icofr_compliance"/>
+</odoo>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- View untuk Wizard Export -->
+    <record id="view_icofr_export_wizard" model="ir.ui.view">
+        <field name="name">icofr.export.wizard.form</field>
+        <field name="model">icofr.export.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Export Data ICORF">
+                <group>
+                    <group>
+                        <field name="export_type"/>
+                        <field name="export_format"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                        <field name="include_inactive"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_export" type="object" string="Export" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action untuk Wizard Export -->
+    <record id="action_icofr_export_wizard" model="ir.actions.act_window">
+        <field name="name">Export Data ICORF</field>
+        <field name="res_model">icofr.export.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_icofr_export_wizard"/>
+        <field name="target">new</field>
+    </record>
+    
+    <!-- Tambahkan tombol export ke view kontrol -->
+    <record id="view_icofr_control_form_with_export" model="ir.ui.view">
+        <field name="name">icofr.control.form.export.button</field>
+        <field name="model">icofr.control</field>
+        <field name="inherit_id" ref="view_icofr_control_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_export_controls" type="object" string="Export Kontrol" class="oe_highlight"/>
+            </header>
+        </field>
+    </record>
+    
+    <!-- Tambahkan tombol export ke view risiko -->
+    <record id="view_icofr_risk_form_with_export" model="ir.ui.view">
+        <field name="name">icofr.risk.form.export.button</field>
+        <field name="model">icofr.risk</field>
+        <field name="inherit_id" ref="view_icofr_risk_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_export_risks" type="object" string="Export Risiko" class="oe_highlight"/>
+            </header>
+        </field>
+    </record>
+    
+    <!-- Tambahkan tombol export ke view pengujian -->
+    <record id="view_icofr_testing_form_with_export" model="ir.ui.view">
+        <field name="name">icofr.testing.form.export.button</field>
+        <field name="model">icofr.testing</field>
+        <field name="inherit_id" ref="view_icofr_testing_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="action_export_testing" type="object" string="Export Pengujian" class="oe_highlight"/>
+            </header>
+        </field>
+    </record>
+</odoo>

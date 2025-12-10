@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Reporting Views -->
+    <record id="view_icofr_reporting_form" model="ir.ui.view">
+        <field name="name">icofr.reporting.form</field>
+        <field name="model">icofr.control</field>
+        <field name="arch" type="xml">
+            <form string="Pelaporan ICORF" create="false" edit="false">
+                <header>
+                    <button name="action_generate_report" type="object" string="Generate Laporan" class="oe_highlight"/>
+                    <button name="action_export_report" type="object" string="Export Laporan"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Laporan ICORF</h1>
+                    </div>
+                    
+                    <group string="Parameter Laporan">
+                        <group>
+                            <field name="report_type"/>
+                            <field name="report_period_start"/>
+                            <field name="report_period_end"/>
+                        </group>
+                        <group>
+                            <field name="include_testing_results"/>
+                            <field name="include_risk_assessment"/>
+                        </group>
+                    </group>
+                    
+                    <div class="row mt16">
+                        <div class="col-12">
+                            <group string="Ringkasan Laporan">
+                                <field name="report_summary_ids" readonly="1" nolabel="1"/>
+                            </group>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt16">
+                        <div class="col-12">
+                            <group string="Detail Laporan">
+                                <field name="report_detail_ids" readonly="1" nolabel="1"/>
+                            </group>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action untuk Reporting -->
+    <record id="action_icofr_reporting" model="ir.actions.act_window">
+        <field name="name">Pelaporan ICORF</field>
+        <field name="res_model">icofr.control</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_icofr_reporting_form"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Laporan ICORF
+            </p><p>
+                Laporan ini menyediakan informasi komprehensif tentang 
+                kontrol internal dan kepatuhan terhadap standar ICORF.
+            </p>
+        </field>
+    </record>
+    
+    <!-- Menu untuk Reporting -->
+    <menuitem id="menu_icofr_reporting" 
+              name="Pelaporan" 
+              action="action_icofr_reporting" 
+              sequence="20"
+              parent="menu_icofr_root"/>
+</odoo>

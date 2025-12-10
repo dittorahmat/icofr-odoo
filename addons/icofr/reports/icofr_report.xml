@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Laporan PDF untuk POJK 15/2024 -->
+    <report 
+        id="pojk_report_pdf" 
+        model="icofr.pojk.report" 
+        string="Laporan POJK 15/2024" 
+        report_type="qweb-pdf" 
+        name="icofr.pojk_report_template" 
+        file="icofr.pojk_report_template" 
+        attachment_use="False"
+    />
+    
+    <!-- Template QWeb untuk laporan POJK -->
+    <template id="pojk_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        
+                        <!-- Kop Laporan -->
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h2 style="color: #2c3e50; margin: 0;">
+                                <t t-esc="doc.company_id.name"/>
+                            </h2>
+                            <h3 style="color: #34495e; margin: 10px 0 0 0;">
+                                LAPORAN INTERNAL CONTROLS OVER FINANCIAL REPORTING
+                            </h3>
+                            <h3 style="color: #34495e; margin: 5px 0 0 0;">
+                                SESUAI PERATURAN OTORITAS JASA KEUANGAN
+                            </h3>
+                            <h3 style="color: #34495e; margin: 5px 0 20px 0;">
+                                NO. 15 TAHUN 2024
+                            </h3>
+                        </div>
+                        
+                        <!-- Informasi Dasar Laporan -->
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <div>
+                                    <strong>Periode Pelaporan:</strong>
+                                    <p t-esc="doc.reporting_period"/>
+                                </div>
+                                <div>
+                                    <strong>Tahun Fiskal:</strong>
+                                    <p t-esc="doc.fiscal_year"/>
+                                </div>
+                                <div>
+                                    <strong>Tanggal Laporan:</strong>
+                                    <p t-esc="doc.report_date" t-esc-options='{"widget": "date"}'/>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <div>
+                                    <strong>Disusun Oleh:</strong>
+                                    <p t-esc="doc.prepared_by_id.name"/>
+                                </div>
+                                <div>
+                                    <strong>Direview Oleh:</strong>
+                                    <p t-esc="doc.reviewed_by_id.name" t-if="doc.reviewed_by_id"/>
+                                    <p t-if="not doc.reviewed_by_id">-</p>
+                                </div>
+                                <div>
+                                    <strong>Disetujui Oleh:</strong>
+                                    <p t-esc="doc.approved_by_id.name" t-if="doc.approved_by_id"/>
+                                    <p t-if="not doc.approved_by_id">-</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Statistik Utama -->
+                        <div style="background-color: #ecf0f1; padding: 15px; border-radius: 5px; margin-bottom: 20px;">
+                            <h4 style="color: #2c3e50; margin-top: 0;">Statistik Utama</h4>
+                            <div style="display: flex; justify-content: space-around; text-align: center;">
+                                <div>
+                                    <div style="font-size: 24px; font-weight: bold; color: #3498db;">
+                                        <t t-esc="doc.total_controls"/>
+                                    </div>
+                                    <div>Total Kontrol</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 24px; font-weight: bold; color: #2ecc71;">
+                                        <t t-esc="doc.effective_controls"/>
+                                    </div>
+                                    <div>Kontrol Efektif</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 24px; font-weight: bold; color: #f39c12;">
+                                        <t t-esc="doc.effectiveness_percentage" t-esc-options='{"widget": "percentage"}'/>
+                                    </div>
+                                    <div>Efektivitas</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 24px; font-weight: bold; color: #e74c3c;">
+                                        <t t-esc="doc.total_risks"/>
+                                    </div>
+                                    <div>Total Risiko</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Penilaian Kerangka Kerja -->
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Penilaian Kerangka Kerja</h4>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Deskripsi Kerangka Kerja:</strong>
+                                <p t-esc="doc.framework_description" style="white-space: pre-line;"/>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Penilaian Lingkungan Pengendalian:</strong>
+                                <p t-esc="doc.control_environment_assessment" style="white-space: pre-line;"/>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Praktik Penilaian Risiko:</strong>
+                                <p t-esc="doc.risk_assessment_practices" style="white-space: pre-line;"/>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Efektivitas Aktivitas Pengendalian:</strong>
+                                <p t-esc="doc.control_activity_effectiveness" style="white-space: pre-line;"/>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Kualitas Informasi dan Komunikasi:</strong>
+                                <p t-esc="doc.information_communication_quality" style="white-space: pre-line;"/>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Hasil Aktivitas Pemantauan:</strong>
+                                <p t-esc="doc.monitoring_activity_results" style="white-space: pre-line;"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Temuan dan Respon -->
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Temuan dan Respon Manajemen</h4>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Detail Kekurangan Signifikan:</strong>
+                                <p t-esc="doc.significant_deficiencies_detail" style="white-space: pre-line;"/>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Detail Kelemahan Material:</strong>
+                                <p t-esc="doc.material_weaknesses_detail" style="white-space: pre-line;"/>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Detail Respon Manajemen:</strong>
+                                <p t-esc="doc.management_response_detail" style="white-space: pre-line;"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Tindakan Perbaikan -->
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Tindakan Perbaikan</h4>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Tindakan Perbaikan:</strong>
+                                <p t-esc="doc.improvement_actions" style="white-space: pre-line;"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Kepatuhan -->
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Status Kepatuhan</h4>
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong>Status Kepatuhan:</strong>
+                                    <p t-esc="dict(doc._fields['compliance_status'].selection).get(doc.compliance_status, doc.compliance_status)"/>
+                                </div>
+                                <div>
+                                    <strong>Jumlah Total Temuan:</strong>
+                                    <p t-esc="doc.total_findings"/>
+                                </div>
+                                <div>
+                                    <strong>Temuan Ditutup:</strong>
+                                    <p t-esc="doc.closed_findings"/>
+                                </div>
+                                <div>
+                                    <strong>Temuan Menunggu:</strong>
+                                    <p t-esc="doc.pending_findings"/>
+                                </div>
+                            </div>
+                            <div style="margin-top: 10px;">
+                                <strong>Catatan Kepatuhan:</strong>
+                                <p t-esc="doc.compliance_notes" style="white-space: pre-line;"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Catatan Tambahan -->
+                        <div t-if="doc.notes" style="margin-bottom: 20px;">
+                            <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Catatan Tambahan</h4>
+                            <p t-esc="doc.notes" style="white-space: pre-line;"/>
+                        </div>
+                        
+                        <!-- Tanggal dan Tanda Tangan -->
+                        <div style="margin-top: 40px;">
+                            <div style="float: right; text-align: center;">
+                                <p>Dibuat di Jakarta,</p>
+                                <p>pada tanggal <span t-esc="doc.report_date" t-esc-options='{"widget": "date"}'/></p>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <p><strong><t t-esc="doc.prepared_by_id.name"/></strong></p>
+                                <p style="margin-top: 0;"><t t-esc="doc.prepared_by_id.job_title if hasattr(doc.prepared_by_id, 'job_title') else 'Penyusun Laporan'"/></p>
+                            </div>
+                        </div>
+                        
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    
+    <!-- Template untuk laporan sertifikasi -->
+    <template id="certification_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        
+                        <!-- Kop Laporan Sertifikasi -->
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h2 style="color: #2c3e50; margin: 0;">
+                                <t t-esc="doc.company_id.name"/>
+                            </h2>
+                            <h3 style="color: #34495e; margin: 10px 0 0 0;">
+                                SERTIFIKASI INTERNAL CONTROLS OVER FINANCIAL REPORTING
+                            </h3>
+                            <h3 style="color: #34495e; margin: 5px 0 20px 0;">
+                                SESUAI STANDAR COSO 2013
+                            </h3>
+                        </div>
+                        
+                        <!-- Informasi Dasar Sertifikasi -->
+                        <div style="margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                                <div>
+                                    <strong>Nama Sertifikasi:</strong>
+                                    <p t-esc="doc.name"/>
+                                </div>
+                                <div>
+                                    <strong>Tahun Fiskal:</strong>
+                                    <p t-esc="doc.fiscal_year"/>
+                                </div>
+                                <div>
+                                    <strong>Tanggal Sertifikasi:</strong>
+                                    <p t-esc="doc.certification_date" t-esc-options='{"widget": "date"}'/>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 10px;">
+                                <strong>Disertifikasi Oleh:</strong>
+                                <p t-esc="doc.certified_by_id.name"/>
+                            </div>
+                            
+                            <div style="margin-bottom: 10px;">
+                                <strong>Status:</strong>
+                                <p t-esc="dict(doc._fields['status'].selection).get(doc.status, doc.status)"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Lingkup dan Pernyataan Efektivitas -->
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Lingkup dan Pernyataan</h4>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Lingkup Sertifikasi:</strong>
+                                <p t-esc="doc.scope" style="white-space: pre-line;"/>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Deskripsi Lingkup:</strong>
+                                <p t-esc="doc.scope_description" style="white-space: pre-line;"/>
+                            </div>
+                            <div style="margin-bottom: 10px;">
+                                <strong>Pernyataan Efektivitas:</strong>
+                                <p t-esc="doc.effectiveness_statement" style="white-space: pre-line;"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Temuan dan Rencana Tindakan -->
+                        <t t-if="doc.finding_ids">
+                            <div style="margin-bottom: 20px;">
+                                <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Temuan</h4>
+                                <t t-foreach="doc.finding_ids" t-as="finding">
+                                    <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                                        <h5 style="margin-top: 0; color: #e74c3c;">
+                                            <t t-esc="finding.name"/> 
+                                            (<t t-esc="dict(finding._fields['severity_level'].selection).get(finding.severity_level, finding.severity_level)"/>)
+                                        </h5>
+                                        <p><strong>Tipe:</strong> <t t-esc="dict(finding._fields['finding_type'].selection).get(finding.finding_type, finding.finding_type)"/></p>
+                                        <p><strong>Deskripsi:</strong> <span t-esc="finding.description" style="white-space: pre-line;"/></p>
+                                        <p><strong>Status:</strong> <t t-esc="dict(finding._fields['status'].selection).get(finding.status, finding.status)"/></p>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                        
+                        <t t-if="doc.action_plan_ids">
+                            <div style="margin-bottom: 20px;">
+                                <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Rencana Tindakan</h4>
+                                <t t-foreach="doc.action_plan_ids" t-as="action_plan">
+                                    <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                                        <h5 style="margin-top: 0; color: #27ae60;">
+                                            <t t-esc="action_plan.name"/>
+                                        </h5>
+                                        <p><strong>Status:</strong> <t t-esc="dict(action_plan._fields['status'].selection).get(action_plan.status, action_plan.status)"/></p>
+                                        <p><strong>Target Selesai:</strong> <t t-esc="action_plan.target_completion_date" t-esc-options='{"widget": "date"}'/></p>
+                                        <p><strong>Deskripsi:</strong> <span t-esc="action_plan.description" style="white-space: pre-line;"/></p>
+                                    </div>
+                                </t>
+                            </div>
+                        </t>
+                        
+                        <!-- Tanggal dan Tanda Tangan -->
+                        <div style="margin-top: 40px;">
+                            <div style="float: right; text-align: center;">
+                                <p>Dijakarta,</p>
+                                <p>pada tanggal <span t-esc="doc.certification_date" t-esc-options='{"widget": "date"}'/></p>
+                                <br/>
+                                <br/>
+                                <br/>
+                                <p><strong><t t-esc="doc.certified_by_id.name"/></strong></p>
+                                <p style="margin-top: 0;"><t t-esc="doc.certified_by_id.job_title if hasattr(doc.certified_by_id, 'job_title') else 'CEO/CFO'"/></p>
+                            </div>
+                        </div>
+                        
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

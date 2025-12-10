@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view for ZIS Campaign -->
+    <record id="zis_campaign_form_view" model="ir.ui.view">
+        <field name="name">zis.campaign.form</field>
+        <field name="model">zis.campaign</field>
+        <field name="arch" type="xml">
+            <form string="ZIS Campaign">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="zis_type"/>
+                            <field name="category_id"/>
+                            <field name="state"/>
+                        </group>
+                        <group>
+                            <field name="target_amount"/>
+                            <field name="collected_amount"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                    </group>
+                    <group>
+                        <field name="image" widget="image" class="oe_avatar"/>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List view for ZIS Campaign -->
+    <record id="zis_campaign_list_view" model="ir.ui.view">
+        <field name="name">zis.campaign.list</field>
+        <field name="model">zis.campaign</field>
+        <field name="arch" type="xml">
+            <list string="ZIS Campaigns">
+                <field name="name"/>
+                <field name="zis_type"/>
+                <field name="category_id"/>
+                <field name="target_amount"/>
+                <field name="collected_amount"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+</odoo>

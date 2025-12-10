@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View untuk Proses Bisnis -->
+    <record id="view_icofr_process_form" model="ir.ui.view">
+        <field name="name">icofr.process.form</field>
+        <field name="model">icofr.process</field>
+        <field name="arch" type="xml">
+            <form string="Proses Bisnis">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="category"/>
+                            <field name="owner_id"/>
+                            <field name="parent_process_id"/>
+                            <field name="status"/>
+                        </group>
+                        <group>
+                            <field name="create_date" readonly="1"/>
+                            <field name="write_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Deskripsi">
+                            <field name="description"/>
+                        </page>
+                        <page string="Kontrol Terkait">
+                            <field name="control_ids" readonly="1"/>
+                        </page>
+                        <page string="Risiko Terkait">
+                            <field name="risk_ids" readonly="1"/>
+                        </page>
+                        <page string="Catatan">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- List View untuk Proses Bisnis -->
+    <record id="view_icofr_process_list" model="ir.ui.view">
+        <field name="name">icofr.process.list</field>
+        <field name="model">icofr.process</field>
+        <field name="arch" type="xml">
+            <list string="Proses Bisnis">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="owner_id"/>
+                <field name="status"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View untuk Proses Bisnis -->
+    <record id="view_icofr_process_search" model="ir.ui.view">
+        <field name="name">icofr.process.search</field>
+        <field name="model">icofr.process</field>
+        <field name="arch" type="xml">
+            <search string="Cari Proses Bisnis">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="category"/>
+                <field name="owner_id"/>
+                <field name="status"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action untuk membuka daftar Proses Bisnis -->
+    <record id="action_icofr_process" model="ir.actions.act_window">
+        <field name="name">Proses Bisnis</field>
+        <field name="res_model">icofr.process</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan proses bisnis pertama Anda!
+            </p>
+            <p>
+                Proses bisnis adalah fondasi dari kerangka kerja pengendalian internal.
+                Mereka membantu mengidentifikasi kontrol dan risiko yang terkait dengan
+                operasional organisasi.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu items untuk Proses Bisnis -->
+    <menuitem id="menu_icofr_process"
+              name="Proses Bisnis"
+              sequence="16"
+              parent="menu_icofr_master"
+              action="action_icofr_process"/>
+</odoo>

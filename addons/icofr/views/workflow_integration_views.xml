@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tambahkan tombol buat workflow ke form sertifikasi -->
+    <record id="view_icofr_certification_form_with_workflow" model="ir.ui.view">
+        <field name="name">icofr.certification.form.with.workflow</field>
+        <field name="model">icofr.certification</field>
+        <field name="inherit_id" ref="view_icofr_certification_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="create_certification_workflow" type="object" string="Buat Workflow Persetujuan" invisible="workflow_id != False" class="oe_highlight"/>
+                <field name="workflow_id" invisible="1"/>
+            </header>
+            <sheet position="before">
+                <div class="alert alert-info" role="alert" invisible="workflow_id == False">
+                    <b>Workflow Terkait:</b>
+                    <field name="workflow_id" readonly="1"
+                           widget="reference"
+                           options="{'always_reload': True}"/>
+                </div>
+            </sheet>
+        </field>
+    </record>
+
+    <!-- Tambahkan tombol buat workflow ke form pengujian -->
+    <record id="view_icofr_testing_form_with_workflow" model="ir.ui.view">
+        <field name="name">icofr.testing.form.with.workflow</field>
+        <field name="model">icofr.testing</field>
+        <field name="inherit_id" ref="view_icofr_testing_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="create_approval_workflow" type="object" string="Buat Workflow Persetujuan" class="oe_highlight"/>
+            </header>
+        </field>
+    </record>
+</odoo>

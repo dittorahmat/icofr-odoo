@@ -1,0 +1,85 @@
+# Project context and summary files
+.qwen/PROJECT_SUMMARY.md
+QWEN.md
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Odoo
+*~
+*.bak
+*.tmp
+addon/*/
+!addon/__init__.py
+!addon/__manifest__.py
+!addon/models/
+!addon/controllers/
+!addon/views/
+!addon/security/
+!addon/data/
+!addon/static/
+!addon/reports/
+!addon/tests/
+!addon/migrations/
+addon/*/static/src/css/.css
+addon/*/static/src/css/.less
+addon/*/static/src/css/.scss
+addon/*/static/src/css/.sass
+addon/*/static/src/js/.js
+addon/*/static/src/xml/.xml
+web/static/src/css/.css
+web/static/src/css/.less
+web/static/src/css/.scss
+web/static/src/css/.sass
+web/static/src/js/.js
+web/static/src/xml/.xml
+web/static/lib/bootstrap/js/.js
+web/static/lib/jquery/.js
+web/static/lib/qunit/.js
+web/static/lib/select2/.js
+web/static/lib/moment/.js
+web/static/lib/moment-timezone/.js
+
+# Docker
+.dockerenv
+
+# Logs
+*.log
+!addons/icofr/**/*.log
+
+# Environment variables
+.env

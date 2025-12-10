@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tambahkan tombol export Excel ke view laporan POJK -->
+    <record id="view_icofr_pojk_report_form_extended" model="ir.ui.view">
+        <field name="name">icofr.pojk.report.form.extended</field>
+        <field name="model">icofr.pojk.report</field>
+        <field name="inherit_id" ref="view_icofr_pojk_report_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="export_to_excel" type="object" string="Export ke Excel" class="oe_highlight"/>
+            </header>
+        </field>
+    </record>
+
+    <!-- Tambahkan tombol export Excel ke view sertifikasi -->
+    <record id="view_icofr_certification_form_extended_report" model="ir.ui.view">
+        <field name="name">icofr.certification.form.extended.report</field>
+        <field name="model">icofr.certification</field>
+        <field name="inherit_id" ref="view_icofr_certification_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button name="export_certification_to_excel" type="object" string="Export ke Excel" class="oe_highlight"/>
+            </header>
+        </field>
+    </record>
+</odoo>
