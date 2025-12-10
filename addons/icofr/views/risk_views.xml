@@ -75,9 +75,16 @@
             <p class="o_view_nocontent_smiling_face">
                 Tambahkan risiko finansial pertama anda!
             </p><p>
-                Risiko finansial digunakan untuk mengidentifikasi dan mengelola 
+                Risiko finansial digunakan untuk mengidentifikasi dan mengelola
                 potensi ancaman terhadap akurasi laporan keuangan.
             </p>
         </field>
     </record>
+
+    <!-- Menu item untuk Risiko Finansial -->
+    <menuitem id="menu_icofr_risk"
+              name="Risiko Finansial"
+              sequence="18"
+              parent="menu_icofr_master"
+              action="action_icofr_risk"/>
 </odoo>

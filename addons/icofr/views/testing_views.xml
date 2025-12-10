@@ -73,9 +73,16 @@
             <p class="o_view_nocontent_smiling_face">
                 Tambahkan pengujian kontrol pertama anda!
             </p><p>
-                Pengujian kontrol digunakan untuk mengevaluasi efektivitas 
+                Pengujian kontrol digunakan untuk mengevaluasi efektivitas
                 kontrol internal terhadap risiko finansial.
             </p>
         </field>
     </record>
+
+    <!-- Menu item untuk Pengujian Kontrol -->
+    <menuitem id="menu_icofr_testing"
+              name="Pengujian Kontrol"
+              sequence="51"
+              parent="menu_icofr_operational"
+              action="action_icofr_testing"/>
 </odoo>

@@ -80,4 +80,11 @@
             </p>
         </field>
     </record>
+
+    <!-- Menu item untuk Kontrol Internal -->
+    <menuitem id="menu_icofr_control"
+              name="Kontrol Internal"
+              sequence="17"
+              parent="menu_icofr_master"
+              action="action_icofr_control"/>
 </odoo>

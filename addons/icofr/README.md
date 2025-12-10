@@ -54,6 +54,18 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 - Pilihan untuk mengekspor data tertentu
 - Filter berdasarkan tanggal dan status
 
+### 11. Pelaporan Komprehensif
+- Laporan ringkasan dan detail tentang kontrol internal
+- Parameter laporan yang dapat disesuaikan
+- Termasuk hasil pengujian dan penilaian risiko
+- Fungsi ekspor laporan
+
+### 12. Kalender Aktivitas
+- Tampilan kalender untuk semua aktivitas terjadwal
+- Menampilkan jadwal pengujian kontrol
+- Warna berbeda untuk masing-masing pelaksana pengujian
+- Integrasi dengan fitur jadwal pengujian
+
 ## Panduan Penggunaan
 
 ### 1. Awal Penggunaan
@@ -121,6 +133,20 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 3. Pilih format ekspor (Excel, CSV, PDF)
 4. Atur parameter seperti tanggal dan status
 5. Klik "Ekspor" untuk menghasilkan file
+
+### 11. Menggunakan Pelaporan
+1. Buka menu "ICORF" > "Pelaporan"
+2. Atur parameter laporan seperti jenis laporan dan periode
+3. Pilih apakah akan menyertakan hasil pengujian dan penilaian risiko
+4. Klik "Generate Laporan" untuk membuat laporan
+5. Gunakan tombol "Export Laporan" untuk mengekspor hasil
+
+### 12. Menggunakan Kalender
+1. Buka menu "ICORF" > "Kalender"
+2. Lihat semua aktivitas terjadwal dalam tampilan kalender
+3. Gunakan filter untuk melihat aktivitas berdasarkan pelaksana
+4. Klik pada event untuk melihat detail aktivitas
+5. Gunakan tombol navigasi untuk berpindah antar bulan
 
 ## Peran Pengguna
 

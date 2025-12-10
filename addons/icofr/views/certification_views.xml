@@ -72,9 +72,16 @@
             <p class="o_view_nocontent_smiling_face">
                 Tambahkan sertifikasi ICORF pertama anda!
             </p><p>
-                Sertifikasi ICORF digunakan untuk memastikan dan mendokumentasikan 
+                Sertifikasi ICORF digunakan untuk memastikan dan mendokumentasikan
                 efektivitas kontrol internal atas pelaporan keuangan.
             </p>
         </field>
     </record>
+
+    <!-- Menu item untuk Sertifikasi ICORF -->
+    <menuitem id="menu_icofr_certification"
+              name="Sertifikasi ICORF"
+              sequence="60"
+              parent="menu_icofr_compliance"
+              action="action_icofr_certification"/>
 </odoo>

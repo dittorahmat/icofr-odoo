@@ -418,7 +418,18 @@ class IcofrControl(models.Model):
 
     @api.model
     def create(self, vals):
-        # Generate a default code if not provided
-        if 'code' not in vals or not vals['code']:
-            vals['code'] = self.env['ir.sequence'].next_by_code('icofr.control') or '/'
-        return super(IcofrControl, self).create(vals)
+        # Ensure vals is a dictionary and not a list by checking the first element if needed
+        if isinstance(vals, list):
+            # If vals is a list (for multiple creation), process each item
+            processed_vals = []
+            for val_dict in vals:
+                if isinstance(val_dict, dict):
+                    if 'code' not in val_dict or not val_dict.get('code'):
+                        val_dict['code'] = self.env['ir.sequence'].next_by_code('icofr.control') or '/'
+                    processed_vals.append(val_dict)
+            return super(IcofrControl, self).create(processed_vals)
+        else:
+            # For single record creation (most common case)
+            if 'code' not in vals or not vals.get('code'):
+                vals['code'] = self.env['ir.sequence'].next_by_code('icofr.control') or '/'
+            return super(IcofrControl, self).create(vals)
