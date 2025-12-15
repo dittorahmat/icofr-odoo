@@ -129,6 +129,46 @@ class IcofrRisk(models.Model):
     ], string='Tingkat Risiko Residu',
        help='Tingkat risiko setelah kontrol diterapkan')
     
+    # Add SK BUMN attributes
+    risk_category_detailed = fields.Selection([
+        ('operational', 'Operasional'),
+        ('financial', 'Finansial'),
+        ('compliance', 'Kepatuhan'),
+        ('strategic', 'Strategis'),
+        ('reputational', 'Reputasi')
+    ], string='Kategori Risiko Terperinci', default='operational',
+       help='Kategori terperinci dari risiko finansial')
+
+    risk_type_detailed = fields.Selection([
+        ('inherent', 'Inheren'),
+        ('residual', 'Residu'),
+        ('control', 'Kontrol')
+    ], string='Tipe Risiko Terperinci', default='inherent',
+       help='Tipe risiko terperinci sesuai dengan SK BUMN')
+
+    risk_cause = fields.Text(
+        string='Penyebab Risiko',
+        help='Deskripsi penyebab mendasar dari risiko'
+    )
+
+    risk_impact_description = fields.Text(
+        string='Deskripsi Dampak Risiko',
+        help='Deskripsi rinci tentang dampak yang mungkin terjadi dari risiko'
+    )
+
+    risk_monitoring_procedures = fields.Text(
+        string='Prosedur Pemantauan Risiko',
+        help='Prosedur untuk memantau risiko secara berkelanjutan'
+    )
+
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        required=True,
+        default=lambda self: self.env.company,
+        help='Perusahaan yang memiliki risiko ini'
+    )
+
     notes = fields.Text(
         string='Catatan Tambahan',
         help='Catatan tambahan terkait risiko'

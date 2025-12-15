@@ -167,12 +167,76 @@ class IcofrPojkReport(models.Model):
         ('non_compliant', 'Tidak Sesuai')
     ], string='Status Kepatuhan', default='partially_compliant',
        help='Status kepatuhan terhadap POJK 15/2024')
-    
+
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        required=True,
+        default=lambda self: self.env.company,
+        help='Perusahaan yang memiliki laporan POJK ini'
+    )
+
     compliance_notes = fields.Text(
         string='Catatan Kepatuhan',
         help='Catatan tambahan terkait kepatuhan terhadap POJK 15/2024'
     )
-    
+
+    # Quantification fields for financial impact
+    monetary_impact_amount = fields.Float(
+        string='Jumlah Dampak Moneter',
+        help='Estimasi jumlah dampak moneter dari temuan'
+    )
+
+    impact_currency_id = fields.Many2one(
+        'res.currency',
+        string='Mata Uang Dampak',
+        default=lambda self: self.env.company.currency_id,
+        help='Mata uang untuk estimasi dampak moneter'
+    )
+
+    finding_ids = fields.One2many(
+        'icofr.finding',
+        'pojk_report_id',
+        string='Temuan Terkait',
+        help='Temuan-temuan yang terkait dengan laporan POJK ini'
+    )
+
+    material_weakness_count = fields.Integer(
+        string='Jumlah Kelemahan Material',
+        compute='_compute_deficiency_counts',
+        store=True,
+        help='Jumlah temuan kelemahan material'
+    )
+
+    significant_deficiency_count = fields.Integer(
+        string='Jumlah Kekurangan Signifikan',
+        compute='_compute_deficiency_counts',
+        store=True,
+        help='Jumlah temuan kekurangan signifikan'
+    )
+
+    control_deficiency_count = fields.Integer(
+        string='Jumlah Kekurangan Kontrol',
+        compute='_compute_deficiency_counts',
+        store=True,
+        help='Jumlah total kekurangan kontrol'
+    )
+
+    @api.depends('finding_ids', 'finding_ids.severity_level', 'finding_ids.deficiency_classified')
+    def _compute_deficiency_counts(self):
+        for record in self:
+            findings = record.finding_ids
+            # Count based on deficiency classification which is more accurate for POJK reporting
+            record.material_weakness_count = len(findings.filtered(
+                lambda f: f.deficiency_classified == 'material_weakness'
+            ))
+            record.significant_deficiency_count = len(findings.filtered(
+                lambda f: f.deficiency_classified == 'significant_deficiency'
+            ))
+            record.control_deficiency_count = len(findings.filtered(
+                lambda f: f.deficiency_classified == 'control_deficiency'
+            ))
+
     attachment_ids = fields.Many2many(
         'ir.attachment',
         string='Lampiran Laporan',
@@ -224,7 +288,27 @@ class IcofrPojkReport(models.Model):
 
     @api.model
     def create(self, vals):
-        # Generate a default name if not provided
-        if 'name' not in vals or not vals['name']:
-            vals['name'] = f'Laporan POJK {vals.get("fiscal_year", fields.Date.today().year)} - {vals.get("reporting_period", "Periode")}'
-        return super(IcofrPojkReport, self).create(vals)
+        # Handle both single and batch creation
+        if isinstance(vals, list):
+            # Process each item in the list
+            processed_vals = []
+            for val_dict in vals:
+                new_val_dict = val_dict.copy()
+                if 'name' not in new_val_dict or not new_val_dict.get('name'):
+                    fiscal_year = new_val_dict.get('fiscal_year')
+                    reporting_period = new_val_dict.get('reporting_period')
+                    fiscal_year_value = fiscal_year if fiscal_year else fields.Date.today().year
+                    reporting_period_value = reporting_period if reporting_period else 'Periode'
+                    new_val_dict['name'] = f'Laporan POJK {fiscal_year_value} - {reporting_period_value}'
+                processed_vals.append(new_val_dict)
+            return super(IcofrPojkReport, self).create(processed_vals)
+        else:
+            # Single record creation
+            new_vals = vals.copy()
+            if 'name' not in new_vals or not new_vals.get('name'):
+                fiscal_year = new_vals.get('fiscal_year')
+                reporting_period = new_vals.get('reporting_period')
+                fiscal_year_value = fiscal_year if fiscal_year else fields.Date.today().year
+                reporting_period_value = reporting_period if reporting_period else 'Periode'
+                new_vals['name'] = f'Laporan POJK {fiscal_year_value} - {reporting_period_value}'
+            return super(IcofrPojkReport, self).create(new_vals)

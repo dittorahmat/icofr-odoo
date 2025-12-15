@@ -66,6 +66,47 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 - Warna berbeda untuk masing-masing pelaksana pengujian
 - Integrasi dengan fitur jadwal pengujian
 
+### 13. Kalkulator Materialitas
+- Fitur perhitungan materialitas otomatis untuk Overall Materiality dan Performance Materiality
+- Berdasarkan standar POJK No. 15 Tahun 2024
+- Menggunakan metode persentase pendapatan, total aset, atau laba bersih
+- Dapat diakses melalui menu "ICORF" > "Master Data" > "Kalkulator Materialitas"
+
+### 14. Pemetaan Akun
+- Pemetaan akun General Ledger (GL) ke Financial Statement Line Item (FSLI)
+- Mendukung kalkulasi materialitas yang lebih akurat
+- Terintegrasi dengan kalkulator materialitas
+- Dapat diakses melalui menu "ICORF" > "Master Data" > "Pemetaan Akun GL-FSLI"
+
+### 15. Penilaian Mandiri Kontrol (CSA)
+- Workflow lengkap untuk Control Self-Assessment
+- Evaluasi efektivitas kontrol oleh pemilik proses (Lini 1)
+- Review oleh tim risiko/ICOFR (Lini 2)
+- Dukungan untuk penilaian kepatuhan dan efektivitas
+- Dapat diakses melalui menu "ICORF" > "Operasional" > "Penilaian Mandiri Kontrol"
+
+### 16. Klasifikasi Kekurangan
+- Klasifikasi otomatis temuan kekurangan kontrol
+- Berdasarkan faktor kuantitatif dan kualitatif
+- Menghasilkan kategori seperti kelemahan material, kekurangan signifikan, atau kekurangan kontrol
+- Terintegrasi dengan modul temuan dan laporan POJK
+
+### 17. Dukungan Multi-Perusahaan
+- Isolasi data perusahaan untuk organisasi dengan entitas ganda
+- Semua modul utama mendukung multi-perusahaan
+- Akses data terbatas pada perusahaan yang sesuai dengan pengguna
+
+### 18. Fitur Copy Period
+- Wizard untuk menyalin data dari satu periode fiskal ke periode lain
+- Meningkatkan efisiensi karena 80-90% RCM biasanya tetap sama dari tahun ke tahun
+- Tersedia di menu "ICORF" > "Utilitas" > "Salin Periode"
+- Opsi untuk memilih entitas yang akan disalin (proses, kontrol, risiko, temuan, rencana aksi, dll.)
+
+### 19. Kepatuhan SK BUMN
+- Implementasi lengkap atribut dan proses sesuai Surat Keputusan BUMN
+- Cocok dengan persyaratan POJK 15/2024
+- Melengkapi framework COSO 2013 dengan elemen khusus Indonesia
+
 ## Panduan Penggunaan
 
 ### 1. Awal Penggunaan
@@ -147,6 +188,60 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 3. Gunakan filter untuk melihat aktivitas berdasarkan pelaksana
 4. Klik pada event untuk melihat detail aktivitas
 5. Gunakan tombol navigasi untuk berpindah antar bulan
+
+### 13. Menggunakan Kalkulator Materialitas
+1. Buka menu "ICORF" > "Master Data" > "Kalkulator Materialitas"
+2. Buat perhitungan materialitas baru dengan mengisi:
+   - Nama perhitungan
+   - Tahun fiskal
+   - Perusahaan
+   - Basis perhitungan (pendapatan, total aset, laba bersih)
+   - Metode perhitungan
+   - Jumlah pendapatan, total aset, dan laba bersih
+3. Sistem akan menghitung Overall Materiality dan Performance Materiality otomatis
+4. Gunakan tombol "Hitung Ulang Materialitas" untuk perhitungan ulang
+
+### 14. Membuat Pemetaan Akun GL-FSLI
+1. Buka menu "ICORF" > "Master Data" > "Pemetaan Akun GL-FSLI"
+2. Buat pemetaan baru dengan mengisi:
+   - Nama pemetaan
+   - Kode GL (General Ledger)
+   - Deskripsi GL
+   - FSLI (Financial Statement Line Item)
+   - Deskripsi FSLI
+   - Tingkat signifikansi
+3. Hubungkan dengan perhitungan materialitas yang relevan
+4. Gunakan untuk mendukung analisis materialitas
+
+### 15. Melakukan Penilaian Mandiri Kontrol (CSA)
+1. Buka menu "ICORF" > "Operasional" > "Penilaian Mandiri Kontrol"
+2. Buat CSA baru dengan memilih:
+   - Kontrol yang dinilai
+   - Periode penilaian
+   - Pemilik kontrol (Lini 1)
+   - Reviewer CSA (Lini 2)
+3. Isi formulir penilaian CSA:
+   - Apakah desain kontrol efektif?
+   - Apakah kontrol beroperasi secara efektif?
+   - Apakah kontrol dilaksanakan sesuai frekuensi?
+   - dll.
+4. Submit CSA untuk review oleh Lini 2
+5. Gunakan fitur temuan terkait untuk mencatat temuan dari CSA
+
+### 16. Menggunakan Fitur Copy Period
+1. Buka menu "ICORF" > "Utilitas" > "Salin Periode"
+2. Pilih periode sumber dan tujuan
+3. Pilih entitas yang ingin disalin (proses, kontrol, risiko, temuan, dll.)
+4. Klik "Proses" untuk memulai penyalinan data
+5. Tinjau hasil copy period dan lakukan validasi
+
+### 17. Melihat Klasifikasi Kekurangan
+1. Buka menu "ICORF" > "Kepatuhan" > "Temuan ICORF"
+2. Perhatikan kolom "Klasifikasi Kekurangan" yang secara otomatis menentukan:
+   - Kekurangan Kontrol (Control Deficiency)
+   - Kekurangan Signifikan (Significant Deficiency)
+   - Kelemahan Material (Material Weakness)
+3. Sistem akan menentukan klasifikasi berdasarkan faktor kuantitatif dan kualitatif
 
 ## Peran Pengguna
 

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Wizard View for Copy Period Functionality -->
+
+    <!-- Form View -->
+    <record id="view_icofr_copy_period_wizard_form" model="ir.ui.view">
+        <field name="name">icofr.copy.period.wizard.form</field>
+        <field name="model">icofr.copy.period.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Salin Data Antar Periode ICORF">
+                <group>
+                    <group>
+                        <field name="source_period"/>
+                        <field name="target_period"/>
+                    </group>
+                </group>
+                <separator string="Pilih Data yang Akan Disalin"/>
+                <group col="4">
+                    <field name="copy_processes"/>
+                    <field name="copy_controls"/>
+                    <field name="copy_risks"/>
+                    <field name="copy_findings"/>
+                    <field name="copy_action_plans"/>
+                    <field name="copy_schedules"/>
+                    <field name="copy_certifications"/>
+                    <field name="copy_reports"/>
+                </group>
+                <group>
+                    <field name="notes"/>
+                </group>
+                <footer>
+                    <button name="action_copy_period_data" type="object" string="Salin Data" class="btn-primary"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action Window for the Wizard -->
+    <record id="action_icofr_copy_period_wizard" model="ir.actions.act_window">
+        <field name="name">Salin Data Antar Periode</field>
+        <field name="res_model">icofr.copy.period.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_icofr_process"/>
+        <field name="binding_view_types">form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Salin Data Periode ICORF
+            </p><p>
+                Gunakan wizard ini untuk menyalin data dari satu periode ke periode berikutnya.
+                Ini akan meningkatkan efisiensi penggunaan sistem karena sebagian besar data 
+                kontrol internal tetap sama dari tahun ke tahun.
+            </p>
+        </field>
+    </record>
+
+    <!-- Alternative binding to provide access from ICORF main menu -->
+    <record id="action_icofr_copy_period_wizard_all" model="ir.actions.act_window">
+        <field name="name">Salin Data Antar Periode ICORF</field>
+        <field name="res_model">icofr.copy.period.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_icofr_control"/>
+        <field name="binding_view_types">form,list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Salin Data Periode ICORF
+            </p><p>
+                Gunakan wizard ini untuk menyalin data dari satu periode ke periode berikutnya.
+                Ini akan meningkatkan efisiensi penggunaan sistem karena sebagian besar data 
+                kontrol internal tetap sama dari tahun ke tahun.
+            </p>
+        </field>
+    </record>
+
+</odoo>

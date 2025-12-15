@@ -1,9 +1,0 @@
-"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-access_zis_campaign_user,zis.campaign.user,model_zis_campaign,base.group_user,1,1,1,1
-access_zis_donation_user,zis.donation.user,model_zis_donation,base.group_user,1,1,1,1
-access_zis_distribution_user,zis.distribution.user,model_zis_distribution,base.group_user,1,1,1,1
-access_zis_category_user,zis.category.user,model_zis_category,base.group_user,1,1,1,1
-access_zis_campaign_public,zis.campaign.public,model_zis_campaign,base.group_public,1,0,0,0
-access_zis_donation_public,zis.donation.public,model_zis_donation,base.group_public,1,0,0,0
-access_zis_distribution_public,zis.distribution.public,model_zis_distribution,base.group_public,1,0,0,0
-access_zis_category_public,zis.category.public,model_zis_category,base.group_public,1,0,0,0

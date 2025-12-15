@@ -1,7 +1,3 @@
-# Project context and summary files
-.qwen/PROJECT_SUMMARY.md
-QWEN.md
-
 # Python
 __pycache__/
 *.py[cod]

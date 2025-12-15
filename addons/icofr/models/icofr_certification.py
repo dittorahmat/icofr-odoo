@@ -72,10 +72,77 @@ class IcofrCertification(models.Model):
         help='Rencana tindakan yang terkait dengan sertifikasi ini'
     )
 
+    # Additional fields for SK BUMN compliance
+    scope = fields.Text(
+        string='Lingkup Sertifikasi',
+        help='Lingkup dari sertifikasi kontrol internal'
+    )
+
+    effectiveness_statement = fields.Text(
+        string='Pernyataan Efektivitas',
+        help='Pernyataan mengenai efektivitas kontrol internal'
+    )
+
+    internal_auditor_opinion = fields.Text(
+        string='Opini Auditor Internal',
+        help='Opini dari tim auditor internal terkait efektivitas kontrol'
+    )
+
+    external_auditor_opinion = fields.Text(
+        string='Opini Auditor Eksternal',
+        help='Opini dari auditor eksternal terkait efektivitas kontrol (jika ada)'
+    )
+
+    material_weakness_identified = fields.Boolean(
+        string='Ada Kelemahan Material?',
+        default=False,
+        help='Apakah ditemukan adanya kelemahan material dalam sertifikasi ini'
+    )
+
+    significant_deficiencies_count = fields.Integer(
+        string='Jumlah Kekurangan Signifikan',
+        help='Jumlah kekurangan signifikan yang ditemukan'
+    )
+
+    action_plan_count = fields.Integer(
+        string='Jumlah Rencana Tindakan',
+        compute='_compute_related_counts',
+        store=True,
+        help='Jumlah rencana tindakan terkait dengan sertifikasi ini'
+    )
+
+    finding_count = fields.Integer(
+        string='Jumlah Temuan',
+        compute='_compute_related_counts',
+        store=True,
+        help='Jumlah temuan terkait dengan sertifikasi ini'
+    )
+
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        required=True,
+        default=lambda self: self.env.company,
+        help='Perusahaan yang memiliki sertifikasi ini'
+    )
+
     notes = fields.Text(
         string='Catatan',
         help='Catatan tambahan terkait sertifikasi'
     )
+
+    created_by_id = fields.Many2one(
+        'res.users',
+        string='Dibuat Oleh',
+        default=lambda self: self.env.user,
+        help='Pengguna yang membuat sertifikasi'
+    )
+
+    @api.depends('action_plan_ids', 'finding_ids')
+    def _compute_related_counts(self):
+        for record in self:
+            record.action_plan_count = len(record.action_plan_ids)
+            record.finding_count = len(record.finding_ids)
 
     def create_certification_workflow(self):
         """Method untuk membuat workflow persetujuan untuk sertifikasi"""
@@ -114,7 +181,27 @@ class IcofrCertification(models.Model):
 
     @api.model
     def create(self, vals):
-        # Generate a default name if not provided
-        if 'name' not in vals or not vals['name']:
-            vals['name'] = f'Sertifikasi {vals.get("fiscal_year", fields.Date.today().year)}'
-        return super(IcofrCertification, self).create(vals)
+        # Handle both single and batch creation
+        if isinstance(vals, list):
+            # Process each item in the list
+            processed_vals = []
+            for val_dict in vals:
+                new_val_dict = val_dict.copy()
+                if 'name' not in new_val_dict or not new_val_dict.get('name'):
+                    fiscal_year = new_val_dict.get('fiscal_year')
+                    if fiscal_year:
+                        new_val_dict['name'] = f'Sertifikasi {fiscal_year}'
+                    else:
+                        new_val_dict['name'] = f'Sertifikasi {fields.Date.today().year}'
+                processed_vals.append(new_val_dict)
+            return super(IcofrCertification, self).create(processed_vals)
+        else:
+            # Single record creation
+            new_vals = vals.copy()
+            if 'name' not in new_vals or not new_vals.get('name'):
+                fiscal_year = new_vals.get('fiscal_year')
+                if fiscal_year:
+                    new_vals['name'] = f'Sertifikasi {fiscal_year}'
+                else:
+                    new_vals['name'] = f'Sertifikasi {fields.Date.today().year}'
+            return super(IcofrCertification, self).create(new_vals)

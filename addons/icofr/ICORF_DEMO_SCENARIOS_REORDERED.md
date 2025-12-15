@@ -457,3 +457,272 @@ Ketujuh skenario di atas mencakup berbagai aspek dari implementasi dan pengelola
 7. **Skenario 7** secara khusus menangani temuan negatif dan proses remediasi
 
 Semua skenario ini dapat digunakan untuk pelatihan pengguna, demonstrasi sistem, atau referensi dalam implementasi ICORF di organisasi keuangan.
+
+---
+
+### 12. Kalkulasi Materialitas dan Pemetaan Akun (SK BUMN Compliance)
+
+#### Latar Belakang
+Sebuah perusahaan BUMN perlu menghitung materialitas secara otomatis sesuai dengan ketentuan POJK No. 15 Tahun 2024 dan Surat Keputusan BUMN. Perusahaan juga perlu memetakan akun buku besar ke item laporan keuangan untuk analisis materialitas yang komprehensif.
+
+#### Tujuan
+- Menghitung Overall Materiality dan Performance Materiality secara otomatis
+- Membuat pemetaan akun GL ke FSLI (Financial Statement Line Items)
+- Memastikan kepatuhan terhadap SK BUMN dan POJK 15/2024
+- Meningkatkan akurasi penilaian materialitas
+
+#### Langkah-langkah:
+1. **Hitung Materialitas**
+   - Buka menu "ICORF" > "Master Data" > "Kalkulator Materialitas"
+   - Buat perhitungan baru dengan informasi:
+     - Nama: "Perhitungan Materialitas Tahun 2024"
+     - Tahun Fiskal: 2024
+     - Perusahaan: PT. Contoh BUMN
+     - Basis Perhitungan: Pendapatan
+     - Pendapatan: 1000000000000 (1 Triliun)
+     - Aset Total: 1500000000000 (1.5 Triliun)
+     - Laba Bersih: 100000000000 (100 Miliar)
+     - Persentase Overall Materiality: 0.5%
+     - Persentase Performance Materiality: 75%
+
+2. **Buat Pemetaan Akun**
+   - Buka menu "ICORF" > "Master Data" > "Pemetaan Akun GL-FSLI"
+   - Buat pemetaan baru:
+     - Nama: "Pemetaan Pendapatan 2024"
+     - Kode Akun GL: "41001"
+     - Deskripsi Akun GL: "Pendapatan Operasional"
+     - FSLI: "Pendapatan"
+     - Deskripsi FSLI: "Pendapatan dari operasional utama"
+     - Tingkat Signifikansi: Signifikan
+     - Status: Aktif
+     - Hubungkan ke perhitungan materialitas "Perhitungan Materialitas Tahun 2024"
+
+3. **Gunakan Pemetaan untuk Analisis Materialitas**
+   - Di form kalkulator materialitas, lihat bagian "Pemetaan Akun" yang menunjukkan akun yang terkait
+   - Lakukan validasi bahwa pemetaan akun sudah benar
+
+4. **Verifikasi Kepatuhan SK BUMN**
+   - Pastikan semua atribut khusus SK BUMN telah diimplementasikan
+   - Periksa bahwa kontrol-kontrol sesuai persyaratan BUMN
+
+---
+
+### 13. Penilaian Mandiri Kontrol (Control Self-Assessment - CSA)
+
+#### Latar Belakang
+Lini 1 (pemilik proses/kontrol) perlu melakukan penilaian mandiri terhadap efektivitas kontrol yang mereka miliki. Proses ini kemudian direview oleh Lini 2 (tim risiko/ICOFR) sebelum proses sertifikasi.
+
+#### Tujuan
+- Meningkatkan tanggung jawab Lini 1 terhadap efektivitas kontrol
+- Memberikan input langsung dari pemilik kontrol tentang efektivitas kontrol
+- Menyediakan bukti dokumentasi untuk proses sertifikasi
+- Mengintegrasikan CSA ke dalam workflow sertifikasi
+
+#### Langkah-langkah:
+1. **Buat CSA oleh Pemilik Kontrol (Lini 1)**
+   - Buka menu "ICORF" > "Operasional" > "Penilaian Mandiri Kontrol"
+   - Buat CSA baru:
+     - Nama CSA: "CSA Pengeluaran Kas Q1 2024"
+     - Kode: CSA-OUTCASH-001
+     - Kontrol: "Otorisasi Pengeluaran Dana"
+     - Periode Penilaian: Q1 2024
+     - Tanggal Penilaian: 31 Mar 2024
+     - Pemilik Kontrol: Finance Manager (Lini 1)
+     - Reviewer CSA: Risk Manager (Lini 2)
+     - Tipe Penilaian: Triwulanan
+
+2. **Isi Formulir CSA**
+   - Apakah desain kontrol efektif?: Ya
+   - Apakah kontrol beroperasi secara efektif?: Ya
+   - Apakah kontrol dilaksanakan sesuai frekuensi?: Ya
+   - Apakah dokumentasi kontrol akurat?: Ya
+   - Apakah pengecualian ditangani dengan baik?: Tidak (catat temuan)
+
+3. **Dokumentasikan Temuan dan Rekomendasi**
+   - Di bagian temuan CSA: "Beberapa pengeluaran tanpa dokumentasi yang memadai"
+   - Rekomendasi: "Perkuat dokumentasi untuk pengeluaran kecil"
+   - Status: Selesai (oleh Lini 1)
+
+4. **Review oleh Lini 2 (Risk/ICOFR Team)**
+   - Lini 2 menerima notifikasi tentang CSA yang siap direview
+   - Buka CSA dan evaluasi hasil penilaian
+   - Tambahkan catatan review
+   - Setujui CSA atau kembalikan untuk perbaikan
+
+5. **Hubungkan dengan Temuan dan Tindak Lanjut**
+   - Dari CSA, buat temuan terkait jika diperlukan
+   - Hubungkan ke rencana tindakan untuk perbaikan
+   - Integrasi dengan laporan POJK 15/2024
+
+6. **Gunakan Hasil CSA dalam Penilaian Kepatuhan**
+   - Hasil CSA digunakan dalam proses sertifikasi
+   - Integrasikan dengan laporan efektivitas kontrol
+   - Update dashboard dengan hasil CSA
+
+---
+
+### 14. Klasifikasi Kekurangan Otomatis dan Kuantifikasi Dampak
+
+#### Latar Belakang
+Temuan dari audit internal dan eksternal perlu diklasifikasikan secara otomatis ke dalam kategori kekurangan kontrol, kekurangan signifikan, atau kelemahan material berdasarkan kriteria kuantitatif dan kualitatif.
+
+#### Tujuan
+- Klasifikasi otomatis temuan kontrol berdasarkan kriteria POJK 15/2024
+- Kuantifikasi dampak finansial dari temuan kontrol
+- Menentukan tingkat keparahan temuan secara konsisten
+- Integrasi dengan laporan POJK 15/2024
+
+#### Langkah-langkah:
+1. **Buat Temuan dengan Kuantifikasi Dampak**
+   - Buka menu "ICORF" > "Kepatuhan" > "Temuan ICORF"
+   - Buat temuan baru:
+     - Nama: "Kesalahan Pengakuan Pendapatan"
+     - Kode: FIND-REVREC-001
+     - Tipe: Control Deficiency
+     - Deskripsi: "Pendapatan tidak diakui sesuai dengan prinsip akuntansi"
+     - Dampak Kuantitatif: 500000000 (Rp. 500 jt)
+     - Mata Uang Dampak: IDR
+     - Skor Kualitatif: 4 (dari skala 1-5)
+     - Kuantifikasi Dampak: "Dampak keuangan Rp. 500 jt, melebihi threshold materialitas 0.5% dari pendapatan"
+
+2. **Sistem Klasifikasi Otomatis**
+   - Sistem secara otomatis mengklasifikasikan temuan berdasarkan threshold:
+     - Kelemahan Material: Jika dampak melebihi Overall Materiality
+     - Kekurangan Signifikan: Jika dampak antara Performance Materiality dan Overall Materiality
+     - Kekurangan Kontrol: Jika dampak di bawah Performance Materiality
+   - Atau berdasarkan penilaian kualitatif
+
+3. **Validasi Klasifikasi oleh Manajemen**
+   - Manajemen meninjau klasifikasi yang dihasilkan secara otomatis
+   - Melakukan penyesuaian jika diperlukan berdasarkan pertimbangan kualitatif
+   - Menyetujui klasifikasi akhir sebelum dimasukkan ke laporan
+
+4. **Integrasi dengan Laporan POJK**
+   - Buka menu "ICORF" > "Kepatuhan" > "Laporan POJK 15/2024"
+   - Temuan dengan klasifikasi otomatis muncul dalam laporan
+   - Jumlah temuan berdasarkan klasifikasi ditampilkan
+   - Respons manajemen terhadap temuan terdokumentasi
+
+5. **Gunakan dalam Proses Sertifikasi**
+   - Hasil klasifikasi digunakan sebagai input untuk sertifikasi CEO/CFO
+   - Manajemen menilai apakah temuan mengindikasikan kegagalan material dalam kontrol internal
+   - Integrasi ke dalam sertifikasi ICORF
+
+---
+
+### 15. Penggunaan Fitur Copy Period untuk Efisiensi RCM
+
+#### Latar Belakang
+Perusahaan ingin meningkatkan efisiensi dalam proses dokumentasi RCM (Risk Control Matrix) karena menurut rekomendasi PwC, sekitar 80-90% dari RCM biasanya tetap sama dari tahun ke tahun. Fitur copy period memungkinkan penyalinan data dari satu tahun fiskal ke tahun berikutnya.
+
+#### Tujuan
+- Meningkatkan efisiensi dokumentasi RCM
+- Mengurangi waktu dan biaya dalam proses implementasi tahunan
+- Memastikan konsistensi kontrol dari tahun ke tahun
+- Memungkinkan fokus pada perubahan penting saja
+
+#### Langkah-langkah:
+1. **Siapkan Data untuk Copy Period**
+   - Verifikasi bahwa data RCM tahun 2023 sudah lengkap dan akurat
+   - Pastikan semua proses, risiko, dan kontrol untuk 2023 sudah terdokumentasi
+   - Pastikan tidak ada data yang belum selesai dalam tahun 2023
+
+2. **Akses Fitur Copy Period**
+   - Buka menu "ICORF" > "Utilitas" > "Salin Periode"
+   - Form wizard muncul untuk memilih opsi copy period
+
+3. **Konfigurasi Copy Period**
+   - Pilih periode sumber: Tahun Fiskal 2023
+   - Pilih periode tujuan: Tahun Fiskal 2024
+   - Pilih entitas yang akan disalin:
+     - Proses bisnis: Ya
+     - Risiko finansial: Ya
+     - Kontrol internal: Ya
+     - Temuan dan rencana tindakan: Ya
+     - Jadwal pengujian: Ya
+     - Sertifikasi (arsip): Tidak
+
+4. **Proses Copy Period**
+   - Klik tombol "Proses" untuk memulai penyalinan data
+   - Sistem akan membuat duplikat data dengan tahun fiskal yang disesuaikan
+   - Proses ini akan mempertahankan relasi antar entitas
+
+5. **Validasi Hasil Copy Period**
+   - Verifikasi bahwa semua entitas telah disalin dengan benar
+   - Periksa bahwa relasi antar entitas tetap terjaga
+   - Pastikan tahun fiskal dan tanggal telah diperbarui dengan benar
+
+6. **Update untuk Perubahan Tahun 2024**
+   - Buka entitas yang disalin untuk menyesuaikan perubahan:
+     - Update frekuensi pengujian yang berubah
+     - Hapus atau nonaktifkan kontrol yang tidak lagi relevan
+     - Tambahkan kontrol baru yang diperlukan
+   - Sesuaikan pemilik kontrol dan pelaksana pengujian
+
+7. **Gunakan sebagai Dasar untuk Tahun 2024**
+   - Gunakan data tercopy sebagai dasar untuk perencanaan tahun 2024
+   - Fokus hanya pada perubahan dan penyesuaian yang diperlukan
+   - Hemat waktu dan tenaga dalam proses dokumentasi tahunan
+
+---
+
+### 16. Implementasi Tiga Lini Pertahanan (Three Lines of Defense)
+
+#### Latar Belakang
+Perusahaan perlu mengimplementasikan model Tiga Lini Pertahanan (Three Lines of Defense) sesuai dengan praktik terbaik dan regulasi POJK 15/2024. Ini mencakup peran Lini 1 (pemilik proses), Lini 2 (risiko dan fungsi pengawas internal), dan Lini 3 (audit internal).
+
+#### Tujuan
+- Menetapkan tanggung jawab yang jelas bagi masing-masing lini
+- Meningkatkan efektivitas pengendalian internal
+- Memastikan fungsi pengawasan yang independen
+- Mewujudkan kerangka kerja kontrol internal yang komprehensif
+
+#### Langkah-langkah:
+1. **Definisikan Peran Lini 1 (Process Owners)**
+   - Lini 1 bertanggung jawab atas operasional harian dan pemilik kontrol
+   - Akses sistem: Mereka dapat mengakses dan memperbarui kontrol yang mereka miliki
+   - Fokus utama: Membangun, mengoperasikan, dan memelihara kontrol internal
+
+2. **Definisikan Peran Lini 2 (Risk & Function Owners)**
+   - Lini 2 bertanggung jawab atas pengawasan independen atas kontrol
+   - Akses sistem: Mereka dapat meninjau, mengevaluasi, dan mereview efektivitas kontrol
+   - Fokus utama: Menilai efektivitas desain dan operasi kontrol
+
+3. **Definisikan Peran Lini 3 (Internal Audit)**
+   - Lini 3 bertanggung jawab atas audit independen atas kontrol internal
+   - Akses sistem: Mereka dapat meninjau semua data kontrol dan mengirimkan temuan
+   - Fokus utama: Mengaudit efektivitas kontrol dan memberikan rekomendasi
+
+4. **Dokumentasi dalam Sistem**
+   - Dalam modul kontrol, tetapkan "Pemilik Kontrol" yang mewakili Lini 1
+   - Dalam modul temuan, tetapkan reviewer yang mewakili Lini 2 dan Lini 3
+   - Dalam CSA, tetapkan pemilik sebagai Lini 1 dan reviewer sebagai Lini 2
+
+5. **Workflow dan Persetujuan**
+   - Buat workflow yang melibatkan ketiga lini dalam proses sertifikasi
+   - Contoh: Lini 1 membuat CSA → Lini 2 mereview → Lini 3 mengaudit → Manajemen menyetujui
+
+6. **Dashboard dan Pelaporan per Lini**
+   - Gunakan filter berdasarkan peran untuk menampilkan data yang relevan
+   - Lini 1 melihat kontrol yang mereka miliki
+   - Lini 2 melihat area yang mereka supervisi
+   - Lini 3 melihat hasil audit dan temuan
+
+7. **Integrasi dengan Proses Sertifikasi**
+   - Hasil evaluasi dari ketiga lini digunakan dalam sertifikasi CEO/CFO
+   - Dashboard menunjukkan efektivitas kontrol dari perspektif masing-masing lini
+   - Laporan POJK 15/2024 mencerminkan input dari ketiga lini
+
+---
+
+## Kesimpulan Tambahan
+
+Dengan ditambahkannya skenario 12 hingga 16, kini modul ICORF memiliki dokumentasi lengkap yang mencakup semua fitur utama yang dikembangkan berdasarkan rekomendasi PwC dan persyaratan POJK No. 15 Tahun 2024:
+
+8. **Skenario 12** membahas kalkulasi materialitas dan pemetaan akun sesuai SK BUMN
+9. **Skenario 13** menunjukkan proses Control Self-Assessment untuk tiga lini pertahanan
+10. **Skenario 14** menyoroti sistem klasifikasi kekurangan otomatis dengan kuantifikasi dampak
+11. **Skenario 15** menggambarkan penggunaan fitur copy period untuk efisiensi kerja
+12. **Skenario 16** secara khusus menangani implementasi Three Lines of Defense
+
+Semua skenario ini dapat digunakan untuk pelatihan pengguna, demonstrasi sistem, atau referensi dalam implementasi ICORF di organisasi keuangan.

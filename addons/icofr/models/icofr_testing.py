@@ -85,6 +85,72 @@ class IcofrTesting(models.Model):
         string='Lampiran Bukti',
         help='File bukti yang mendukung hasil pengujian'
     )
+
+    # Fields for sampling calculator according to SK BUMN
+    control_frequency = fields.Selection([
+        ('daily', 'Harian'),
+        ('weekly', 'Mingguan'),
+        ('monthly', 'Bulanan'),
+        ('quarterly', 'Triwulanan'),
+        ('yearly', 'Tahunan')
+    ], string='Frekuensi Kontrol',
+       help='Frekuensi pelaksanaan kontrol yang diuji')
+
+    population_size = fields.Integer(
+        string='Ukuran Populasi',
+        help='Jumlah total item dalam populasi kontrol'
+    )
+
+    sample_size_calculated = fields.Integer(
+        string='Ukuran Sampel Terhitung',
+        compute='_compute_sample_size',
+        help='Ukuran sampel yang dihitung menggunakan kalkulator sampling'
+    )
+
+    sampling_method = fields.Selection([
+        ('random', 'Acak'),
+        ('systematic', 'Sistematik'),
+        ('judgmental', 'Penilaian Profesional'),
+        ('block', 'Blok')
+    ], string='Metode Sampling', default='random',
+       help='Metode sampling yang digunakan')
+
+    confidence_level = fields.Float(
+        string='Tingkat Kepercayaan (%)',
+        default=95.0,
+        help='Tingkat kepercayaan untuk sampling (dalam persen)'
+    )
+
+    monetary_impact_threshold = fields.Float(
+        string='Ambang Dampak Moneter',
+        help='Ambang batas dampak moneter untuk penilaian temuan'
+    )
+
+    testing_workspace = fields.Html(
+        string='Ruang Kerja Pengujian',
+        help='Area kerja untuk mendokumentasikan hasil pengujian'
+    )
+
+    @api.depends('control_frequency', 'population_size', 'confidence_level')
+    def _compute_sample_size(self):
+        """Compute sample size based on frequency, population size, and confidence level"""
+        for record in self:
+            # Simple calculation based on frequency and population
+            if record.control_frequency == 'daily':
+                # High frequency controls need larger samples
+                calculated_size = min(50, record.population_size or 1000)  # Cap at population size
+            elif record.control_frequency == 'weekly':
+                calculated_size = min(25, record.population_size or 1000)
+            elif record.control_frequency == 'monthly':
+                calculated_size = min(15, record.population_size or 1000)
+            elif record.control_frequency == 'quarterly':
+                calculated_size = min(9, record.population_size or 1000)
+            elif record.control_frequency == 'yearly':
+                calculated_size = min(6, record.population_size or 1000)
+            else:
+                calculated_size = 25  # Default value
+
+            record.sample_size_calculated = calculated_size
     
     recommendation = fields.Text(
         string='Rekomendasi',
@@ -100,7 +166,15 @@ class IcofrTesting(models.Model):
         string='Tanggal Selesai',
         help='Tanggal sebenarnya pengujian selesai'
     )
-    
+
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        required=True,
+        default=lambda self: self.env.company,
+        help='Perusahaan yang memiliki pengujian ini'
+    )
+
     notes = fields.Text(
         string='Catatan Tambahan',
         help='Catatan tambahan terkait pengujian'
@@ -173,8 +247,30 @@ class IcofrTesting(models.Model):
 
     @api.model
     def create(self, vals):
-        # Generate a default name based on control if not provided
-        if 'name' not in vals or not vals['name']:
-            control = self.env['icofr.control'].browse(vals.get('control_id'))
-            vals['name'] = f'Pengujian {control.name or "Kontrol"} - {fields.Date.to_string(fields.Date.today())}'
-        return super(IcofrTesting, self).create(vals)
+        # Handle both single and batch creation
+        if isinstance(vals, list):
+            # Process each item in the list
+            processed_vals = []
+            for val_dict in vals:
+                new_val_dict = val_dict.copy()
+                if 'name' not in new_val_dict or not new_val_dict.get('name'):
+                    # Generate name based on control if not provided
+                    control_id = new_val_dict.get('control_id')
+                    if isinstance(control_id, int):
+                        # Control reference is resolved, generate name
+                        control = self.env['icofr.control'].browse(control_id)
+                        new_val_dict['name'] = f'Pengujian {control.name or "Kontrol"} - {fields.Date.to_string(fields.Date.today())}'
+                    # If control_id is not resolved, skip name generation for now
+                processed_vals.append(new_val_dict)
+            return super(IcofrTesting, self).create(processed_vals)
+        else:
+            # Single record creation
+            new_vals = vals.copy()
+            if 'name' not in new_vals or not new_vals.get('name'):
+                control_id = new_vals.get('control_id')
+                if isinstance(control_id, int):
+                    # Control reference is resolved, generate name
+                    control = self.env['icofr.control'].browse(control_id)
+                    new_vals['name'] = f'Pengujian {control.name or "Kontrol"} - {fields.Date.to_string(fields.Date.today())}'
+                # If control_id is not resolved, skip name generation for now
+            return super(IcofrTesting, self).create(new_vals)

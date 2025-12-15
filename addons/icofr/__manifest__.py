@@ -1,6 +1,6 @@
 {
     "name": "ICORF (Internal Controls Over Financial Reporting)",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.0.1",
     "category": "Accounting",
     "summary": "Modul untuk mengelola Internal Controls Over Financial Reporting sesuai POJK 15/2024",
     "description": """
@@ -22,13 +22,18 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "security/ir.model.access.csv",
 
         # Views
+        "views/icofr_menu.xml",
         "views/control_views.xml",
         "views/risk_views.xml",
         "views/testing_views.xml",
         "views/certification_views.xml",
         "views/workflow_views.xml",
         "views/calendar_views.xml",
+        "views/coso_element_views.xml",
+        "views/materiality_views.xml",
         "views/pojk_report_views.xml",
+        "views/csa_views.xml",
+        "views/copy_period_wizard_views.xml",
         "views/schedule_views.xml",
         "views/finding_views.xml",
         "views/workflow_integration_views.xml",
@@ -37,7 +42,6 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/dashboard_views.xml",
         "views/reporting_views.xml",
         "views/icofr_process_views.xml",
-        "views/icofr_menu.xml",
 
         # Data
         "data/icofr_data.xml",

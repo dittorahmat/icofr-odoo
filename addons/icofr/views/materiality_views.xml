@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Materiality Calculator Views -->
+
+    <!-- Form View -->
+    <record id="view_icofr_materiality_form" model="ir.ui.view">
+        <field name="name">icofr.materiality.form</field>
+        <field name="model">icofr.materiality</field>
+        <field name="arch" type="xml">
+            <form string="Kalkulator Materialitas ICORF" create="false" edit="false">
+                <header>
+                    <button name="action_calculate_materiality" type="object" string="Hitung Ulang Materialitas" class="oe_highlight"/>
+                    <button name="action_export_materiality" type="object" string="Ekspor"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="fiscal_year"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group>
+                            <field name="materiality_basis"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Basis Perhitungan">
+                        <group>
+                            <field name="revenue_amount" widget="monetary"/>
+                            <field name="total_assets_amount" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="net_income_amount" widget="monetary"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Parameter Materialitas">
+                        <group>
+                            <field name="overall_materiality_percent"/>
+                            <field name="overall_materiality_amount" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="performance_materiality_percent"/>
+                            <field name="performance_materiality_amount" widget="monetary"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Catatan Perhitungan">
+                            <field name="notes"/>
+                        </page>
+                        <page string="Pemetaan Akun">
+                            <field name="account_mapping_ids">
+                                <list editable="top">
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter"/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View -->
+    <record id="view_icofr_materiality_tree" model="ir.ui.view">
+        <field name="name">icofr.materiality.tree</field>
+        <field name="model">icofr.materiality</field>
+        <field name="arch" type="xml">
+            <list string="Kalkulator Materialitas">
+                <field name="name"/>
+                <field name="fiscal_year"/>
+                <field name="company_id"/>
+                <field name="overall_materiality_amount" widget="monetary"/>
+                <field name="performance_materiality_amount" widget="monetary"/>
+                <field name="materiality_basis"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_icofr_materiality_search" model="ir.ui.view">
+        <field name="name">icofr.materiality.search</field>
+        <field name="model">icofr.materiality</field>
+        <field name="arch" type="xml">
+            <search string="Cari Kalkulasi Materialitas">
+                <field name="name"/>
+                <field name="fiscal_year"/>
+                <field name="company_id"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action Window -->
+    <record id="action_icofr_materiality" model="ir.actions.act_window">
+        <field name="name">Kalkulator Materialitas</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">icofr.materiality</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan kalkulasi materialitas pertama Anda!
+            </p><p>
+                Kalkulator materialitas digunakan untuk menghitung Overall Materiality dan Performance Materiality
+                berdasarkan data laporan keuangan perusahaan.
+            </p>
+        </field>
+    </record>
+
+    <!-- Materiality Menu Items -->
+    <menuitem id="menu_icofr_materiality" 
+              name="Kalkulator Materialitas"
+              parent="menu_icofr_master"
+              action="action_icofr_materiality"
+              sequence="30"/>
+
+    <!-- Account Mapping Views -->
+
+    <!-- Account Mapping Form View -->
+    <record id="view_icofr_account_mapping_form" model="ir.ui.view">
+        <field name="name">icofr.account.mapping.form</field>
+        <field name="model">icofr.account.mapping</field>
+        <field name="arch" type="xml">
+            <form string="Pemetaan Akun GL ke FSLI">
+                <header>
+                    <button name="action_validate_mapping" type="object" string="Validasi Pemetaan" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="status"/>
+                            <field name="is_significant_account" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Detail Akun">
+                            <field name="gl_account"/>
+                            <field name="account_description"/>
+                        </group>
+                        <group string="FSLI (Financial Statement Line Item)">
+                            <field name="fsl_item"/>
+                            <field name="fsl_description"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="significance_level"/>
+                    </group>
+                    <notebook>
+                        <page string="Proses Terkait">
+                            <field name="process_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Risiko Terkait">
+                            <field name="risk_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Kontrol Terkait">
+                            <field name="control_ids" widget="many2many_tags"/>
+                        </page>
+                        <page string="Catatan">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Account Mapping Tree View -->
+    <record id="view_icofr_account_mapping_tree" model="ir.ui.view">
+        <field name="name">icofr.account.mapping.tree</field>
+        <field name="model">icofr.account.mapping</field>
+        <field name="arch" type="xml">
+            <list string="Pemetaan Akun GL ke FSLI">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="gl_account"/>
+                <field name="fsl_item"/>
+                <field name="significance_level"/>
+                <field name="status"/>
+                <field name="is_significant_account"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Account Mapping Search View -->
+    <record id="view_icofr_account_mapping_search" model="ir.ui.view">
+        <field name="name">icofr.account.mapping.search</field>
+        <field name="model">icofr.account.mapping</field>
+        <field name="arch" type="xml">
+            <search string="Cari Pemetaan Akun">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="gl_account"/>
+                <field name="fsl_item"/>
+                <field name="significance_level"/>
+                <field name="status"/>
+                <field name="is_significant_account"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Account Mapping Action -->
+    <record id="action_icofr_account_mapping" model="ir.actions.act_window">
+        <field name="name">Pemetaan Akun GL ke FSLI</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">icofr.account.mapping</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan pemetaan akun pertama Anda!
+            </p><p>
+                Pemetaan akun GL ke FSLI digunakan untuk menghubungkan akun buku besar ke
+                item laporan keuangan sesuai dengan standar POJK 15/2024.
+            </p>
+        </field>
+    </record>
+
+    <!-- Account Mapping Menu -->
+    <menuitem id="menu_icofr_account_mapping"
+              name="Pemetaan Akun GL-FSLI"
+              parent="menu_icofr_master"
+              action="action_icofr_account_mapping"
+              sequence="31"/>
+
+</odoo>

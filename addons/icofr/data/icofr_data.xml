@@ -56,4 +56,36 @@
         <field name="padding">4</field>
         <field name="company_id" eval="False"/>
     </record>
+
+    <record id="seq_type_icofr_coso_element" model="ir.sequence">
+        <field name="name">Icofr COSO Element</field>
+        <field name="code">icofr.coso.element</field>
+        <field name="prefix">COSE/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_type_icofr_account_mapping" model="ir.sequence">
+        <field name="name">Icofr Account Mapping</field>
+        <field name="code">icofr.account.mapping</field>
+        <field name="prefix">ACCMAP/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_type_icofr_csa" model="ir.sequence">
+        <field name="name">Icofr CSA</field>
+        <field name="code">icofr.csa</field>
+        <field name="prefix">CSA/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
+
+    <record id="seq_type_icofr_copy_period_wizard" model="ir.sequence">
+        <field name="name">Icofr Copy Period Wizard</field>
+        <field name="code">icofr.copy.period.wizard</field>
+        <field name="prefix">COPY/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
 </odoo>

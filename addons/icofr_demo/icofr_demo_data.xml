@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo data for ICORF Demo Scenarios -->
+
+    <!-- Skenario 1: Implementasi Awal dan Pemetaan Kontrol Eksisting -->
+    <!-- Create demo users first -->
+    <record id="demo_user_finance_manager" model="res.users">
+        <field name="name">Finance Manager</field>
+        <field name="login">finance_manager</field>
+        <field name="password">FinanceManager123</field>
+        <field name="email">finance@demo.com</field>
+    </record>
+
+    <record id="demo_user_john_doe" model="res.users">
+        <field name="name">John Doe</field>
+        <field name="login">john_doe</field>
+        <field name="password">JohnDoe123</field>
+        <field name="email">john@demo.com</field>
+    </record>
+
+    <record id="demo_user_jane_smith" model="res.users">
+        <field name="name">Jane Smith</field>
+        <field name="login">jane_smith</field>
+        <field name="password">JaneSmith123</field>
+        <field name="email">jane@demo.com</field>
+    </record>
+
+    <record id="demo_user_hr_manager" model="res.users">
+        <field name="name">HR Manager</field>
+        <field name="login">hr_manager</field>
+        <field name="password">HRManager123</field>
+        <field name="email">hr@demo.com</field>
+    </record>
+
+    <record id="demo_user_it_manager" model="res.users">
+        <field name="name">IT Manager</field>
+        <field name="login">it_manager</field>
+        <field name="password">ITManager123</field>
+        <field name="email">it@demo.com</field>
+    </record>
+
+    <record id="demo_user_ceo" model="res.users">
+        <field name="name">CEO</field>
+        <field name="login">ceo</field>
+        <field name="password">CEO123</field>
+        <field name="email">ceo@demo.com</field>
+    </record>
+
+    <!-- Demo Business Processes (Skenario 1 & 2) -->
+    <record id="demo_proc_cashin_001" model="icofr.process">
+        <field name="name">Pengelolaan Kas Masuk</field>
+        <field name="code">PROC-CASHIN-001</field>
+        <field name="description">Proses pengelolaan kas masuk perusahaan</field>
+        <field name="category">operational</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">active</field>
+    </record>
+
+    <record id="demo_proc_cashout_001" model="icofr.process">
+        <field name="name">Pengelolaan Kas Keluar</field>
+        <field name="code">PROC-CASHOUT-001</field>
+        <field name="description">Proses pengelolaan kas keluar perusahaan</field>
+        <field name="category">operational</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">active</field>
+    </record>
+
+    <record id="demo_proc_payroll_001" model="icofr.process">
+        <field name="name">Penggajian</field>
+        <field name="code">PROC-PAYROLL-001</field>
+        <field name="description">Proses penggajian karyawan</field>
+        <field name="category">operational</field>
+        <field name="owner_id" ref="demo_user_hr_manager"/>
+        <field name="status">active</field>
+    </record>
+
+    <!-- Demo Risks (Skenario 1 & 2) -->
+    <record id="demo_risk_unauth_001" model="icofr.risk">
+        <field name="name">Pengeluaran tanpa otorisasi</field>
+        <field name="code">RISK-UNAUTH-001</field>
+        <field name="risk_category">operational</field>
+        <field name="risk_type">control</field>
+        <field name="description">Risiko pengeluaran yang tidak memiliki otorisasi yang memadai</field>
+        <field name="process_id" ref="demo_proc_cashout_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="likelihood">high</field>
+        <field name="impact">high</field>
+        <field name="status">identified</field>
+    </record>
+
+    <record id="demo_risk_fraud_001" model="icofr.risk">
+        <field name="name">Kecurangan dalam penerimaan kas</field>
+        <field name="code">RISK-FRAUD-001</field>
+        <field name="risk_category">operational</field>
+        <field name="risk_type">inherent</field>
+        <field name="description">Risiko kecurangan dalam proses penerimaan kas</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="likelihood">medium</field>
+        <field name="impact">high</field>
+        <field name="status">identified</field>
+    </record>
+
+    <record id="demo_risk_payroll_001" model="icofr.risk">
+        <field name="name">Pembayaran gaji tidak akurat</field>
+        <field name="code">RISK-PAY-001</field>
+        <field name="risk_category">operational</field>
+        <field name="risk_type">inherent</field>
+        <field name="description">Risiko pembayaran gaji yang tidak akurat karena kekeliruan otorisasi</field>
+        <field name="process_id" ref="demo_proc_payroll_001"/>
+        <field name="owner_id" ref="demo_user_hr_manager"/>
+        <field name="likelihood">medium</field>
+        <field name="impact">medium</field>
+        <field name="status">identified</field>
+    </record>
+
+    <!-- Demo Controls (Skenario 1 & 2) -->
+    <record id="demo_ctrl_withdraw_001" model="icofr.control">
+        <field name="name">Otorisasi Pencairan Dana</field>
+        <field name="code">CTRL-WITHDR-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Kontrol untuk menjamin semua pencairan dana memiliki otorisasi yang memadai</field>
+        <field name="process_id" ref="demo_proc_cashout_001"/>
+        <field name="risk_ids" eval="[(4, ref('demo_risk_unauth_001'))]"/>
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">active</field>
+    </record>
+
+    <record id="demo_ctrl_cash_001" model="icofr.control">
+        <field name="name">Otorisasi transaksi lebih dari Rp. 10.000.000</field>
+        <field name="code">CTRL-CASH-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Kontrol untuk menjamin semua transaksi di atas Rp. 10.000.000 memiliki otorisasi</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>
+        <field name="risk_ids" eval="[(4, ref('demo_risk_fraud_001'))]"/>
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="demo_user_john_doe"/>
+        <field name="status">active</field>
+    </record>
+
+    <!-- Demo Testing Schedule (Skenario 1 & 5) -->
+    <record id="demo_schedule_auth_001" model="icofr.testing.schedule">
+        <field name="name">Pengujian Otorisasi Dana Bulanan</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="schedule_type">recurring</field>
+        <field name="frequency">monthly</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('%Y-%m-01')"/>
+        <field name="end_date" eval="(datetime.now() + timedelta(days=365)).strftime('%Y-%m-%d')"/>
+        <field name="status">active</field>
+        <field name="description">Pengujian bulanan terhadap kontrol otorisasi pencairan dana</field>
+    </record>
+
+    <record id="demo_schedule_auth_002" model="icofr.testing.schedule">
+        <field name="name">Pengujian Otorisasi Transaksi</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="schedule_type">recurring</field>
+        <field name="frequency">weekly</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('%Y-%m-01')"/>
+        <field name="end_date" eval="(datetime.now() + timedelta(days=365)).strftime('%Y-%m-%d')"/>
+        <field name="status">active</field>
+        <field name="description">Pengujian mingguan terhadap kontrol otorisasi transaksi di atas Rp. 10.000.000</field>
+    </record>
+
+    <!-- Demo Testing Results (Skenario 2 & 6) -->
+    <record id="demo_testing_cash_001" model="icofr.testing">
+        <field name="name">Pengujian Otorisasi Transaksi T1</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="test_type">compliance</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="test_date" eval="time.strftime('%Y-%m-%d')"/>
+        <field name="status">completed</field>
+        <field name="testing_procedures">Menguji transaksi random di atas Rp. 10.000.000 untuk validasi otorisasi</field>
+        <field name="test_results">Semua transaksi &gt;Rp. 10,000,000 memiliki otorisasi yang valid</field>
+        <field name="effectiveness">effective</field>
+    </record>
+
+    <!-- Demo Findings (Skenario 4 & 7) -->
+    <record id="demo_finding_pay_001" model="icofr.finding">
+        <field name="name">Kesalahan Pembayaran Gaji</field>
+        <field name="code">FIND-PAY-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">high</field>
+        <field name="description">Beberapa pembayaran gaji tidak melalui otorisasi yang tepat</field>
+        <field name="risk_id" ref="demo_risk_payroll_001"/>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="owner_id" ref="demo_user_hr_manager"/>
+        <field name="status">closed</field>
+        <field name="impact_assessment">Kesalahan pembayaran yang signifikan dapat merugikan perusahaan dan karyawan</field>
+        <field name="root_cause">Prosedur otorisasi tidak diikuti secara konsisten</field>
+    </record>
+
+    <!-- Demo Action Plans (Skenario 4 & 7) -->
+    <record id="demo_action_plan_pay_001" model="icofr.action.plan">
+        <field name="name">Perkuat Prosedur Otorisasi Penggajian</field>
+        <field name="finding_id" ref="demo_finding_pay_001"/>
+        <field name="action_owner_id" ref="demo_user_hr_manager"/>
+        <field name="target_completion_date" eval="(datetime.now() + timedelta(days=60)).strftime('%Y-%m-%d')"/>
+        <field name="status">completed</field>
+        <field name="priority">high</field>
+        <field name="description">Perkuat prosedur otorisasi untuk pembayaran gaji</field>
+        <field name="implementation_steps">Implementasikan sistem otorisasi ganda untuk pembayaran &amp;gt;Rp. 5,000,000</field>
+    </record>
+
+    <record id="demo_action_plan_train_001" model="icofr.action.plan">
+        <field name="name">Pelatihan ulang staf terhadap kebijakan otorisasi</field>
+        <field name="finding_id" ref="demo_finding_pay_001"/>
+        <field name="action_owner_id" ref="demo_user_hr_manager"/>
+        <field name="target_completion_date" eval="(datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+        <field name="status">completed</field>
+        <field name="priority">high</field>
+        <field name="description">Pelatihan ulang staf terhadap kebijakan otorisasi</field>
+        <field name="implementation_steps">Semua staf yang menangani pengeluaran harus mengikuti pelatihan ulang</field>
+    </record>
+
+    <!-- New Control from Skenario 4 -->
+    <record id="demo_ctrl_payroll_001" model="icofr.control">
+        <field name="name">Otorisasi Ganda untuk Pembayaran Gaji &amp;gt;Rp. 5,000,000</field>
+        <field name="code">CTRL-PAY-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Kontrol tambahan untuk menjamin pembayaran gaji di atas Rp. 5.000.000 memiliki otorisasi ganda</field>
+        <field name="process_id" ref="demo_proc_payroll_001"/>
+        <field name="risk_ids" eval="[(4, ref('demo_risk_payroll_001'))]"/>
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="demo_user_hr_manager"/>
+        <field name="status">active</field>
+    </record>
+
+    <!-- Skenario 7: Demo Negative Finding -->
+    <record id="demo_finding_outcash_001" model="icofr.finding">
+        <field name="name">Kegagalan Kontrol Otorisasi Pengeluaran Kas</field>
+        <field name="code">FIND-OUTCASH-001</field>
+        <field name="finding_type">material_weakness</field>
+        <field name="severity_level">high</field>
+        <field name="description">Ditemukan 47 transaksi pengeluaran kas di atas Rp. 50,000,000 tanpa otorisasi manajer</field>
+        <field name="risk_id" ref="demo_risk_unauth_001"/>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">open</field>
+        <field name="impact_assessment">Risiko kehilangan aset yang signifikan akibat pengeluaran kas tanpa otorisasi yang memadai</field>
+        <field name="root_cause">Ketidaktahuan staf tentang kebijakan otorisasi, sistem otorisasi tidak terintegrasi dengan sistem pengeluaran, tekanan waktu dalam proses pembayaran</field>
+    </record>
+
+    <!-- Skenario 7: Action Plans for Negative Finding -->
+    <record id="demo_action_plan_train_002" model="icofr.action.plan">
+        <field name="name">Pelatihan ulang staf terhadap kebijakan otorisasi</field>
+        <field name="finding_id" ref="demo_finding_outcash_001"/>
+        <field name="action_owner_id" ref="demo_user_hr_manager"/>
+        <field name="target_completion_date" eval="(datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+        <field name="status">in_progress</field>
+        <field name="priority">high</field>
+        <field name="description">Pelatihan ulang staf terhadap kebijakan otorisasi</field>
+        <field name="implementation_steps">Semua staf yang menangani pengeluaran harus mengikuti pelatihan ulang</field>
+    </record>
+
+    <record id="demo_action_plan_integration_001" model="icofr.action.plan">
+        <field name="name">Integrasi sistem otorisasi dengan sistem pengeluaran</field>
+        <field name="finding_id" ref="demo_finding_outcash_001"/>
+        <field name="action_owner_id" ref="demo_user_it_manager"/>
+        <field name="target_completion_date" eval="(datetime.now() + timedelta(days=90)).strftime('%Y-%m-%d')"/>
+        <field name="status">in_progress</field>
+        <field name="priority">high</field>
+        <field name="description">Integrasi sistem otorisasi dengan sistem pengeluaran</field>
+        <field name="implementation_steps">Sistem harus mencegah entri transaksi tanpa otorisasi yang sesuai</field>
+    </record>
+
+    <record id="demo_action_plan_policy_001" model="icofr.action.plan">
+        <field name="name">Revisi kebijakan untuk memperjelas batas otorisasi</field>
+        <field name="finding_id" ref="demo_finding_outcash_001"/>
+        <field name="action_owner_id" ref="demo_user_finance_manager"/>
+        <field name="target_completion_date" eval="(datetime.now() + timedelta(days=45)).strftime('%Y-%m-%d')"/>
+        <field name="status">in_progress</field>
+        <field name="priority">medium</field>
+        <field name="description">Revisi kebijakan untuk memperjelas batas otorisasi</field>
+        <field name="implementation_steps">Kebijakan harus diperbarui dengan otorisasi multi-level</field>
+    </record>
+
+    <!-- Updated Control from Skenario 7 -->
+    <record id="demo_ctrl_withdraw_002" model="icofr.control">
+        <field name="name">Verifikasi sistem otorisasi</field>
+        <field name="code">CTRL-WITHDR-002</field>
+        <field name="control_type">detective</field>
+        <field name="description">Kontrol otomatis untuk verifikasi sistem otorisasi</field>
+        <field name="process_id" ref="demo_proc_cashout_001"/>
+        <field name="risk_ids" eval="[(4, ref('demo_risk_unauth_001'))]"/>
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="demo_user_it_manager"/>
+        <field name="status">active</field>
+    </record>
+
+    <!-- Skenario 3: Demo Certification -->
+    <record id="demo_certification_2024" model="icofr.certification">
+        <field name="name">Sertifikasi ICORF Q4 2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="certification_date" eval="(datetime.now() - timedelta(days=15)).strftime('%Y-%m-%d')"/>
+        <field name="certified_by_id" ref="demo_user_finance_manager"/>
+        <field name="status">approved</field>
+        <field name="scope">Semua kontrol internal atas pelaporan keuangan</field>
+        <field name="effectiveness_statement">Berdasarkan penilaian manajemen, kontrol internal atas pelaporan keuangan efektif</field>
+    </record>
+
+    <!-- Demo POJK Report -->
+    <record id="demo_pojk_report_2024" model="icofr.pojk.report">
+        <field name="name">Laporan POJK 2024</field>
+        <field name="reporting_period">2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="report_date" eval="(datetime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+        <field name="status">submitted</field>
+        <field name="prepared_by_id" ref="demo_user_finance_manager"/>
+        <field name="reviewed_by_id" ref="demo_user_finance_manager"/>
+        <field name="approved_by_id" ref="demo_user_finance_manager"/>
+        <field name="total_controls">10</field>
+        <field name="effective_controls">8</field>
+        <field name="total_risks">6</field>
+        <field name="high_risks">2</field>
+        <field name="total_findings">3</field>
+        <field name="closed_findings">2</field>
+        <field name="pending_findings">1</field>
+        <field name="effectiveness_percentage">0.8</field>
+        <field name="framework_description">Kerangka kerja kontrol internal mengikuti standar COSO 2013</field>
+        <field name="control_environment_assessment">Lingkungan kontrol secara keseluruhan memadai</field>
+        <field name="risk_assessment_practices">Praktik penilaian risiko berjalan efektif</field>
+        <field name="control_activity_effectiveness">Kegiatan kontrol berjalan efektif namun perlu perbaikan pada beberapa area</field>
+        <field name="information_communication_quality">Kualitas informasi dan komunikasi memadai</field>
+        <field name="monitoring_activity_results">Kegiatan monitoring berjalan secara periodik</field>
+        <field name="significant_deficiencies_detail">Teridentifikasi dua kelemahan signifikan yang telah ditangani</field>
+        <field name="material_weaknesses_detail">Satu kelemahan material yang sedang dalam proses perbaikan</field>
+        <field name="management_response_detail">Manajemen telah menetapkan rencana aksi untuk menangani semua temuan</field>
+        <field name="improvement_actions">Perbaikan sistem, pelatihan staf, dan penguatan kebijakan</field>
+        <field name="compliance_status">compliant</field>
+        <field name="compliance_notes">Beberapa area masih dalam proses perbaikan sesuai dengan rencana aksi yang ditetapkan</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- SCENARIO 3: Sertifikasi CEO/CFO untuk Laporan Tahunan -->
+    <!-- ========================================== -->
+
+    <record id="demo_certification_q1_2024" model="icofr.certification">
+        <field name="name">Sertifikasi ICORF Q1 2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="certification_date" eval="time.strftime('%Y-%m-%d')"/>
+        <field name="certified_by_id" ref="demo_user_ceo"/>
+        <field name="scope">All internal controls over financial reporting</field>
+        <field name="effectiveness_statement">Based on our evaluation, management concluded that internal control over financial reporting was effective as of the end of fiscal year 2024.</field>
+        <field name="status">approved</field>
+        <field name="created_by_id" ref="demo_user_ceo"/>
+        <field name="notes">Sertifikasi untuk periode Q1 2024 sesuai dengan POJK No. 15 Tahun 2024</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- SCENARIO 4: Respons terhadap Temuan Audit Internal -->
+    <!-- ========================================== -->
+
+    <record id="demo_finding_payroll_error_scenario4" model="icofr.finding">
+        <field name="name">Kesalahan Pembayaran Gaji</field>
+        <field name="code">FIND-PAY-002</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">high</field>
+        <field name="description">Beberapa pembayaran gaji tidak melalui otorisasi yang tepat</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="risk_id" ref="demo_risk_payroll_001"/>
+        <field name="owner_id" ref="demo_user_hr_manager"/>
+        <field name="status">in_progress</field>
+        <field name="impact_assessment">Potensi kerugian dari pembayaran yang salah</field>
+        <field name="root_cause">Prosedur otorisasi tidak konsisten</field>
+        <field name="recommendation">Perkuat prosedur otorisasi untuk pembayaran gaji</field>
+        <field name="created_by_id" ref="demo_user_jane_smith"/>
+        <field name="notes">Temuan dari audit internal, sedang dalam proses perbaikan</field>
+    </record>
+
+    <record id="demo_action_plan_payroll_error_scenario4" model="icofr.action.plan">
+        <field name="name">Perkuat Prosedur Otorisasi Penggajian</field>
+        <field name="finding_id" ref="demo_finding_payroll_error_scenario4"/>
+        <field name="action_owner_id" ref="demo_user_hr_manager"/>
+        <field name="target_completion_date" eval="(datetime.now() + timedelta(days=60)).strftime('%Y-%m-%d')"/>
+        <field name="status">in_progress</field>
+        <field name="priority">high</field>
+        <field name="description">Perkuat prosedur otorisasi untuk pembayaran gaji</field>
+        <field name="implementation_steps">Implementasikan sistem otorisasi ganda untuk pembayaran &amp;gt;Rp. 5,000,000</field>
+        <field name="created_by_id" ref="demo_user_jane_smith"/>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- SCENARIO 5: Kalender dan Pengelolaan Aktivitas ICORF -->
+    <!-- ========================================== -->
+
+    <record id="demo_schedule_auth_daily" model="icofr.testing.schedule">
+        <field name="name">Pengujian Otorisasi Transaksi Harian</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="schedule_type">recurring</field>
+        <field name="frequency">daily</field>
+        <field name="tester_id" ref="demo_user_john_doe"/>
+        <field name="start_date" eval="time.strftime('%Y-%m-01')"/>
+        <field name="end_date" eval="(datetime.now() + timedelta(days=365)).strftime('%Y-%m-%d')"/>
+        <field name="status">active</field>
+        <field name="description">Pengujian harian terhadap kontrol otorisasi transaksi</field>
+    </record>
+
+    <record id="demo_schedule_bank_rec_monthly" model="icofr.testing.schedule">
+        <field name="name">Pengujian Rekonsiliasi Rekening Bank Mingguan</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="schedule_type">recurring</field>
+        <field name="frequency">weekly</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('%Y-%m-01')"/>
+        <field name="end_date" eval="(datetime.now() + timedelta(days=365)).strftime('%Y-%m-%d')"/>
+        <field name="status">active</field>
+        <field name="description">Pengujian mingguan terhadap kontrol rekonsiliasi rekening bank</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- SCENARIO 6: Pelaporan dan Analisis ICORF -->
+    <!-- ========================================== -->
+
+    <record id="demo_dashboard_report_q1" model="icofr.pojk.report">
+        <field name="name">Laporan Dashboard ICORF Q1 2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="reporting_period">Q1</field>
+        <field name="report_date" eval="time.strftime('%Y-%m-%d')"/>
+        <field name="prepared_by_id" ref="demo_user_finance_manager"/>
+        <field name="status">submitted</field>
+        <field name="total_controls">10</field>
+        <field name="effective_controls">8</field>
+        <field name="total_risks">6</field>
+        <field name="high_risks">2</field>
+        <field name="total_findings">3</field>
+        <field name="closed_findings">2</field>
+        <field name="pending_findings">1</field>
+        <field name="effectiveness_percentage">0.8</field>
+        <field name="framework_description">Kerangka kerja kontrol internal mengikuti standar COSO 2013</field>
+        <field name="control_environment_assessment">Lingkungan kontrol secara keseluruhan memadai</field>
+        <field name="risk_assessment_practices">Praktik penilaian risiko berjalan efektif</field>
+        <field name="control_activity_effectiveness">Kegiatan kontrol berjalan efektif namun perlu perbaikan pada beberapa area</field>
+        <field name="information_communication_quality">Kualitas informasi dan komunikasi memadai</field>
+        <field name="monitoring_activity_results">Kegiatan monitoring berjalan secara periodik</field>
+        <field name="significant_deficiencies_detail">2 kelemahan signifikan yang sedang ditangani</field>
+        <field name="material_weaknesses_detail">0 kelemahan material ditemukan</field>
+        <field name="management_response_detail">Manajemen telah menetapkan rencana aksi untuk menangani semua temuan</field>
+        <field name="improvement_actions">Perbaikan sistem, pelatihan staf, dan penguatan kebijakan</field>
+        <field name="compliance_status">compliant</field>
+        <field name="compliance_notes">Beberapa area masih dalam proses perbaikan sesuai dengan rencana aksi yang ditetapkan</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- SCENARIO 7: Penanganan Temuan Negatif dan Proses Remediasi -->
+    <!-- ========================================== -->
+
+    <record id="demo_finding_negative_scenario7" model="icofr.finding">
+        <field name="name">Kegagalan Kontrol Otorisasi Pengeluaran Kas</field>
+        <field name="code">FIND-OUTCASH-001</field>
+        <field name="finding_type">material_weakness</field>
+        <field name="severity_level">critical</field>
+        <field name="description">Ditemukan 47 transaksi pengeluaran kas di atas Rp. 50,000,000 tanpa otorisasi manajer</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="risk_id" ref="demo_risk_unauth_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">open</field>
+        <field name="impact_assessment">Risiko kehilangan aset dan potensi fraud</field>
+        <field name="root_cause">Sistem otorisasi tidak terintegrasi dengan sistem pengeluaran</field>
+        <field name="recommendation">Integrasi sistem otorisasi dengan sistem pengeluaran</field>
+        <field name="created_by_id" ref="demo_user_jane_smith"/>
+        <field name="notes">Temuan negatif yang memerlukan tindakan korektif segera</field>
+    </record>
+
+    <record id="demo_action_plan_negative_scenario7" model="icofr.action.plan">
+        <field name="name">Integrasi Sistem Otorisasi dengan Sistem Pengeluaran</field>
+        <field name="finding_id" ref="demo_finding_negative_scenario7"/>
+        <field name="action_owner_id" ref="demo_user_it_manager"/>
+        <field name="target_completion_date" eval="(datetime.now() + timedelta(days=90)).strftime('%Y-%m-%d')"/>
+        <field name="status">planned</field>
+        <field name="priority">urgent</field>
+        <field name="description">Integrasi sistem otorisasi dengan sistem pengeluaran untuk mencegah transaksi tanpa otorisasi</field>
+        <field name="implementation_steps">Desain sistem, pengembangan modul, uji coba, implementasi</field>
+        <field name="created_by_id" ref="demo_user_jane_smith"/>
+    </record>
+
+</odoo>

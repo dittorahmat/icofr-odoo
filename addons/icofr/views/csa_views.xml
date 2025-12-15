@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- CSA (Control Self Assessment) Views -->
+
+    <!-- Form View -->
+    <record id="view_icofr_csa_form" model="ir.ui.view">
+        <field name="name">icofr.csa.form</field>
+        <field name="model">icofr.csa</field>
+        <field name="arch" type="xml">
+            <form string="Control Self-Assessment">
+                <header>
+                    <button name="action_submit_csa" type="object" string="Kirim untuk Review" invisible="status not in ['planned', 'in_progress']"/>
+                    <button name="action_approve_csa" type="object" string="Setujui CSA" invisible="status != 'reviewed'"/>
+                    <button name="action_create_workflow" type="object" string="Buat Workflow Persetujuan" invisible="workflow_id != False"/>
+                    <field name="status" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_create_workflow" type="object" string="Workflow Persetujuan" class="oe_stat_button" icon="fa-sitemap" invisible="workflow_id != False"/>
+                        <field name="workflow_id" invisible="1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="control_id"/>
+                            <field name="control_owner_id"/>
+                            <field name="assessment_period"/>
+                            <field name="assessment_date"/>
+                            <field name="assessment_type"/>
+                        </group>
+                        <group>
+                            <field name="sample_size"/>
+                            <field name="reviewer_id"/>
+                            <field name="next_csa_date"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Hasil Penilaian">
+                            <field name="compliance_result"/>
+                            <field name="effectiveness_result"/>
+                        </group>
+                        <group string="Temuan">
+                            <field name="findings"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Pertanyaan CSA">
+                            <group>
+                                <group string="Efektivitas Desain">
+                                    <field name="design_effective"/>
+                                    <field name="documentation_accurate"/>
+                                </group>
+                                <group string="Efektivitas Operasional">
+                                    <field name="operating_effective"/>
+                                    <field name="frequency_complied"/>
+                                    <field name="exception_handled"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Bukti dan Dokumentasi">
+                            <group>
+                                <field name="testing_evidence"/>
+                            </group>
+                            <group string="Lampiran Bukti">
+                                <field name="evidence_attachment_ids" widget="many2many_binary"/>
+                            </group>
+                        </page>
+                        <page string="Rekomendasi dan Tindak Lanjut">
+                            <field name="recommendations"/>
+                            <field name="approval_note"/>
+                        </page>
+                        <page string="Temuan Terkait">
+                            <field name="finding_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="status"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Catatan">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View -->
+    <record id="view_icofr_csa_tree" model="ir.ui.view">
+        <field name="name">icofr.csa.tree</field>
+        <field name="model">icofr.csa</field>
+        <field name="arch" type="xml">
+            <list string="Control Self-Assessment">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="control_id"/>
+                <field name="control_owner_id"/>
+                <field name="assessment_period"/>
+                <field name="assessment_date"/>
+                <field name="status"/>
+                <field name="effectiveness_result"/>
+                <field name="compliance_result"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_icofr_csa_search" model="ir.ui.view">
+        <field name="name">icofr.csa.search</field>
+        <field name="model">icofr.csa</field>
+        <field name="arch" type="xml">
+            <search string="Cari CSA">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="control_id"/>
+                <field name="control_owner_id"/>
+                <field name="assessment_period"/>
+                <field name="status"/>
+                <field name="assessment_type"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_icofr_csa" model="ir.actions.act_window">
+        <field name="name">Control Self-Assessment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">icofr.csa</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan CSA pertama Anda!
+            </p><p>
+                Control Self-Assessment (CSA) adalah metode untuk mengevaluasi efektivitas
+                kontrol internal secara mandiri oleh pemilik kontrol (Lini 1). CSA merupakan
+                komponen penting dari pendekatan tiga lini pertahanan.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_icofr_csa"
+              name="CSA (Control Self-Assessment)"
+              parent="menu_icofr_operational"
+              action="action_icofr_csa"
+              sequence="15"/>
+
+</odoo>

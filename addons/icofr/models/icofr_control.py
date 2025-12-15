@@ -37,11 +37,100 @@ class IcofrControl(models.Model):
     ], string='Frekuensi', required=True,
        help='Frekuensi pelaksanaan kontrol')
     
+    # Three Lines of Defense
+    control_owner_line = fields.Selection([
+        ('line_1', 'Lini 1 (Lini Bisnis)'),
+        ('line_2', 'Lini 2 (Risk/ICOFR Team)'),
+        ('line_3', 'Lini 3 (Internal Audit)')
+    ], string='Lini Pemilik Kontrol', default='line_1',
+       help='Lini pertahanan yang memiliki kontrol ini')
+
     owner_id = fields.Many2one(
         'res.users',
         string='Pemilik Kontrol',
         required=True,
         help='Pengguna yang bertanggung jawab atas kontrol ini'
+    )
+
+    # SK BUMN Attributes
+    assertion_existence = fields.Boolean(
+        string='Asersi Keberadaan',
+        default=True,
+        help='Kontrol ini menjamin keberadaan asersi'
+    )
+
+    assertion_completeness = fields.Boolean(
+        string='Asersi Kelengkapan',
+        default=True,
+        help='Kontrol ini menjamin kelengkapan asersi'
+    )
+
+    assertion_accuracy = fields.Boolean(
+        string='Asersi Akurasi',
+        default=True,
+        help='Kontrol ini menjamin akurasi asersi'
+    )
+
+    assertion_authorization = fields.Boolean(
+        string='Asersi Otorisasi',
+        default=True,
+        help='Kontrol ini menjamin otorisasi asersi'
+    )
+
+    assertion_valuation = fields.Boolean(
+        string='Asersi Valuasi',
+        default=True,
+        help='Kontrol ini menjamin valuasi asersi'
+    )
+
+    control_type_detailed = fields.Selection([
+        ('manual', 'Manual'),
+        ('semi_manual', 'Semi-Manual'),
+        ('automated', 'Otomatis'),
+        ('it_dependent', 'Berdasarkan IT')
+    ], string='Tipe Kontrol Terperinci',
+       help='Jenis kontrol yang lebih rinci')
+
+    frequency_detailed = fields.Selection([
+        ('per_transaction', 'Per Transaksi'),
+        ('daily', 'Harian'),
+        ('weekly', 'Mingguan'),
+        ('biweekly', 'Dua Mingguan'),
+        ('monthly', 'Bulanan'),
+        ('bimonthly', 'Dua Bulanan'),
+        ('quarterly', 'Triwulanan'),
+        ('semiyearly', 'Semesteran'),
+        ('yearly', 'Tahunan')
+    ], string='Frekuensi Terperinci', default='monthly',
+       help='Frekuensi pelaksanaan kontrol secara terperinci')
+
+    coso_element_id = fields.Many2one(
+        'icofr.coso.element',
+        string='Elemen COSO',
+        help='Elemen dari kerangka kerja COSO 2013'
+    )
+
+    itgc_control = fields.Boolean(
+        string='Kontrol ITGC',
+        default=False,
+        help='Apakah ini adalah kontrol ITGC (Information Technology General Controls)'
+    )
+
+    cobit_process = fields.Char(
+        string='Proses COBIT',
+        help='Proses COBIT 2019 yang terkait dengan kontrol ini'
+    )
+
+    monitoring_frequency = fields.Selection([
+        ('continuous', 'Kontinu'),
+        ('periodic', 'Periodik'),
+        ('event_driven', 'Didorong Kejadian')
+    ], string='Frekuensi Monitoring',
+       help='Frekuensi monitoring kontrol ini')
+
+    exception_handling_procedure = fields.Text(
+        string='Prosedur Penanganan Pengecualian',
+        help='Prosedur untuk menangani pengecualian dari kontrol ini'
     )
     
     description = fields.Text(
@@ -112,7 +201,15 @@ class IcofrControl(models.Model):
         ('not_tested', 'Belum Diuji')
     ], string='Rating Efektivitas', default='not_tested',
        help='Rating efektivitas kontrol berdasarkan hasil pengujian terakhir')
-    
+
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        required=True,
+        default=lambda self: self.env.company,
+        help='Perusahaan yang memiliki kontrol ini'
+    )
+
     notes = fields.Text(
         string='Catatan Tambahan',
         help='Catatan tambahan terkait kontrol'

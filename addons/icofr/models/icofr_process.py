@@ -70,6 +70,14 @@ class IcofrProcess(models.Model):
     ], string='Status', default='active',
        help='Status dari proses bisnis')
 
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        required=True,
+        default=lambda self: self.env.company,
+        help='Perusahaan yang memiliki proses ini'
+    )
+
     notes = fields.Text(
         string='Catatan Tambahan',
         help='Catatan tambahan terkait proses'

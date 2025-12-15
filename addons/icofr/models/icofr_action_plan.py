@@ -97,9 +97,24 @@ class IcofrActionPlan(models.Model):
     ], string='Prioritas', default='medium',
        help='Prioritas pelaksanaan rencana tindakan')
 
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        required=True,
+        default=lambda self: self.env.company,
+        help='Perusahaan yang memiliki rencana tindakan ini'
+    )
+
     notes = fields.Text(
         string='Catatan',
         help='Catatan tambahan terkait rencana tindakan'
+    )
+
+    created_by_id = fields.Many2one(
+        'res.users',
+        string='Dibuat Oleh',
+        default=lambda self: self.env.user,
+        help='Pengguna yang membuat rencana tindakan'
     )
 
     def action_mark_in_progress(self):
@@ -121,9 +136,29 @@ class IcofrActionPlan(models.Model):
 
     @api.model
     def create(self, vals):
-        # Jika tidak ada nama, buat berdasarkan temuan
-        if 'name' not in vals or not vals['name']:
-            finding = self.env['icofr.finding'].browse(vals.get('finding_id'))
-            if finding:
-                vals['name'] = f'Rencana Tindakan: {finding.name}'
-        return super(IcofrActionPlan, self).create(vals)
+        # Handle both single and batch creation
+        if isinstance(vals, list):
+            # Process each item in the list
+            processed_vals = []
+            for val_dict in vals:
+                new_val_dict = val_dict.copy()
+                if 'name' not in new_val_dict or not new_val_dict.get('name'):
+                    finding_id = new_val_dict.get('finding_id')
+                    if isinstance(finding_id, int):
+                        # Finding reference is resolved, generate name
+                        finding = self.env['icofr.finding'].browse(finding_id)
+                        new_val_dict['name'] = f'Rencana Tindakan: {finding.name or "Temuan"}'
+                    # If finding_id is not resolved, skip name generation for now
+                processed_vals.append(new_val_dict)
+            return super(IcofrActionPlan, self).create(processed_vals)
+        else:
+            # Single record creation
+            new_vals = vals.copy()
+            if 'name' not in new_vals or not new_vals.get('name'):
+                finding_id = new_vals.get('finding_id')
+                if isinstance(finding_id, int):
+                    # Finding reference is resolved, generate name
+                    finding = self.env['icofr.finding'].browse(finding_id)
+                    new_vals['name'] = f'Rencana Tindakan: {finding.name or "Temuan"}'
+                # If finding_id is not resolved, skip name generation for now
+            return super(IcofrActionPlan, self).create(new_vals)

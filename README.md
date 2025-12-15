@@ -46,6 +46,15 @@ The ICORF module implements the COSO 2013 Internal Control framework and complie
 - **Export Functionality**: Export data in CSV, Excel, and PDF formats
 - **Calendar Integration**: Interactive calendar for planning and scheduling activities
 - **Automated Notifications**: Reminders and alerts for upcoming activities and deadlines
+- **Materiality Calculator**: Automatic calculation of Overall Materiality and Performance Materiality following POJK No. 15 Tahun 2024 requirements
+- **Three Lines of Defense**: Complete role separation for Lini 1 (Process Owners), Lini 2 (Risk/ICOFR Team), and Lini 3 (Internal Auditors) with appropriate access controls
+- **Control Self-Assessment (CSA)**: Complete workflow for Control Self-Assessment process with evaluation results and effectiveness measurement
+- **Deficiency Classification**: Automated classification of control deficiencies based on quantitative and qualitative factors
+- **Account Mapping**: Mapping of GL accounts to Financial Statement Line Items (FSLI) for comprehensive materiality assessment
+- **Multi-company Support**: Complete company isolation for organizations with multiple entities
+- **Copy Period Functionality**: Wizard to copy data from one fiscal period to another for increased efficiency (addressing PwC recommendation that 80-90% of RCM remains same year-over-year)
+- **SK BUMN Compliance**: Complete compliance with Surat Keputusan BUMN requirements and attributes as specified in POJK 15/2024
+- **Comprehensive Demo Modules**: Separate modules for basic functionality (`icofr_demo`) and advanced features (`icofr_demo_new_features`) providing complete demonstration datasets for all scenarios
 
 ## Prerequisites
 

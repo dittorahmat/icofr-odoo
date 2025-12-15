@@ -1,0 +1,152 @@
+Tentu, ini adalah ide yang sangat bagus mengingat BUMN sekarang diwajibkan memiliki standar yang sama sesuai SK-5/DKU.MBU/11/2024.
+
+Untuk membangun aplikasi ICOFR yang compliant dengan regulasi BUMN dan praktik terbaik (seperti saran PwC), aplikasi ini harus mendukung konsep Three Lines Model dan siklus hidup (lifecycle) ICOFR secara end-to-end.
+
+Berikut adalah Functional & Technical Requirements untuk aplikasi ICOFR Anda:
+
+1. Arsitektur Modul Utama (High-Level Modules)
+
+Aplikasi sebaiknya dibagi menjadi 6 modul utama mengikuti alur di SK BUMN:
+
+Modul Admin & Master Data (Setup Organisasi & User).
+
+Modul Scoping & Planning (Perancangan).
+
+Modul Documentation (RCM & BPM Repository).
+
+Modul Assessment (CSA oleh Lini 1 & Review Lini 2).
+
+Modul Evaluation & Audit (Testing oleh Lini 3).
+
+Modul Reporting & Dashboard (Pelaporan & Defisiensi).
+
+2. Functional Requirements (Fitur Detail)
+A. Modul Admin & Governance (Setup)
+
+Role-Based Access Control (RBAC): Sistem harus memisahkan hak akses secara tegas sesuai Three Lines Model:
+
+Lini 1 (Maker/Process Owner): Input CSA, Upload Bukti.
+
+Lini 2 (Risk/ICOFR Team): Reviewer, Validator RCM, Scoping.
+
+Lini 3 (Internal Audit): Tester (TOD/TOE), Evaluator.
+
+Management (CEO/CFO): Sign-off/Approval.
+
+External Auditor: View Only access.
+
+Organizational Hierarchy: Support struktur Holding (Induk) dan Anak Perusahaan (Subsidiaries) untuk konsolidasi laporan.
+
+B. Modul Scoping (Perancangan)
+
+Materiality Calculator: Fitur untuk menghitung Overall Materiality (OM) dan Performance Materiality (PM) secara otomatis berdasarkan input laporan keuangan (Laba Rugi/Aset/Revenue).
+
+Account Mapping: Pemetaan akun GL (General Ledger) ke Laporan Keuangan (FSLI - Financial Statement Line Item).
+
+Significance Assessment:
+
+Kuantitatif: Otomatis menandai akun signifikan jika > PM.
+
+Kualitatif: Kuesioner untuk menilai risiko kualitatif (kompleksitas, rawan fraud, transaksi pihak berelasi).
+
+Process Mapping: Menghubungkan Akun Signifikan -> Lokasi -> Proses Bisnis.
+
+C. Modul Documentation (RCM & BPM)
+
+RCM Builder (Risk Control Matrix):
+
+Database risiko dan kontrol.
+
+Harus mencakup attribute wajib SK BUMN: Asersi (Existence, Completeness, dll), Tipe Kontrol (Manual/IT), Frekuensi, PIC, COSO mapping.
+
+ITGC & COBIT Mapping: Fitur khusus untuk dokumentasi kontrol IT (Access, Change Mgt, Ops) yang dipetakan ke COBIT 2019.
+
+Document Repository: Upload flow chart (BPM) dan SOP yang terhubung langsung ke RCM.
+
+Change Management Log: Audit trail untuk setiap perubahan pada RCM (siapa yang ubah, kapan, alasan).
+
+D. Modul Assessment (Implementasi - Lini 1 & 2)
+
+CSA Workflow (Control Self-Assessment):
+
+Sistem mengirim notifikasi otomatis ke Control Owner (Lini 1) untuk melakukan CSA (Semesteran/Kuartalan).
+
+Kuesioner CSA: "Apakah kontrol berjalan efektif?" (Ya/Tidak).
+
+Wajib upload bukti sampel (evidence).
+
+Lini 2 Review: Approval workflow bagi tim ICOFR untuk memvalidasi hasil CSA Lini 1.
+
+E. Modul Evaluation (Testing - Lini 3)
+
+Testing Workspace: Lembar kerja digital untuk Test of Design (TOD) dan Test of Operating Effectiveness (TOE).
+
+Sampling Logic Calculator: Fitur kalkulator sampling otomatis sesuai tabel SK BUMN (misal: kontrol harian = 25 sampel).
+
+Deficiency Recording: Jika testing gagal, auditor bisa langsung input temuan (Finding).
+
+Quantification Tool: Kolom wajib untuk menghitung Dampak Rupiah (Monetary Impact) dari temuan (Sesuai saran PwC agar dampaknya jelas).
+
+F. Modul Remediasi & Pelaporan
+
+Deficiency Evaluation Matrix: Fitur untuk mengkalkulasi skor defisiensi secara otomatis menjadi:
+
+Control Deficiency
+
+Significant Deficiency
+
+Material Weakness
+
+Remediation Tracking: Ticketing system untuk memantau status perbaikan (Open, In Progress, Closed, Overdue).
+
+Management Assertion Letter Generator: Auto-generate draft surat pernyataan manajemen (CEO/CFO) berdasarkan hasil testing.
+
+3. Non-Functional Requirements (Teknis)
+
+Audit Trail (Jejak Audit):
+
+Setiap klik, edit, upload, dan approval harus tercatat (Timestamp, User ID, IP Address, Action). Ini krusial untuk integritas data.
+
+Security:
+
+Enkripsi data (Data at rest & Data in transit).
+
+MFA (Multi-Factor Authentication) saat login.
+
+Scalability:
+
+Mampu menangani ribuan control points jika digunakan oleh Holding BUMN besar.
+
+Integration (API):
+
+Kemampuan integrasi dengan ERP (SAP/Oracle) untuk menarik data saldo akun secara otomatis (mengurangi input manual).
+
+User Experience (UX):
+
+Tampilan Dashboard yang visual (Grafik kepatuhan, Pie chart defisiensi).
+
+Mobile friendly untuk approval sederhana.
+
+4. Workflow Aplikasi (User Journey)
+
+Admin setting periode tahun buku & user.
+
+Lini 2 input data keuangan -> Sistem hitung Materialitas.
+
+Lini 2 tentukan akun & proses signifikan (Scoping).
+
+Lini 1 & Lini 2 menyusun RCM (Library Kontrol).
+
+Lini 1 melakukan CSA berkala & upload bukti.
+
+Lini 3 melakukan Testing (Sampling) atas hasil CSA.
+
+Jika ada temuan -> Masuk Modul Remediasi -> Lini 1 perbaiki -> Lini 3 re-test.
+
+System generate Laporan Final -> Klasifikasi Defisiensi (CD/SD/MW).
+
+CEO/CFO review dashboard & sign-off digital.
+
+Saran Tambahan untuk Developer:
+
+Pastikan aplikasi menyediakan fitur "Copy Period". Biasanya RCM tahun ini 80-90% sama dengan tahun lalu. Fitur untuk menyalin data dari tahun sebelumnya ke tahun berjalan akan sangat menghemat waktu user (user-friendly).
