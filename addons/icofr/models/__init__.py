@@ -18,3 +18,10 @@ from . import icofr_materiality
 from . import icofr_account_mapping
 from . import icofr_csa
 from . import icofr_copy_period_wizard
+from . import icofr_account_mapping_upload_wizard
+from . import icofr_qualitative_assessment
+from . import icofr_dashboard
+from . import icofr_bpm_document
+from . import icofr_cobit_element
+from . import icofr_notification_scheduler
+from . import icofr_line_reports

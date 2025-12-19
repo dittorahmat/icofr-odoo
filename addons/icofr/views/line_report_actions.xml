@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions for Line-Specific Reports -->
+
+    <!-- Action for Line 1 Report -->
+    <record id="action_icofr_line1_report" model="ir.actions.act_window">
+        <field name="name">Laporan Lini 1 - Pemilik Proses</field>
+        <field name="res_model">icofr.line1.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat laporan Lini 1 pertama Anda!
+            </p>
+            <p>
+                Laporan ini menyediakan ringkasan untuk Lini 1 (Pemilik Proses)
+                termasuk kontrol, CSA, dan temuan yang menjadi tanggung jawab mereka.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action for Line 2 Report -->
+    <record id="action_icofr_line2_report" model="ir.actions.act_window">
+        <field name="name">Laporan Lini 2 - Tim Risiko/ICOFR</field>
+        <field name="res_model">icofr.line2.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat laporan Lini 2 pertama Anda!
+            </p>
+            <p>
+                Laporan ini menyediakan ringkasan untuk Lini 2 (Tim Risiko/ICOFR)
+                termasuk review kontrol, CSA, dan temuan yang mereka kelola.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action for Line 3 Report -->
+    <record id="action_icofr_line3_report" model="ir.actions.act_window">
+        <field name="name">Laporan Lini 3 - Audit Internal</field>
+        <field name="res_model">icofr.line3.report</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat laporan Lini 3 pertama Anda!
+            </p>
+            <p>
+                Laporan ini menyediakan ringkasan untuk Lini 3 (Audit Internal)
+                termasuk pengujian, temuan, dan rekomendasi audit yang mereka hasilkan.
+            </p>
+        </field>
+    </record>
+</odoo>

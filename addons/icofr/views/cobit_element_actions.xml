@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action untuk Elemen COBIT 2019 -->
+    <record id="action_icofr_cobit_element" model="ir.actions.act_window">
+        <field name="name">Elemen COBIT 2019</field>
+        <field name="res_model">icofr.cobit.element</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat elemen COBIT 2019 pertama Anda!
+            </p>
+            <p>
+                Elemen-elemen ini merupakan bagian dari framework COBIT 2019
+                yang digunakan untuk mengelola tata kelola dan manajemen TI.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action untuk Penjadwal Notifikasi Otomatis -->
+    <record id="action_icofr_notification_scheduler" model="ir.actions.act_window">
+        <field name="name">Penjadwal Notifikasi Otomatis</field>
+        <field name="res_model">icofr.notification.scheduler</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat penjadwal notifikasi otomatis pertama Anda!
+            </p>
+            <p>
+                Fitur ini memungkinkan Anda membuat penjadwalan untuk notifikasi otomatis
+                terkait CSA dan pengujian kontrol.
+            </p>
+        </field>
+    </record>
+</odoo>

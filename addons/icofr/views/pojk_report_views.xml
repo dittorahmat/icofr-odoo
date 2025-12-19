@@ -42,7 +42,9 @@
                             <field name="fiscal_year"/>
                             <field name="report_date"/>
                             <field name="company_id"/>
+                            <field name="is_consolidated"/>
                         </group>
+
                         <group>
                             <field name="prepared_by_id"/>
                             <field name="reviewed_by_id"/>

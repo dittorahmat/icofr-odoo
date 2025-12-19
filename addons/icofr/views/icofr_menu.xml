@@ -4,7 +4,8 @@
     <menuitem id="menu_icofr_root"
               name="ICORF"
               sequence="10"
-              web_icon="icofr,static/description/icon.png"/>
+              groups="base.group_user"/>
+
 
     <!-- Submenu untuk Master Data -->
     <menuitem id="menu_icofr_master"
@@ -12,15 +13,90 @@
               sequence="15"
               parent="menu_icofr_root"/>
 
+    <!-- Menu untuk Elemen COBIT 2019 -->
+    <menuitem id="menu_icofr_cobit_element"
+              name="Elemen COBIT 2019"
+              sequence="45"
+              parent="menu_icofr_master"
+              action="action_icofr_cobit_element"
+              groups="group_icofr_line_2"/>
+
+    <!-- Menu untuk Penjadwal Notifikasi Otomatis -->
+    <menuitem id="menu_icofr_notification_scheduler"
+              name="Penjadwal Notifikasi"
+              sequence="50"
+              parent="menu_icofr_master"
+              action="action_icofr_notification_scheduler"
+              groups="group_icofr_line_2"/>
+
+    <!-- Menu untuk Dokumen BPM dan SOP -->
+    <menuitem id="menu_icofr_bpm_document"
+              name="Dokumen BPM/SOP"
+              sequence="55"
+              parent="menu_icofr_master"
+              action="action_icofr_bpm_document"
+              groups="group_icofr_line_2"/>
+
+    <!-- Menu untuk Asesmen Risiko Kualitatif -->
+    <menuitem id="menu_icofr_qualitative_assessment"
+              name="Asesmen Kualitatif"
+              sequence="60"
+              parent="menu_icofr_master"
+              action="action_icofr_qualitative_assessment"
+              groups="group_icofr_line_2"/>
+
     <!-- Submenu untuk Pengujian dan Pelaporan -->
     <menuitem id="menu_icofr_operational"
               name="Operasional"
               sequence="20"
               parent="menu_icofr_root"/>
 
+    <!-- Submenu untuk Utility/Alat Bantu -->
+    <menuitem id="menu_icofr_utilities"
+              name="Utilitas"
+              sequence="25"
+              parent="menu_icofr_root"/>
+
+    <!-- Menu untuk Upload Excel Pemetaan Akun -->
+    <menuitem id="menu_icofr_account_mapping_upload_wizard"
+              name="Upload Excel Pemetaan Akun"
+              sequence="10"
+              parent="menu_icofr_utilities"
+              action="action_icofr_account_mapping_upload_wizard"/>
+
     <!-- Submenu untuk Sertifikasi dan Approval -->
     <menuitem id="menu_icofr_compliance"
               name="Kepatuhan"
               sequence="25"
               parent="menu_icofr_root"/>
+
+    <!-- Submenu untuk Laporan Khusus per Lini Pertahanan -->
+    <menuitem id="menu_icofr_line_reports"
+              name="Laporan Lini Pertahanan"
+              sequence="30"
+              parent="menu_icofr_root"/>
+
+    <!-- Laporan Lini 1 (Process Owner) -->
+    <menuitem id="menu_icofr_line1_report"
+              name="Laporan Lini 1"
+              sequence="10"
+              parent="menu_icofr_line_reports"
+              action="action_icofr_line1_report"
+              groups="group_icofr_line_1"/>
+
+    <!-- Laporan Lini 2 (Risk/ICOFR Team) -->
+    <menuitem id="menu_icofr_line2_report"
+              name="Laporan Lini 2"
+              sequence="20"
+              parent="menu_icofr_line_reports"
+              action="action_icofr_line2_report"
+              groups="group_icofr_line_2"/>
+
+    <!-- Laporan Lini 3 (Internal Audit) -->
+    <menuitem id="menu_icofr_line3_report"
+              name="Laporan Lini 3"
+              sequence="30"
+              parent="menu_icofr_line_reports"
+              action="action_icofr_line3_report"
+              groups="group_icofr_line_3"/>
 </odoo>

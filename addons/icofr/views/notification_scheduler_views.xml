@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Notification Scheduler Views -->
+
+    <!-- Form View -->
+    <record id="view_icofr_notification_scheduler_form" model="ir.ui.view">
+        <field name="name">icofr.notification.scheduler.form</field>
+        <field name="model">icofr.notification.scheduler</field>
+        <field name="arch" type="xml">
+            <form string="Penjadwal Notifikasi Otomatis">
+                <header>
+                    <button name="action_manual_execute" type="object" string="Eksekusi Manual" class="oe_highlight"/>
+                    <field name="active" widget="boolean_toggle"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="notification_type"/>
+                            <field name="model_ref"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                            <field name="next_run_date"/>
+                            <field name="last_run_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Penjadwalan">
+                            <group>
+                                <field name="interval_number"/>
+                                <field name="interval_type"/>
+                            </group>
+                        </page>
+                        <page string="Penerima">
+                            <field name="recipient_ids" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                        </page>
+                        <page string="Pesan">
+                            <field name="notification_message" placeholder="Pesan notifikasi akan dibuat otomatis berdasarkan jenis notifikasi..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View -->
+    <record id="view_icofr_notification_scheduler_list" model="ir.ui.view">
+        <field name="name">icofr.notification.scheduler.list</field>
+        <field name="model">icofr.notification.scheduler</field>
+        <field name="arch" type="xml">
+            <list string="Penjadwal Notifikasi Otomatis">
+                <field name="name"/>
+                <field name="notification_type"/>
+                <field name="model_ref"/>
+                <field name="next_run_date"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_icofr_notification_scheduler_search" model="ir.ui.view">
+        <field name="name">icofr.notification.scheduler.search</field>
+        <field name="model">icofr.notification.scheduler</field>
+        <field name="arch" type="xml">
+            <search string="Cari Penjadwal Notifikasi">
+                <field name="name"/>
+                <field name="notification_type"/>
+                <field name="active"/>
+                <field name="next_run_date"/>
+            </search>
+        </field>
+    </record>
+</odoo>

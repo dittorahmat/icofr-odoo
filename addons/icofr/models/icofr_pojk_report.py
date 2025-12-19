@@ -222,10 +222,22 @@ class IcofrPojkReport(models.Model):
         help='Jumlah total kekurangan kontrol'
     )
 
-    @api.depends('finding_ids', 'finding_ids.severity_level', 'finding_ids.deficiency_classified')
+    is_consolidated = fields.Boolean(
+        string='Konsolidasi?',
+        default=False,
+        help='Centang jika laporan mencakup data dari anak perusahaan'
+    )
+
+    @api.depends('finding_ids', 'finding_ids.severity_level', 'finding_ids.deficiency_classified', 'is_consolidated', 'company_id')
     def _compute_deficiency_counts(self):
         for record in self:
-            findings = record.finding_ids
+            domain = []
+            if record.is_consolidated:
+                domain = [('company_id', 'child_of', record.company_id.id)]
+            else:
+                domain = [('company_id', '=', record.company_id.id)]
+            
+            findings = self.env['icofr.finding'].search(domain)
             # Count based on deficiency classification which is more accurate for POJK reporting
             record.material_weakness_count = len(findings.filtered(
                 lambda f: f.deficiency_classified == 'material_weakness'
@@ -236,6 +248,7 @@ class IcofrPojkReport(models.Model):
             record.control_deficiency_count = len(findings.filtered(
                 lambda f: f.deficiency_classified == 'control_deficiency'
             ))
+
 
     attachment_ids = fields.Many2many(
         'ir.attachment',

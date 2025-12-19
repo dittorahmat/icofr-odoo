@@ -77,6 +77,10 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 - Mendukung kalkulasi materialitas yang lebih akurat
 - Terintegrasi dengan kalkulator materialitas
 - Dapat diakses melalui menu "ICORF" > "Master Data" > "Pemetaan Akun GL-FSLI"
+- Mengambil data akun langsung dari sistem akuntansi Odoo
+- Menyediakan opsi pengisian manual jika tidak menggunakan akun dari sistem Odoo
+- Fitur upload Excel untuk import data pemetaan akun secara massal
+- Termasuk template Excel untuk kemudahan pengisian data
 
 ### 15. Penilaian Mandiri Kontrol (CSA)
 - Workflow lengkap untuk Control Self-Assessment
@@ -94,15 +98,41 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 ### 17. Dukungan Multi-Perusahaan
 - Isolasi data perusahaan untuk organisasi dengan entitas ganda
 - Semua modul utama mendukung multi-perusahaan
+
+### 18. Kuantifikasi Dampak Defisiensi
+- Fitur kuantifikasi dampak moneter dari temuan kontrol
+- Perhitungan otomatis klasifikasi defisiensi (Kekurangan Kontrol, Kekurangan Signifikan, Kelemahan Material)
+- Berdasarkan kriteria kuantitatif dan kualitatif
+
+### 19. Pemetaan COBIT 2019
+- Integrasi dengan kerangka kerja COBIT 2019 untuk kontrol TI
+- Pemetaan kontrol ke elemen COBIT
+- Klasifikasi kontrol TI berdasarkan area risiko dan tipe aset TI
+
+### 20. Penjadwal Notifikasi Otomatis
+- Sistem penjadwalan notifikasi untuk CSA dan pengujian kontrol
+- Pengingat otomatis sebelum tenggat waktu
+- Pemberitahuan multi-channel untuk stakeholder terkait
+
+### 21. Sinkronisasi Data Keuangan dari ERP
+- Sinkronisasi otomatis data keuangan dari modul akuntansi Odoo
+- Penarikan data pendapatan, aset, dan laba bersih secara otomatis
+- Pembaruan saldo akun untuk keperluan scoping
+
+### 22. Laporan Khusus per Lini Pertahanan
+- Laporan khusus untuk Lini 1 (Pemilik Proses)
+- Laporan khusus untuk Lini 2 (Tim Risiko/ICOFR)
+- Laporan khusus untuk Lini 3 (Audit Internal)
+- Penyajian metrik dan KPI berdasarkan peran masing-masing lini
 - Akses data terbatas pada perusahaan yang sesuai dengan pengguna
 
-### 18. Fitur Copy Period
+### 23. Fitur Copy Period
 - Wizard untuk menyalin data dari satu periode fiskal ke periode lain
 - Meningkatkan efisiensi karena 80-90% RCM biasanya tetap sama dari tahun ke tahun
 - Tersedia di menu "ICORF" > "Utilitas" > "Salin Periode"
 - Opsi untuk memilih entitas yang akan disalin (proses, kontrol, risiko, temuan, rencana aksi, dll.)
 
-### 19. Kepatuhan SK BUMN
+### 24. Kepatuhan SK BUMN
 - Implementasi lengkap atribut dan proses sesuai Surat Keputusan BUMN
 - Cocok dengan persyaratan POJK 15/2024
 - Melengkapi framework COSO 2013 dengan elemen khusus Indonesia
@@ -205,7 +235,7 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 1. Buka menu "ICORF" > "Master Data" > "Pemetaan Akun GL-FSLI"
 2. Buat pemetaan baru dengan mengisi:
    - Nama pemetaan
-   - Kode GL (General Ledger)
+   - Akun GL (dari sistem Odoo) atau Akun GL Manual (jika tidak menggunakan akun dari sistem)
    - Deskripsi GL
    - FSLI (Financial Statement Line Item)
    - Deskripsi FSLI
@@ -213,7 +243,19 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 3. Hubungkan dengan perhitungan materialitas yang relevan
 4. Gunakan untuk mendukung analisis materialitas
 
-### 15. Melakukan Penilaian Mandiri Kontrol (CSA)
+### 15. Menggunakan Fitur Upload Excel untuk Pemetaan Akun
+1. Buka menu "ICORF" > "Master Data" > "Kalkulator Materialitas"
+2. Pilih entri kalkulasi materialitas yang relevan
+3. Di header form, klik tombol "Upload Excel Pemetaan Akun"
+4. Siapkan file Excel dengan format yang benar:
+   - Kolom wajib: Kode Akun GL, Nama Akun GL, FSLI, Deskripsi FSLI, Tingkat Signifikansi
+   - Jika Kode Akun GL sesuai dengan akun di sistem Odoo, sistem akan memetakan otomatis
+   - Jika tidak ditemukan di sistem Odoo, sistem akan menggunakan field manual
+5. Pilih file Excel dan klik "Upload & Import"
+6. Sistem akan menampilkan hasil import, termasuk jumlah record baru dan diperbarui
+7. Periksa hasil import dan pastikan data sudah sesuai
+
+### 16. Melakukan Penilaian Mandiri Kontrol (CSA)
 1. Buka menu "ICORF" > "Operasional" > "Penilaian Mandiri Kontrol"
 2. Buat CSA baru dengan memilih:
    - Kontrol yang dinilai
@@ -228,14 +270,14 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 4. Submit CSA untuk review oleh Lini 2
 5. Gunakan fitur temuan terkait untuk mencatat temuan dari CSA
 
-### 16. Menggunakan Fitur Copy Period
+### 17. Menggunakan Fitur Copy Period
 1. Buka menu "ICORF" > "Utilitas" > "Salin Periode"
 2. Pilih periode sumber dan tujuan
 3. Pilih entitas yang ingin disalin (proses, kontrol, risiko, temuan, dll.)
 4. Klik "Proses" untuk memulai penyalinan data
 5. Tinjau hasil copy period dan lakukan validasi
 
-### 17. Melihat Klasifikasi Kekurangan
+### 18. Melihat Klasifikasi Kekurangan
 1. Buka menu "ICORF" > "Kepatuhan" > "Temuan ICORF"
 2. Perhatikan kolom "Klasifikasi Kekurangan" yang secara otomatis menentukan:
    - Kekurangan Kontrol (Control Deficiency)

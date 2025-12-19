@@ -264,10 +264,10 @@ class IcofrCsa(models.Model):
             'initiator_id': self.env.user.id,
             'status': 'active'
         })
-        
+
         # Link workflow to CSA record
         self.write({'workflow_id': workflow.id})
-        
+
         return {
             'type': 'ir.actions.act_window',
             'name': 'Workflow CSA',
@@ -276,3 +276,22 @@ class IcofrCsa(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+
+    def action_schedule_csa_notification(self):
+        """Method to create scheduled notification for CSA assignments"""
+        for csa in self:
+            # Create a scheduler for the CSA assignment notification
+            scheduler = self.env['icofr.notification.scheduler'].create({
+                'name': f'Notifikasi CSA: {csa.name}',
+                'notification_type': 'csa_assignment',
+                'model_ref': f'icofr.csa,{csa.id}',
+                'recipient_ids': [(4, csa.control_owner_id.id)] if csa.control_owner_id else [],
+                'next_run_date': fields.Datetime.now(),
+                'active': True,
+                'interval_number': 1,
+                'interval_type': 'days',
+                'company_id': csa.company_id.id,
+            })
+
+            # Add notification message
+            scheduler._generate_notification_content()

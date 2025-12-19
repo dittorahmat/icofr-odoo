@@ -29,7 +29,7 @@ D:\development\icofr-odoo/
 
 ## Recent Updates
 
-### ICORF Demo Module (@addons/icofr_demo and @addons/icofr_demo_new_features)
+### ICORF Demo Module (@addons/icofr_demo and <!-- Import failed: addons/icofr_demo_new_features) - ENOENT: no such file or directory, access 'D:\development\icofr-odoo\addons\icofr_demo_new_features' -->
 I have created additional modules called `icofr_demo` and `icofr_demo_new_features` that provide sample data for demonstrating the ICORF system. The modules include:
 
 - **Demo data for all 7 scenarios** from the ICORF Demo Scenarios documentation
@@ -87,7 +87,12 @@ addons/icofr/
 │   ├── icofr_materiality.py # Materiality calculator
 │   ├── icofr_account_mapping.py # Account mapping
 │   ├── icofr_csa.py         # Control Self Assessment
-│   └── icofr_action_plan.py # Action plan management
+│   ├── icofr_action_plan.py # Action plan management
+│   ├── icofr_cobit_element.py # COBIT element model
+│   ├── icofr_notification_scheduler.py # Notification scheduler model
+│   ├── icofr_line_reports.py # Line-specific report models
+│   ├── icofr_qualitative_assessment.py # Qualitative assessment model
+│   └── icofr_bpm_document.py # BPM document model
 ├── reports/                # Report templates and logic
 ├── security/               # Access rights and security
 ├── static/                 # Static assets (CSS, JS)
@@ -188,6 +193,10 @@ Based on the `tasks\tasks-icofr-system.md` file, all major development tasks hav
 - **Account Mapping**: Mapping of GL accounts to FSLI (Financial Statement Line Items)
 - **Control Self-Assessment (CSA)**: Self-assessment process following Three Lines of Defense
 - **Deficiency Classification**: Automatic classification of deficiencies based on quantitative and qualitative factors
+- **COBIT 2019 Integration**: Framework for IT governance and management
+- **Line-specific Reporting**: Dedicated reports for each line of defense
+- **Qualitative Assessment**: Tools for evaluating non-financial risks
+- **BPM/SOP Repository**: Document management for business processes
 
 ### Technical Architecture
 - Built for **Odoo Community Edition 19**
@@ -278,7 +287,7 @@ One critical issue was discovered during installation testing where certain mode
 
 1. **`icofr.testing.schedule` model** - Fixed in `icofr_schedule.py` to properly handle batch creation
 2. **`icofr.testing` model** - Fixed in `icofr_testing.py` to properly handle batch creation
-3. **`icofr.finding` model** - Fixed in `icofr_finding.py` to properly handle batch creation
+3. **`icofr.finding` model** - Fixed in `icofr_findin.py` to properly handle batch creation
 4. **`icofr.action.plan` model** - Fixed in `icofr_action_plan.py` to properly handle batch creation
 5. **`icofr.certification` model** - Fixed in `icofr_certification.py` to properly handle batch creation
 6. **`icofr.pojk.report` model** - Fixed in `icofr_pojk_report.py` to properly handle batch creation
@@ -487,3 +496,67 @@ Updated the icofr_demo_new_features module to ensure all records use valid field
 - Ensured all demo records are compatible with the model definitions
 
 With all these fixes, the ICORF module should now install and run without errors.
+
+## Integration with Accounting System Enhancement
+
+Recent enhancement adds integration with Odoo's accounting system:
+- Changed `gl_account` field in `icofr.account.mapping` model from Char to Many2one relationship with `account.account` model
+- Added fallback field `gl_account_manual` for manual entry when not using accounts from system
+- Added `gl_account_description` field to automatically show description from selected GL account
+- Implemented onchange method to auto-populate FSLI and description based on selected GL account
+- Updated UI views to reflect new field structure and relationships
+- Added appropriate validation constraints
+- Updated demo data to use new field structure
+- Added upload Excel functionality for bulk account mapping import
+
+This enhancement allows users to:
+- Select GL accounts directly from the company's chart of accounts
+- Have FSLI and descriptions auto-populated based on selected GL account
+- Use manual entry option if GL account is not in the system
+- Import account mapping data in bulk via Excel upload
+
+The implementation follows all current requirements as defined in the POJK 15/2024 compliance and SK BUMN standards.
+
+## Integration with Accounting System Enhancement - RESOLVED
+
+The integration feature with Odoo's accounting system has now been successfully implemented with the following approach:
+
+- Field `gl_account` maintained as Char field for compatibility and required functionality
+- Additional Many2one field `account_gl_id` added to provide integration feature with accounting system
+- Field `gl_account_description` as Char field for account description
+- Implemented onchange method to automatically populate description when `account_gl_id` is selected
+- Updated UI views to reflect new field structure and relationships
+- Updated demo data to work with the new field structure
+- Added upload Excel functionality for bulk account mapping import
+- Added menu item under "ICORF" > "Utilitas" for easy access to Excel upload feature
+
+This implementation successfully addresses the NOT NULL constraint issue by using a hybrid approach that maintains compatibility while providing the desired functionality.
+
+## Key Features Successfully Implemented
+
+1. **Account Integration**: Select GL accounts directly from the company's chart of accounts
+2. **Auto-population**: Have FSLI and descriptions auto-populated based on selected GL account
+3. **Manual Entry Option**: Use manual entry option if GL account is not in the system
+4. **Bulk Import**: Import account mapping data in bulk via Excel upload
+5. **Easy Access**: Convenient menu item for accessing the upload Excel functionality
+6. **UI Integration**: Button in materiality form for quick access to the upload wizard
+7. **Compatibility**: Maintains backward compatibility while adding new features
+
+The implementation follows all current requirements as defined in the POJK 15/2024 compliance and SK BUMN standards.
+
+## Final Enhancements
+
+The latest enhancements include:
+
+1. **COBIT 2019 Framework Integration**: Complete implementation of COBIT 2019 elements with ITGC mapping
+2. **Automated Notification System**: Scheduling system for CSA and testing deadline reminders
+3. **Line-Specific Reporting**: Dedicated reports for each line of defense (Lini 1, 2, and 3)
+4. **Qualitative Risk Assessment**: Structured questionnaires for evaluating non-financial risks
+5. **BPM/SOP Document Repository**: Centralized management of business process documentation
+6. **Financial Data ERP Integration**: Automatic pulling of financial data from Odoo's accounting modules
+7. **Enhanced Menu Structure**: All models now have properly linked menu items for easy access
+8. **Multi-Entity Consolidation**: Support for consolidated reporting across subsidiaries
+9. **Improved Security**: Granular access controls for each line of defense
+10. **Mobile Responsiveness**: Enhanced CSS for mobile compatibility
+
+The ICORF module now fully supports the PwC recommendations and provides a comprehensive solution for internal controls over financial reporting compliance in Indonesia following POJK 15/2024 requirements.

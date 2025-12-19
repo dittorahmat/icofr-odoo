@@ -27,6 +27,7 @@
         <field name="name">Pemetaan Pendapatan 2024</field>
         <field name="code">AM-REV-001</field>
         <field name="gl_account">41001</field>
+        <field name="gl_account_description">Pendapatan Operasional</field>
         <field name="fsl_item">Pendapatan</field>
         <field name="account_description">Pendapatan Operasional</field>
         <field name="fsl_description">Pendapatan dari operasional utama</field>
@@ -39,6 +40,7 @@
         <field name="name">Pemetaan Biaya Pokok 2024</field>
         <field name="code">AM-COGS-001</field>
         <field name="gl_account">51001</field>
+        <field name="gl_account_description">Biaya Pokok Penjualan</field>
         <field name="fsl_item">Biaya Pokok</field>
         <field name="account_description">Biaya Pokok Penjualan</field>
         <field name="fsl_description">Biaya pokok dari operasional utama</field>
@@ -51,6 +53,7 @@
         <field name="name">Pemetaan Aset Tetap 2024</field>
         <field name="code">AM-FIX-001</field>
         <field name="gl_account">12001</field>
+        <field name="gl_account_description">Aset Tetap Berwujud</field>
         <field name="fsl_item">Aset Tetap</field>
         <field name="account_description">Aset Tetap Berwujud</field>
         <field name="fsl_description">Aset tetap yang digunakan dalam operasional</field>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- View untuk Wizard Upload Excel Pemetaan Akun -->
+    <record id="view_icofr_account_mapping_upload_wizard" model="ir.ui.view">
+        <field name="name">icofr.account.mapping.upload.wizard.form</field>
+        <field name="model">icofr.account.mapping.upload.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Upload Excel Pemetaan Akun ke FSLI">
+                <group>
+                    <group>
+                        <field name="materiality_id" invisible="context.get('active_model') == 'icofr.materiality'"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="excel_file" filename="file_name" widget="binary"/>
+                        <label for="excel_file" string="Format file: XLS atau XLSX"/>
+                    </group>
+                </group>
+                <group col="2">
+                    <button name="action_download_template" type="object" string="Unduh Template" class="btn-secondary"/>
+                    <button name="action_upload_excel" type="object" string="Upload &amp; Import" class="btn-primary" icon="fa-upload"/>
+                </group>
+                <field name="import_result" nolabel="1" invisible="import_result == False"/>
+                <footer>
+                    <button string="Tutup" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action untuk membuka wizard -->
+    <record id="action_icofr_account_mapping_upload_wizard" model="ir.actions.act_window">
+        <field name="name">Upload Excel Pemetaan Akun</field>
+        <field name="res_model">icofr.account.mapping.upload.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

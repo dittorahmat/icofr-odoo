@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class IcofrAccountMapping(models.Model):
@@ -26,10 +27,18 @@ class IcofrAccountMapping(models.Model):
         help='Urutan tampilan dalam daftar'
     )
 
+    # Field Char untuk kode akun GL sebagai field utama untuk kompatibilitas
     gl_account = fields.Char(
-        string='Akun GL (General Ledger)',
+        string='Kode Akun GL (General Ledger)',
         required=True,
-        help='Kode atau nama akun General Ledger'
+        help='Kode akun General Ledger dari sistem atau manual'
+    )
+
+    # Field Many2one sebagai fitur tambahan untuk integrasi ke sistem akuntansi Odoo
+    account_gl_id = fields.Many2one(
+        'account.account',
+        string='Akun GL dari Sistem',
+        help='Pilih akun dari sistem akuntansi Odoo (opsional, untuk integrasi)'
     )
 
     fsl_item = fields.Char(
@@ -43,6 +52,12 @@ class IcofrAccountMapping(models.Model):
         help='Deskripsi lengkap dari akun GL'
     )
 
+    # Fallback field untuk deskripsi akun GL jika tidak menggunakan akun dari sistem
+    gl_account_description = fields.Char(
+        string='Deskripsi Akun GL',
+        help='Deskripsi akun GL yang digunakan'
+    )
+
     fsl_description = fields.Text(
         string='Deskripsi FSLI',
         help='Deskripsi dari item laporan keuangan'
@@ -53,7 +68,29 @@ class IcofrAccountMapping(models.Model):
         ('moderate', 'Moderat'),
         ('minor', 'Minor')
     ], string='Tingkat Signifikansi', default='moderate',
+       compute='_compute_significance_level', store=True,
+       readonly=False,
        help='Tingkat signifikansi dari akun terhadap laporan keuangan')
+
+    account_balance = fields.Float(
+        string='Saldo Akun',
+        help='Saldo terakhir dari akun ini untuk keperluan scoping'
+    )
+
+    has_fraud_risk = fields.Boolean(
+        string='Risiko Fraud?',
+        help='Apakah akun ini memiliki risiko kecurangan yang tinggi?'
+    )
+
+    is_complex_transaction = fields.Boolean(
+        string='Transaksi Kompleks?',
+        help='Apakah transaksi pada akun ini memiliki kompleksitas yang tinggi?'
+    )
+
+    has_related_party = fields.Boolean(
+        string='Pihak Berelasi?',
+        help='Apakah akun ini melibatkan transaksi dengan pihak berelasi?'
+    )
 
     materiality_id = fields.Many2one(
         'icofr.materiality',
@@ -106,10 +143,34 @@ class IcofrAccountMapping(models.Model):
         help='Menandakan apakah ini adalah akun yang signifikan'
     )
 
-    @api.depends('significance_level')
+    @api.depends('account_balance', 'materiality_id.performance_materiality_amount', 'significance_level')
     def _compute_significant_account(self):
         for record in self:
-            record.is_significant_account = record.significance_level == 'significant'
+            is_significant = record.significance_level == 'significant'
+            if record.materiality_id and record.account_balance > record.materiality_id.performance_materiality_amount:
+                is_significant = True
+            record.is_significant_account = is_significant
+
+    @api.depends('account_balance', 'materiality_id.performance_materiality_amount', 
+                 'has_fraud_risk', 'is_complex_transaction', 'has_related_party')
+    def _compute_significance_level(self):
+        for record in self:
+            # Quantitative limit
+            pm = record.materiality_id.performance_materiality_amount if record.materiality_id else 0
+            
+            # Qualitative factors
+            qualitative_trigger = record.has_fraud_risk or record.is_complex_transaction or record.has_related_party
+            
+            if pm > 0 and record.account_balance > pm:
+                record.significance_level = 'significant'
+            elif qualitative_trigger:
+                record.significance_level = 'significant'
+            elif pm > 0 and record.account_balance > (pm * 0.5):
+                record.significance_level = 'moderate'
+            else:
+                record.significance_level = 'minor'
+
+
 
     @api.model
     def create(self, vals):
@@ -124,7 +185,9 @@ class IcofrAccountMapping(models.Model):
                     new_val_dict['code'] = self.env['ir.sequence'].next_by_code('icofr.account.mapping') or '/'
                 # Generate name if not provided
                 if 'name' not in new_val_dict or not new_val_dict.get('name'):
-                    new_val_dict['name'] = f'{new_val_dict.get("gl_account", "Akun")} -> {new_val_dict.get("fsl_item", "FSLI")}'
+                    gl_account_name = new_val_dict.get('gl_account', 'Akun')
+                    fsl_item = new_val_dict.get('fsl_item', 'FSLI')
+                    new_val_dict['name'] = f'{gl_account_name} -> {fsl_item}'
                 processed_vals.append(new_val_dict)
             return super(IcofrAccountMapping, self).create(processed_vals)
         else:
@@ -135,8 +198,12 @@ class IcofrAccountMapping(models.Model):
                 new_vals['code'] = self.env['ir.sequence'].next_by_code('icofr.account.mapping') or '/'
             # Generate name if not provided
             if 'name' not in new_vals or not new_vals.get('name'):
-                new_vals['name'] = f'{new_vals.get("gl_account", "Akun")} -> {new_vals.get("fsl_item", "FSLI")}'
+                gl_account_name = new_vals.get('gl_account', 'Akun')
+                fsl_item = new_vals.get('fsl_item', 'FSLI')
+                new_vals['name'] = f'{gl_account_name} -> {fsl_item}'
             return super(IcofrAccountMapping, self).create(new_vals)
+
+    # Validasi akan diterapkan melalui required=True pada field gl_account
 
     def action_validate_mapping(self):
         """Method untuk memvalidasi pemetaan akun GL ke FSLI"""
@@ -148,8 +215,9 @@ class IcofrAccountMapping(models.Model):
         # Basic validation checks
         validation_messages = []
 
+        # Check if gl_account is filled (it's required anyway)
         if not self.gl_account:
-            validation_messages.append("Akun GL belum diisi")
+            validation_messages.append("Kode Akun GL belum diisi")
         if not self.fsl_item:
             validation_messages.append("FSLI belum diisi")
         if not self.materiality_id:
@@ -179,3 +247,45 @@ class IcofrAccountMapping(models.Model):
                 'type': 'success',
             }
         }
+
+    @api.onchange('account_gl_id')
+    def _onchange_account_gl_id(self):
+        """Isi field deskripsi otomatis berdasarkan akun GL dari sistem yang dipilih"""
+        if self.account_gl_id:
+            # Ambil informasi dari akun GL terpilih
+            account = self.account_gl_id
+
+            # Jika deskripsi akun belum diisi, ambil dari akun GL
+            if not self.gl_account_description:
+                self.gl_account_description = account.name or account.code
+
+            # Update kode akun GL sesuai dengan akun yang dipilih dari sistem
+            if not self.gl_account:
+                self.gl_account = account.code
+
+    def action_refresh_balance(self):
+        """Ambil saldo terbaru dari akun GL di sistem"""
+        self.ensure_one()
+        if self.account_gl_id:
+            # Gunakan context untuk membatasi rentang tanggal jika ada tahun fiskal
+            ctx = {}
+            if self.materiality_id and self.materiality_id.fiscal_year:
+                ctx.update({
+                    'date_from': f"{self.materiality_id.fiscal_year}-01-01",
+                    'date_to': f"{self.materiality_id.fiscal_year}-12-31"
+                })
+            
+            # Ambil saldo dari field 'balance' standar Odoo (computed)
+            account = self.account_gl_id.with_context(**ctx)
+            self.account_balance = abs(account.balance)
+            
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Sinkronisasi Berhasil',
+                    'message': f'Saldo untuk akun {self.gl_account} telah diperbarui.',
+                    'type': 'success',
+                }
+            }
+        return False

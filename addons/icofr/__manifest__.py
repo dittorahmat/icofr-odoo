@@ -18,8 +18,17 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "web",
     ],
     "data": [
+        # Data
+        "data/icofr_data.xml",
+
         # Security
+        "security/security.xml",
         "security/ir.model.access.csv",
+
+        # Actions
+        "views/line_report_actions.xml",
+        "views/cobit_element_actions.xml",
+        "views/additional_actions.xml",
 
         # Views
         "views/icofr_menu.xml",
@@ -42,9 +51,13 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/dashboard_views.xml",
         "views/reporting_views.xml",
         "views/icofr_process_views.xml",
+        "views/account_mapping_upload_wizard_views.xml",
+        "views/cobit_element_views.xml",
+        "views/notification_scheduler_views.xml",
+        "views/line_report_views.xml",
 
         # Data
-        "data/icofr_data.xml",
+        "data/account_mapping_upload_data.xml",
     ],
     "installable": True,
     "auto_install": False,

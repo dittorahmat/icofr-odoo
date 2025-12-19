@@ -63,6 +63,13 @@ class IcofrProcess(models.Model):
         help='Risiko-risiko yang terkait dengan proses ini'
     )
 
+    bpm_document_ids = fields.One2many(
+        'icofr.bpm.document',
+        'process_id',
+        string='Dokumen BPM/SOP'
+    )
+
+
     status = fields.Selection([
         ('active', 'Aktif'),
         ('inactive', 'Tidak Aktif'),

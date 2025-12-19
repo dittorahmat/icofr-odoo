@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class IcofrMateriality(models.Model):
@@ -164,4 +165,117 @@ class IcofrMateriality(models.Model):
             'type': 'ir.actions.act_url',
             'url': f'/web/binary/download_document/{self.id}/icofr.materiality/export',
             'target': 'new',
+        }
+
+
+    def action_update_balances_from_erp(self):
+        """Memperbarui seluruh saldo akun yang terpetakan dari sistem ERP Odoo"""
+        self.ensure_one()
+        for mapping in self.account_mapping_ids:
+            if mapping.account_gl_id:
+                mapping.action_refresh_balance()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Sinkronisasi ERP Selesai',
+                'message': 'Seluruh saldo akun yang terhubung telah diperbarui.',
+                'type': 'success',
+            }
+        }
+
+    def action_pull_financial_data_from_erp(self):
+        """Pull financial data (revenue, assets, net income) from Odoo's accounting modules"""
+        self.ensure_one()
+
+        # Create context with fiscal year range
+        fiscal_year = self.fiscal_year
+        if not fiscal_year or len(str(fiscal_year)) != 4:
+            raise ValidationError(f"Format tahun fiskal '{fiscal_year}' tidak valid. Format yang benar: YYYY")
+
+        date_from = f"{fiscal_year}-01-01"
+        date_to = f"{fiscal_year}-12-31"
+
+        # Context untuk periode fiskal
+        ctx = dict(self.env.context)
+        ctx.update({
+            'date_from': date_from,
+            'date_to': date_to,
+            'company_id': self.company_id.id,
+            'all_entries': True,
+            'state': 'posted',  # hanya entri yang sudah diposting
+            'fiscalyear': True,
+        })
+
+        # Pull revenue (pendapatan) - typically from income accounts
+        revenue_accounts = self.env['account.account'].with_context(ctx).search([
+            ('user_type_id.type', '=', 'other'),
+            ('user_type_id.name', 'like', '%Revenue%'),
+            ('company_id', '=', self.company_id.id)
+        ])
+
+        total_revenue = sum(acc.balance for acc in revenue_accounts)
+
+        # Pull assets (aset) - from asset accounts
+        asset_accounts = self.env['account.account'].with_context(ctx).search([
+            ('user_type_id.type', '=', 'other'),
+            ('user_type_id.name', 'like', '%Asset%'),
+            ('company_id', '=', self.company_id.id)
+        ])
+
+        total_assets = sum(acc.balance for acc in asset_accounts)
+
+        # Alternative approach: Get specific account types
+        # For assets, we might need to be more specific
+        account_types = self.env['account.account.type'].search([
+            ('name', 'in', ['Assets', 'Asset', 'Aktiva'])
+        ])
+        specific_asset_accounts = self.env['account.account'].with_context(ctx).search([
+            ('user_type_id', 'in', account_types.ids),
+            ('company_id', '=', self.company_id.id)
+        ])
+
+        specific_assets = sum(acc.balance for acc in specific_asset_accounts)
+
+        # Pull net income - from profit and loss accounts or Retained Earnings
+        # Calculate by getting income and expense accounts
+        income_accounts = self.env['account.account'].with_context(ctx).search([
+            ('user_type_id.type', '=', 'other'),
+            ('user_type_id.name', 'in', ['Income', 'Revenue', 'Pendapatan']),
+            ('company_id', '=', self.company_id.id)
+        ])
+
+        expense_accounts = self.env['account.account'].with_context(ctx).search([
+            ('user_type_id.type', '=', 'other'),
+            ('user_type_id.name', 'in', ['Expense', 'Beban', 'Biaya']),
+            ('company_id', '=', self.company_id.id)
+        ])
+
+        total_income = sum(acc.balance for acc in income_accounts if acc.balance > 0) + sum(abs(acc.balance) for acc in income_accounts if acc.balance < 0)
+        total_expenses = sum(acc.balance for acc in expense_accounts if acc.balance > 0) + sum(abs(acc.balance) for acc in expense_accounts if acc.balance < 0)
+
+        net_income = total_income - total_expenses
+
+        # Update the materiality record with pulled data
+        self.write({
+            'revenue_amount': abs(total_revenue),
+            'total_assets_amount': abs(total_assets + specific_assets),  # Use the higher accuracy
+            'net_income_amount': abs(net_income)
+        })
+
+        # Recalculate materiality amounts
+        self._compute_materiality_amounts()
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Data Keuangan Terambil',
+                'message': f'Data keuangan berhasil diambil dari sistem ERP:\n'
+                          f'Pendapatan: {total_revenue:,.2f}\n'
+                          f'Aset: {total_assets + specific_assets:,.2f}\n'
+                          f'Laba Bersih: {net_income:,.2f}',
+                'type': 'success',
+            }
         }

@@ -1,0 +1,21 @@
+Format Template Excel untuk Upload Pemetaan Akun GL ke FSLI:
+
+Kolom yang harus ada di file Excel:
+1. Kode Akun GL (wajib) - Kode akun dari sistem Odoo atau kode akun manual
+2. Nama Akun GL (opsional) - Nama akun GL untuk referensi
+3. FSLI (wajib) - Financial Statement Line Item
+4. Deskripsi FSLI (opsional) - Deskripsi dari item laporan keuangan
+5. Tingkat Signifikansi (wajib) - Pilihan: 'significant', 'moderate', 'minor'
+
+Contoh isi file Excel:
+
+| Kode Akun GL | Nama Akun GL | FSLI           | Deskripsi FSLI       | Tingkat Signifikansi |
+|--------------|--------------|----------------|----------------------|----------------------|
+| 11000        | Kas di Tangan| Kas dan Bank   | Akun kas perusahaan  | significant          |
+| 12000        | Piutang Usaha| Piutang Usaha  | Piutang dari pelanggan| moderate             |
+
+Catatan:
+- Jika Kode Akun GL sesuai dengan akun yang ada di sistem Odoo, maka sistem akan menghubungkannya secara otomatis
+- Jika Kode Akun GL tidak ditemukan di sistem Odoo, maka akan digunakan sebagai akun manual
+- Kolom wajib harus diisi, kolom opsional bisa dikosongkan
+- File Excel harus berformat .xls atau .xlsx

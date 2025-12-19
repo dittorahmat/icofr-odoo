@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Laporan Khusus Lini 1 - Pemilik Proses -->
+
+    <!-- Form View for Line 1 Report -->
+    <record id="view_icofr_line1_report_form" model="ir.ui.view">
+        <field name="name">icofr.line1.report.form</field>
+        <field name="model">icofr.line1.report</field>
+        <field name="arch" type="xml">
+            <form string="Laporan Lini 1 - Pemilik Proses">
+                <header>
+                    <button name="action_refresh_data" type="object" string="Refresh Data" class="oe_highlight"/>
+                    <button name="print_report" type="object" string="Cetak Laporan" class="btn btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="report_date"/>
+                            <field name="period_start"/>
+                            <field name="period_end"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Metrik Utama">
+                            <group>
+                                <group>
+                                    <field name="line_1_controls_count"/>
+                                    <field name="effective_controls"/>
+                                    <field name="ineffective_controls"/>
+                                </group>
+                                <group>
+                                    <field name="csa_completed"/>
+                                    <field name="csa_pending"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Temuan">
+                            <group>
+                                <group>
+                                    <field name="findings_assigned"/>
+                                    <field name="findings_resolved"/>
+                                    <field name="findings_overdue"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Ringkasan">
+                            <field name="summary"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View for Line 1 Report -->
+    <record id="view_icofr_line1_report_list" model="ir.ui.view">
+        <field name="name">icofr.line1.report.list</field>
+        <field name="model">icofr.line1.report</field>
+        <field name="arch" type="xml">
+            <list string="Laporan Lini 1">
+                <field name="name"/>
+                <field name="report_date"/>
+                <field name="user_id"/>
+                <field name="line_1_controls_count"/>
+                <field name="effective_controls"/>
+                <field name="findings_resolved"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View for Line 1 Report -->
+    <record id="view_icofr_line1_report_search" model="ir.ui.view">
+        <field name="name">icofr.line1.report.search</field>
+        <field name="model">icofr.line1.report</field>
+        <field name="arch" type="xml">
+            <search string="Cari Laporan Lini 1">
+                <field name="name"/>
+                <field name="report_date"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Laporan Khusus Lini 2 - Tim Risiko/ICOFR -->
+
+    <!-- Form View for Line 2 Report -->
+    <record id="view_icofr_line2_report_form" model="ir.ui.view">
+        <field name="name">icofr.line2.report.form</field>
+        <field name="model">icofr.line2.report</field>
+        <field name="arch" type="xml">
+            <form string="Laporan Lini 2 - Tim Risiko/ICOFR">
+                <header>
+                    <button name="action_refresh_data" type="object" string="Refresh Data" class="oe_highlight"/>
+                    <button name="print_report" type="object" string="Cetak Laporan" class="btn btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="report_date"/>
+                            <field name="period_start"/>
+                            <field name="period_end"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Metrik Utama">
+                            <group>
+                                <group>
+                                    <field name="controls_reviewed"/>
+                                    <field name="csa_reviewed"/>
+                                </group>
+                                <group>
+                                    <field name="testing_performed"/>
+                                    <field name="findings_identified"/>
+                                    <field name="findings_validated"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Defisiensi">
+                            <group>
+                                <group>
+                                    <field name="material_weakness_identified"/>
+                                    <field name="significant_deficiency_identified"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Ringkasan">
+                            <field name="summary"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View for Line 2 Report -->
+    <record id="view_icofr_line2_report_list" model="ir.ui.view">
+        <field name="name">icofr.line2.report.list</field>
+        <field name="model">icofr.line2.report</field>
+        <field name="arch" type="xml">
+            <list string="Laporan Lini 2">
+                <field name="name"/>
+                <field name="report_date"/>
+                <field name="user_id"/>
+                <field name="csa_reviewed"/>
+                <field name="findings_identified"/>
+                <field name="testing_performed"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View for Line 2 Report -->
+    <record id="view_icofr_line2_report_search" model="ir.ui.view">
+        <field name="name">icofr.line2.report.search</field>
+        <field name="model">icofr.line2.report</field>
+        <field name="arch" type="xml">
+            <search string="Cari Laporan Lini 2">
+                <field name="name"/>
+                <field name="report_date"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Laporan Khusus Lini 3 - Audit Internal -->
+
+    <!-- Form View for Line 3 Report -->
+    <record id="view_icofr_line3_report_form" model="ir.ui.view">
+        <field name="name">icofr.line3.report.form</field>
+        <field name="model">icofr.line3.report</field>
+        <field name="arch" type="xml">
+            <form string="Laporan Lini 3 - Audit Internal">
+                <header>
+                    <button name="action_refresh_data" type="object" string="Refresh Data" class="oe_highlight"/>
+                    <button name="print_report" type="object" string="Cetak Laporan" class="btn btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="report_date"/>
+                            <field name="period_start"/>
+                            <field name="period_end"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Metrik Utama">
+                            <group>
+                                <group>
+                                    <field name="testing_performed"/>
+                                    <field name="findings_identified"/>
+                                </group>
+                                <group>
+                                    <field name="high_risk_controls_tested"/>
+                                    <field name="compliance_testing"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Defisiensi">
+                            <group>
+                                <group>
+                                    <field name="material_weakness_identified"/>
+                                    <field name="significant_deficiency_identified"/>
+                                    <field name="audit_recommendations"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Ringkasan">
+                            <field name="summary"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View for Line 3 Report -->
+    <record id="view_icofr_line3_report_list" model="ir.ui.view">
+        <field name="name">icofr.line3.report.list</field>
+        <field name="model">icofr.line3.report</field>
+        <field name="arch" type="xml">
+            <list string="Laporan Lini 3">
+                <field name="name"/>
+                <field name="report_date"/>
+                <field name="user_id"/>
+                <field name="testing_performed"/>
+                <field name="findings_identified"/>
+                <field name="material_weakness_identified"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View for Line 3 Report -->
+    <record id="view_icofr_line3_report_search" model="ir.ui.view">
+        <field name="name">icofr.line3.report.search</field>
+        <field name="model">icofr.line3.report</field>
+        <field name="arch" type="xml">
+            <search string="Cari Laporan Lini 3">
+                <field name="name"/>
+                <field name="report_date"/>
+                <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </search>
+        </field>
+    </record>
+</odoo>

@@ -3,7 +3,7 @@
     <!-- Dashboard Views -->
     <record id="view_icofr_dashboard_form" model="ir.ui.view">
         <field name="name">icofr.dashboard.form</field>
-        <field name="model">icofr.control</field>
+        <field name="model">icofr.dashboard</field>
         <field name="arch" type="xml">
             <form string="Dashboard ICORF" create="false" edit="false">
                 <header>
@@ -67,12 +67,24 @@
                     <div class="row mt16">
                         <div class="col-6">
                             <group string="Ringkasan Kontrol">
-                                <field name="control_summary_ids" readonly="1" nolabel="1"/>
+                                <field name="control_summary_ids" readonly="1" nolabel="1">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                        <field name="status"/>
+                                    </list>
+                                </field>
                             </group>
                         </div>
                         <div class="col-6">
                             <group string="Risiko Terbaru">
-                                <field name="recent_risks_ids" readonly="1" nolabel="1"/>
+                                <field name="recent_risks_ids" readonly="1" nolabel="1">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                        <field name="risk_level"/>
+                                    </list>
+                                </field>
                             </group>
                         </div>
                     </div>
@@ -80,7 +92,13 @@
                     <div class="row mt16">
                         <div class="col-12">
                             <group string="Pengujian Terjadwal">
-                                <field name="scheduled_testing_ids" readonly="1" nolabel="1"/>
+                                <field name="scheduled_testing_ids" readonly="1" nolabel="1">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="test_date"/>
+                                        <field name="status"/>
+                                    </list>
+                                </field>
                             </group>
                         </div>
                     </div>
@@ -88,7 +106,13 @@
                     <div class="row mt16">
                         <div class="col-12">
                             <group string="Status Kontrol Terbaru">
-                                <field name="recent_control_status_ids" readonly="1" nolabel="1"/>
+                                <field name="recent_control_status_ids" readonly="1" nolabel="1">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="effectiveness_rating"/>
+                                        <field name="last_tested_date"/>
+                                    </list>
+                                </field>
                             </group>
                         </div>
                     </div>
@@ -100,9 +124,11 @@
     <!-- Action untuk Dashboard -->
     <record id="action_icofr_dashboard" model="ir.actions.act_window">
         <field name="name">Dashboard ICORF</field>
-        <field name="res_model">icofr.control</field>
+        <field name="res_model">icofr.dashboard</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="view_icofr_dashboard_form"/>
+        <field name="res_id" ref="icofr.icofr_dashboard_main"/>
+
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Dashboard ICORF

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Dashboard Singleton -->
+    <record id="icofr_dashboard_main" model="icofr.dashboard">
+        <field name="name">Main Dashboard</field>
+    </record>
+
     <!-- Data awal untuk sequence -->
     <record id="seq_type_icofr_control" model="ir.sequence">
         <field name="name">Icofr Control</field>

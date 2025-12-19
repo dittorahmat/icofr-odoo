@@ -31,10 +31,24 @@
                         <page string="Risiko Terkait">
                             <field name="risk_ids" readonly="1"/>
                         </page>
+                        <page string="Dokumen BPM/SOP">
+                            <field name="bpm_document_ids">
+                                <list editable="top">
+                                    <field name="name"/>
+                                    <field name="document_type"/>
+                                    <field name="version"/>
+                                    <field name="document_file" filename="file_name"/>
+                                    <field name="file_name" invisible="1"/>
+                                    <field name="status"/>
+                                    <field name="description"/>
+                                </list>
+                            </field>
+                        </page>
                         <page string="Catatan">
                             <field name="notes"/>
                         </page>
                     </notebook>
+
                 </sheet>
             </form>
         </field>

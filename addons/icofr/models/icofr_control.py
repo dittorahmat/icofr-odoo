@@ -116,9 +116,10 @@ class IcofrControl(models.Model):
         help='Apakah ini adalah kontrol ITGC (Information Technology General Controls)'
     )
 
-    cobit_process = fields.Char(
-        string='Proses COBIT',
-        help='Proses COBIT 2019 yang terkait dengan kontrol ini'
+    cobit_element_id = fields.Many2one(
+        'icofr.cobit.element',
+        string='Elemen COBIT',
+        help='Elemen COBIT 2019 yang terkait dengan kontrol ini'
     )
 
     monitoring_frequency = fields.Selection([
@@ -223,46 +224,6 @@ class IcofrControl(models.Model):
                 raise ValidationError("Kode kontrol harus unik!")
     
     # Dashboard-related methods and fields
-    def action_refresh_dashboard(self):
-        """Method untuk merefresh data dashboard"""
-        # Dalam implementasi sebenarnya, ini akan memperbarui data yang tampil di dashboard
-        # Untuk sekarang, hanya akan menampilkan notifikasi bahwa data telah diperbarui
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': 'Dashboard Diperbarui',
-                'message': 'Data dashboard telah diperbarui',
-                'type': 'success',
-                'sticky': False
-            }
-        }
-
-    def action_export_dashboard_data(self):
-        """Method untuk mengekspor data dashboard"""
-        # Buka wizard ekspor dengan parameter untuk data dashboard
-        wizard = self.env['icofr.export.wizard'].create({
-            'export_type': 'all',
-            'export_format': 'xlsx',
-            'date_from': False,
-            'date_to': False,
-            'include_attachments': False,
-            'include_inactive': False
-        })
-
-        return {
-            'name': 'Ekspor Data Dashboard',
-            'type': 'ir.actions.act_window',
-            'res_model': 'icofr.export.wizard',
-            'res_id': wizard.id,
-            'view_mode': 'form',
-            'target': 'new',  # Buka di modal window
-            'context': {
-                'default_export_type': 'all',
-                'default_export_format': 'xlsx'
-            }
-        }
-
     def action_export_controls(self):
         """Method untuk membuka wizard ekspor kontrol"""
         self.ensure_one()
@@ -288,77 +249,6 @@ class IcofrControl(models.Model):
                 'default_export_format': 'xlsx'
             }
         }
-
-    # Field-field untuk dashboard
-    total_controls = fields.Integer(
-        string='Total Kontrol',
-        compute='_compute_dashboard_metrics',
-        help='Jumlah total kontrol'
-    )
-
-    effective_controls = fields.Integer(
-        string='Kontrol Efektif',
-        compute='_compute_dashboard_metrics',
-        help='Jumlah kontrol yang efektif'
-    )
-
-    total_risks = fields.Integer(
-        string='Total Risiko',
-        compute='_compute_dashboard_metrics',
-        help='Jumlah total risiko'
-    )
-
-    high_risks = fields.Integer(
-        string='Risiko Tinggi',
-        compute='_compute_dashboard_metrics',
-        help='Jumlah risiko dengan tingkat tinggi'
-    )
-
-    compliance_rate = fields.Float(
-        string='Rata-rata Kepatuhan',
-        compute='_compute_dashboard_metrics',
-        help='Rata-rata tingkat kepatuhan kontrol'
-    )
-
-    upcoming_tests_count = fields.Integer(
-        string='Pengujian Mendatang',
-        compute='_compute_dashboard_metrics',
-        help='Jumlah pengujian yang terjadwal dalam 30 hari ke depan'
-    )
-
-    overdue_tests_count = fields.Integer(
-        string='Pengujian Terlambat',
-        compute='_compute_dashboard_metrics',
-        help='Jumlah pengujian yang terlambat'
-    )
-
-    control_summary_ids = fields.One2many(
-        'icofr.control',
-        compute='_compute_dashboard_metrics',
-        string='Ringkasan Kontrol',
-        help='Ringkasan kontrol terbaru'
-    )
-
-    recent_risks_ids = fields.One2many(
-        'icofr.risk',
-        compute='_compute_dashboard_metrics',
-        string='Risiko Terbaru',
-        help='Risiko-risiko terbaru'
-    )
-
-    scheduled_testing_ids = fields.One2many(
-        'icofr.testing',
-        compute='_compute_dashboard_metrics',
-        string='Pengujian Terjadwal',
-        help='Pengujian-pengujian terjadwal'
-    )
-
-    recent_control_status_ids = fields.One2many(
-        'icofr.control',
-        compute='_compute_dashboard_metrics',
-        string='Status Kontrol Terbaru',
-        help='Status kontrol terbaru'
-    )
 
     # Reporting-related methods and fields
     def action_generate_report(self):
@@ -464,54 +354,6 @@ class IcofrControl(models.Model):
             # Isi field-field berdasarkan parameter
             record.report_summary_ids = all_controls[:10]  # Ambil 10 kontrol pertama
             record.report_detail_ids = report_tests[:10]  # Ambil 10 pengujian terkait
-
-    def _compute_dashboard_metrics(self):
-        """Menghitung berbagai metrik untuk dashboard"""
-        for record in self:
-            # Hitung total kontrol
-            all_controls = self.env['icofr.control'].search([])
-            record.total_controls = len(all_controls)
-
-            # Hitung kontrol efektif
-            effective_controls = all_controls.filtered(lambda c: c.effectiveness_rating == 'high')
-            record.effective_controls = len(effective_controls)
-
-            # Hitung total risiko
-            all_risks = self.env['icofr.risk'].search([])
-            record.total_risks = len(all_risks)
-
-            # Hitung risiko tinggi
-            high_risks = all_risks.filtered(lambda r: r.risk_level == 'very_high' or r.risk_level == 'high')
-            record.high_risks = len(high_risks)
-
-            # Hitung rata-rata kepatuhan
-            if record.total_controls > 0:
-                effective_count = record.effective_controls
-                record.compliance_rate = (effective_count / record.total_controls) * 100
-            else:
-                record.compliance_rate = 0
-
-            # Hitung pengujian mendatang (dalam 30 hari)
-            today = fields.Date.today()
-            next_30_days = today + timedelta(days=30)
-            upcoming_tests = self.env['icofr.testing'].search([
-                ('test_date', '>=', today),
-                ('test_date', '<=', next_30_days)
-            ])
-            record.upcoming_tests_count = len(upcoming_tests)
-
-            # Hitung pengujian terlambat
-            overdue_tests = self.env['icofr.testing'].search([
-                ('test_date', '<', today),
-                ('status', '!=', 'completed')
-            ])
-            record.overdue_tests_count = len(overdue_tests)
-
-            # Set other computed fields to empty or appropriate values
-            record.control_summary_ids = all_controls[:5]  # Ambil 5 kontrol pertama
-            record.recent_risks_ids = all_risks[:5]  # Ambil 5 risiko pertama
-            record.scheduled_testing_ids = upcoming_tests[:5]  # Ambil 5 pengujian terjadwal
-            record.recent_control_status_ids = all_controls[:5]  # Ambil 5 kontrol pertama
 
     @api.model
     def create(self, vals):

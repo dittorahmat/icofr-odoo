@@ -13,6 +13,9 @@ Implement and configure the ICORF (Internal Controls Over Financial Reporting) m
 - Created a separate demo module (icorfr_demo) with comprehensive sample data for all 7 scenarios
 - Fixed multiple issues in the demo data: field name errors, XML syntax issues, invalid selection values, missing required fields
 - Fixed view type issues where 'tree' tags were used instead of 'list' tags in Odoo views
+- Added integration with Odoo's accounting system to allow mapping GL accounts to FSLI
+- Implemented upload Excel functionality for importing account mappings in bulk
+- Added additional menu item for accessing the upload Excel wizard
 
 ## Recent Actions
 - Identified and fixed missing "Proses Bisnis" menu item by adding proper access rights to security/ir.model.access.csv
@@ -48,6 +51,20 @@ Implement and configure the ICORF (Internal Controls Over Financial Reporting) m
 - Implemented Copy Period feature with wizard to copy data between fiscal periods for improved efficiency
 - Enhanced all models with additional SK BUMN compliance attributes and automatic classification features
 - Fixed view type errors in multiple views where 'tree' tags were replaced with 'list' tags for compatibility with Odoo's view registry
+- Added proper integration with Odoo's accounting system for mapping GL accounts to FSLI
+- Implemented comprehensive upload Excel functionality for account mapping import
+- Added button for accessing Excel upload wizard in both materiality form and additional menu item
+- Restructured account mapping model to maintain compatibility while providing new integration features
+- Added "Upload Excel Pemetaan Akun" menu item under "ICORF" > "Utilitas" for easy access to the feature
+- Implemented **External Auditor Role** with read-only access across all ICORF models
+- Developed **Structured Qualitative Questionnaire** for account significance assessment with automated scoring
+- Added **Consolidation Logic** to POJK reports for aggregating data from child companies
+- Established **BPM/SOP Document Repository** in Process model for structured documentation management
+- Implemented **ERP Automatic Balance Integration** for real-time account data synchronization
+- Fixed **Menu Visibility & Security Groups** ensuring proper access for Administrators and External Auditors
+- **Refactored Dashboard Architecture**: Moved dashboard metrics to a dedicated `icofr.dashboard` singleton model to fix `ValidationError` on refresh.
+- **Fixed Stuck Module Upgrades**: Resolved multiple `ParseError` and `KeyError` issues during the upgrade process by fixing manifest syntax and ensuring correct record loading order.
+
 
 ## Current Plan
 - [DONE] Fix missing menu items by adding proper access rights and menu definitions
@@ -93,25 +110,43 @@ Implement and configure the ICORF (Internal Controls Over Financial Reporting) m
 - [DONE] Fix invalid selection field value in icofr.process model (status)
 - [DONE] Fix additional invalid field references in icofr.finding model records in demo data
 - [DONE] Ensure all demo data in icofr_demo_new_features module is valid and compatible with model definitions
+- [DONE] Implement integration with Odoo's accounting system for mapping GL accounts to FSLI
+- [DONE] Implement upload Excel functionality for importing account mappings in bulk
+- [DONE] Add button for accessing Excel upload wizard in materiality form
+- [DONE] Restructure account mapping model for compatibility while maintaining functionality
+- [DONE] Add additional menu item for easy access to Excel upload wizard
 
 ## Key Achievements
 
 With these enhancements, the ICORF module now includes:
 
-1. **Three Lines of Defense** - Role-based access controls for Lini 1, Lini 2, and Lini 3
-2. **Materiality Calculator** - Automatic calculation of Overall Materiality and Performance Materiality
-3. **Enhanced RCM** - Comprehensive Risk Control Matrix with COSO mapping and required SK BUMN attributes
-4. **CSA Workflow** - Complete Control Self-Assessment process with proper workflow
-5. **Improved Testing Workspace** - Enhanced with sampling calculator and quantification tools
-6. **Deficiency Classification System** - Automatic classification of deficiencies based on quantitative and qualitative factors
-7. **Multi-company Support** - All major models now include company isolation
-8. **Copy Period Feature** - Wizard to copy data from one fiscal period to another for increased efficiency
-9. **Complete SK BUMN Compliance** - All required attributes and functionality implemented
 10. **Enhanced UI/UX** - Improved user interface with comprehensive views and wizards
 11. **Robust Data Compatibility** - All demo data is validated and compatible with model definitions
 12. **Proper View Rendering** - Fixed view type issues ensuring all views render correctly in UI
+13. **Account Integration** - Integration with Odoo's accounting system to map GL accounts to FSLI
+14. **Excel Upload Functionality** - Capability to import account mappings in bulk via Excel files
+15. **Additional Menu Access** - Convenient menu item for accessing Excel upload wizard
+16. **COBIT 2019 Framework Integration** - Complete implementation of COBIT 2019 elements with ITGC mapping
+17. **Automated Notification System** - Scheduling system for CSA and testing deadline reminders
+18. **Line-Specific Reporting** - Dedicated reports for each line of defense (Lini 1, 2, and 3)
+19. **Qualitative Risk Assessment** - Structured questionnaires for evaluating non-financial risks
+20. **BPM/SOP Document Repository** - Centralized management of business process documentation
+21. **Financial Data ERP Integration** - Automatic pulling of financial data from Odoo's accounting modules
+22. **Enhanced Menu Structure** - All models now have properly linked menu items for easy access
+23. **Mobile Responsiveness** - Enhanced CSS for mobile compatibility
+24. **Improved Security** - Granular access controls for each line of defense
 
-These enhancements fully address the requirements from the PwC document and make the ICORF module a comprehensive internal controls management system compliant with COSO 2013 framework and POJK No. 15 Tahun 2024.
+These enhancements fully address the requirements from the PwC document and make the ICORF module a comprehensive internal controls management system compliant with COSO 2013 framework and POJK No. 15 Tahun 2024. The module now offers advanced capabilities for integrating with accounting systems, importing data in bulk, managing group-wide compliance through consolidated reporting and structured documentation, and implementing proper three-lines-of-defense governance.
+
+12. **Governance & Audit Compliance**: Added dedicated roles for External Auditors and structured scoping assessments.
+13. **Group Consolidation**: Enabled multi-entity reporting for holding structures.
+14. **Document Governance**: Centralized repository for BPM and SOP versions linked to business processes.
+15. **ERP Connectivity**: Integrated real-time account balance retrieval from Odoo's financial reports.
+16. **Complete Framework Support**: Full integration of both COSO and COBIT frameworks for comprehensive governance.
+17. **Automated Processes**: Implemented scheduling and notification systems to reduce manual effort.
+18. **Role-Based Functionality**: Specific tools and reports tailored for each line of defense.
+19. **Qualitative Risk Tools**: Advanced assessment tools for non-financial risk evaluation.
+20. **Enhanced Data Management**: Streamlined import, export, and synchronization of financial data.
 
 ## Summary Metadata
-**Update time**: 2025-12-11T16:25:00.000Z
+**Update time**: 2025-12-19T07:15:00.000Z

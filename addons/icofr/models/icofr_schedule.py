@@ -101,6 +101,14 @@ class IcofrTestingSchedule(models.Model):
         help='Catatan tambahan terkait jadwal pengujian'
     )
 
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        required=True,
+        default=lambda self: self.env.company,
+        help='Perusahaan yang memiliki jadwal pengujian ini'
+    )
+
     testing_ids = fields.One2many(
         'icofr.testing',
         'schedule_id',
@@ -196,4 +204,27 @@ class IcofrTestingSchedule(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+
+    def action_schedule_testing_notification(self):
+        """Method to create scheduled notification for testing reminders"""
+        for schedule in self:
+            # Calculate the notification date based on notify_before_days
+            from datetime import timedelta
+            notification_date = schedule.next_scheduled_date - timedelta(days=schedule.notify_before_days or 3)
+
+            # Create a scheduler for the testing reminder notification
+            scheduler = self.env['icofr.notification.scheduler'].create({
+                'name': f'Pengingat Pengujian: {schedule.name}',
+                'notification_type': 'testing_reminder',
+                'model_ref': f'icofr.testing.schedule,{schedule.id}',
+                'recipient_ids': [(4, schedule.tester_id.id)] if schedule.tester_id else [],
+                'next_run_date': fields.Datetime.to_string(notification_date),
+                'active': True,
+                'interval_number': 1,
+                'interval_type': 'days',
+                'company_id': schedule.company_id.id if hasattr(schedule, 'company_id') else self.env.company.id,
+            })
+
+            # Add notification message
+            scheduler._generate_notification_content()
 

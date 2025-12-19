@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- COBIT Element Views -->
+
+    <!-- Form View -->
+    <record id="view_icofr_cobit_element_form" model="ir.ui.view">
+        <field name="name">icofr.cobit.element.form</field>
+        <field name="model">icofr.cobit.element</field>
+        <field name="arch" type="xml">
+            <form string="Elemen COBIT 2019">
+                <header>
+                    <!-- Add any header buttons if needed -->
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- Add buttons here if needed -->
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="domain"/>
+                            <field name="process_group"/>
+                        </group>
+                        <group>
+                            <field name="is_itgc"/>
+                            <field name="it_risk_area"/>
+                            <field name="it_asset_type"/>
+                            <field name="maturity_level"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Deskripsi">
+                            <field name="description"/>
+                        </page>
+                        <page string="Struktur">
+                            <group>
+                                <field name="parent_id"/>
+                            </group>
+                            <separator string="Sub-Elemen"/>
+                            <field name="child_ids"/>
+                        </page>
+                        <page string="Kontrol Terkait">
+                            <field name="control_ids"/>
+                        </page>
+                        <page string="Catatan">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View -->
+    <record id="view_icofr_cobit_element_list" model="ir.ui.view">
+        <field name="name">icofr.cobit.element.list</field>
+        <field name="model">icofr.cobit.element</field>
+        <field name="arch" type="xml">
+            <list string="Elemen COBIT 2019">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="domain"/>
+                <field name="is_itgc"/>
+                <field name="it_risk_area"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_icofr_cobit_element_search" model="ir.ui.view">
+        <field name="name">icofr.cobit.element.search</field>
+        <field name="model">icofr.cobit.element</field>
+        <field name="arch" type="xml">
+            <search string="Cari Elemen COBIT">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="domain"/>
+            </search>
+        </field>
+    </record>
+</odoo>

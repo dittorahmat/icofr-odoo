@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Force overwrite the dashboard record to ensure it points to the right model -->
+    <function model="ir.ui.view" name="search" eval="[[('name', '=', 'icofr.dashboard.form')]]">
+        <value model="ir.ui.view" eval="obj().search([('name', '=', 'icofr.dashboard.form')]).id"/>
+    </function>
+
+    <!-- Additional safety: if the module is stuck, sometimes we need to manually fix the action -->
+    <record id="icofr.action_icofr_dashboard" model="ir.actions.act_window">
+        <field name="res_model">icofr.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="icofr.icofr_dashboard_main"/>
+    </record>
+</odoo>

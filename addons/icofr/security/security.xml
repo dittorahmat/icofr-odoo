@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Module Category for ICORF -->
+    <record id="module_category_icofr" model="ir.module.category">
+        <field name="name">ICORF</field>
+        <field name="description">Manajemen Internal Controls Over Financial Reporting</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <!-- Lini 1: Business Process Owner -->
+    <record id="group_icofr_line_1" model="res.groups">
+        <field name="name">Lini 1 (Process Owner)</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Lini 2: Risk / ICOFR Team -->
+    <record id="group_icofr_line_2" model="res.groups">
+        <field name="name">Lini 2 (Risk/ICOFR Team)</field>
+        <field name="implied_ids" eval="[(4, ref('group_icofr_line_1'))]"/>
+    </record>
+
+    <!-- Lini 3: Internal Audit -->
+    <record id="group_icofr_line_3" model="res.groups">
+        <field name="name">Lini 3 (Internal Audit)</field>
+        <field name="implied_ids" eval="[(4, ref('group_icofr_line_2'))]"/>
+    </record>
+
+    <!-- Management: CEO/CFO -->
+    <record id="group_icofr_manager" model="res.groups">
+        <field name="name">Management (CEO/CFO)</field>
+        <field name="implied_ids" eval="[(4, ref('group_icofr_line_2'))]"/>
+    </record>
+
+    <!-- Administrator -->
+    <record id="group_icofr_admin" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="implied_ids" eval="[(4, ref('group_icofr_line_3'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- External Auditor: View Only -->
+    <record id="group_icofr_external_auditor" model="res.groups">
+        <field name="name">External Auditor</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+</odoo>
+
+
+
