@@ -1,0 +1,26 @@
+Format Template Excel untuk Upload Data Keuangan:
+
+Kolom yang harus ada di file Excel:
+1. Tahun Fiskal (wajib) - Tahun fiskal data keuangan (format: YYYY)
+2. Pendapatan (wajib) - Jumlah pendapatan perusahaan
+3. Total Aset (wajib) - Jumlah total aset perusahaan
+4. Laba Bersih (opsional) - Jumlah laba bersih perusahaan
+5. Persentase Overall Materiality (opsional) - Persentase OM (default: 0.5%)
+6. Persentase Performance Materiality (opsional) - Persentase PM (default: 75%)
+7. Basis Perhitungan (opsional) - Basis utama perhitungan materialitas (pilihan: revenue, total_assets, net_income, hybrid; default: revenue)
+
+Contoh isi file Excel:
+
+| Tahun Fiskal | Pendapatan | Total Aset | Laba Bersih | Persentase Overall Materiality | Persentase Performance Materiality | Basis Perhitungan |
+|--------------|------------|------------|-------------|-------------------------------|-----------------------------------|-------------------|
+| 2024         | 10000000000| 50000000000| 2000000000  | 0.5                           | 75                                | revenue           |
+| 2023         | 8000000000 | 45000000000| 1500000000  | 0.5                           | 75                                | total_assets      |
+
+Catatan:
+- Kolom wajib harus diisi dengan nilai numerik
+- Jika Laba Bersih tidak diisi, akan dihitung berdasarkan pendapatan dan beban
+- Jika persentase materiality tidak diisi, akan digunakan nilai default
+- Basis perhitungan menentukan rumus yang digunakan untuk menghitung Overall Materiality
+- File Excel harus berformat .xls atau .xlsx
+- Hanya baris pertama data yang akan diproses (selain header)
+- Jika sudah ada perhitungan materialitas untuk tahun fiskal yang sama, data akan diupdate

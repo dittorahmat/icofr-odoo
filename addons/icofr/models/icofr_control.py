@@ -33,7 +33,10 @@ class IcofrControl(models.Model):
         ('weekly', 'Mingguan'),
         ('monthly', 'Bulanan'),
         ('quarterly', 'Triwulanan'),
-        ('yearly', 'Tahunan')
+        ('yearly', 'Tahunan'),
+        ('every_change', 'Setiap Perubahan'),
+        ('event_driven', 'Berdasarkan Kejadian'),
+        ('per_transaction', 'Per Transaksi')
     ], string='Frekuensi', required=True,
        help='Frekuensi pelaksanaan kontrol')
     
@@ -87,9 +90,37 @@ class IcofrControl(models.Model):
         ('manual', 'Manual'),
         ('semi_manual', 'Semi-Manual'),
         ('automated', 'Otomatis'),
+        ('manual_automatic', 'Manual dan Otomatis'),
         ('it_dependent', 'Berdasarkan IT')
     ], string='Tipe Kontrol Terperinci',
        help='Jenis kontrol yang lebih rinci')
+
+    control_specific_type = fields.Selection([
+        ('standard', 'Standar'),
+        ('mrc', 'Management Review Control (MRC)'),
+        ('euc', 'End User Computing (EUC)'),
+        ('ipe', 'Information Produced by Entity (IPE)'),
+        ('service_org', 'Service Organization (Pihak Ketiga)')
+    ], string='Kategori Spesifik', default='standard',
+       help='Kategori kontrol spesifik yang memerlukan prosedur validasi khusus sesuai Juknis')
+
+    control_risk_level = fields.Selection([
+        ('low', 'Rendah'),
+        ('high', 'Tinggi')
+    ], string='Tingkat Risiko Pengendalian', default='low',
+       required=True,
+       help='Tingkat risiko pengendalian untuk penentuan jumlah sampel (Tabel 22 Juknis)')
+
+    # SOC / Service Organization Fields
+    service_provider_name = fields.Char(
+        string='Nama Penyedia Jasa (Service Org)',
+        help='Nama pihak ketiga/vendor jika kontrol dikelola oleh Service Organization'
+    )
+    
+    soc_report_ref = fields.Char(
+        string='Referensi Laporan SOC',
+        help='Nomor/Tanggal Laporan SOC 1 Type 2 yang relevan'
+    )
 
     frequency_detailed = fields.Selection([
         ('per_transaction', 'Per Transaksi'),
@@ -100,7 +131,8 @@ class IcofrControl(models.Model):
         ('bimonthly', 'Dua Bulanan'),
         ('quarterly', 'Triwulanan'),
         ('semiyearly', 'Semesteran'),
-        ('yearly', 'Tahunan')
+        ('yearly', 'Tahunan'),
+        ('event_driven', 'Berdasarkan Kejadian')
     ], string='Frekuensi Terperinci', default='monthly',
        help='Frekuensi pelaksanaan kontrol secara terperinci')
 
@@ -120,6 +152,14 @@ class IcofrControl(models.Model):
         'icofr.cobit.element',
         string='Elemen COBIT',
         help='Elemen COBIT 2019 yang terkait dengan kontrol ini'
+    )
+
+    cobit_element_ids = fields.Many2many(
+        'icofr.cobit.element',
+        'icofr_control_cobit_rel',
+        'control_id', 'cobit_element_id',
+        string='Elemen-2 COBIT',
+        help='Elemen-elemen COBIT 2019 yang terkait dengan kontrol ini'
     )
 
     monitoring_frequency = fields.Selection([
@@ -163,6 +203,17 @@ class IcofrControl(models.Model):
         help='Indikator kinerja untuk mengevaluasi efektivitas kontrol'
     )
 
+    testing_frequency = fields.Selection([
+        ('daily', 'Harian'),
+        ('weekly', 'Mingguan'),
+        ('monthly', 'Bulanan'),
+        ('quarterly', 'Triwulanan'),
+        ('yearly', 'Tahunan'),
+        ('event_driven', 'Berdasarkan Kejadian'),
+        ('per_transaction', 'Per Transaksi')
+    ], string='Frekuensi Pengujian', default='quarterly',
+       help='Frekuensi pelaksanaan pengujian kontrol')
+
     testing_procedures = fields.Text(
         string='Prosedur Pengujian',
         help='Prosedur yang digunakan untuk menguji kontrol ini'
@@ -171,11 +222,6 @@ class IcofrControl(models.Model):
     evidence_required = fields.Text(
         string='Bukti yang Diperlukan',
         help='Dokumentasi atau bukti yang diperlukan sebagai hasil pengujian'
-    )
-
-    key_performance_indicator = fields.Text(
-        string='Indikator Kinerja Utama',
-        help='Indikator kinerja untuk mengevaluasi efektivitas kontrol'
     )
 
     status = fields.Selection([
@@ -210,6 +256,15 @@ class IcofrControl(models.Model):
         default=lambda self: self.env.company,
         help='Perusahaan yang memiliki kontrol ini'
     )
+
+    significance_level = fields.Selection([
+        ('low', 'Rendah'),
+        ('medium', 'Sedang'),
+        ('significant', 'Signifikan'),
+        ('high', 'Tinggi'),
+        ('critical', 'Kritis')
+    ], string='Tingkat Signifikansi', default='medium',
+       help='Tingkat signifikansi dari kontrol internal')
 
     notes = fields.Text(
         string='Catatan Tambahan',

@@ -1,33 +1,17 @@
 ## Relevant Files
 
-- `addons/icofr/models/__init__.py` - Initializer for ICORF models
-- `addons/icofr/models/icofr_control.py` - Model untuk kontrol internal
-- `addons/icofr/models/icofr_risk.py` - Model untuk risiko finansial
-- `addons/icofr/models/icofr_testing.py` - Model untuk pengujian kontrol
-- `addons/icofr/models/icofr_certification.py` - Model untuk sertifikasi
-- `addons/icofr/models/icofr_workflow.py` - Model untuk workflow approval
-- `addons/icofr/views/control_views.xml` - View untuk pengelolaan kontrol
-- `addons/icofr/views/risk_views.xml` - View untuk pengelolaan risiko
-- `addons/icofr/views/dashboard_views.xml` - View untuk dashboard ICORF
-- `addons/icofr/views/reporting_views.xml` - View untuk pelaporan
-- `addons/icofr/security/ir.model.access.csv` - Hak akses untuk model-model ICORF
-- `addons/icofr/data/icofr_data.xml` - Data awal untuk modul ICORF
-- `addons/icofr/__init__.py` - Initializer untuk modul ICORF
-- `addons/icofr/__manifest__.py` - Manifest file untuk modul ICORF
-- `addons/icofr/controllers/main.py` - Controller untuk endpoint web ICORF
-- `addons/icofr/reports/icofr_report.py` - Laporan ICORF
-- `addons/icofr/reports/icofr_report.xml` - Template laporan ICORF
-- `addons/icofr/static/src/js/icofr_dashboard.js` - JavaScript untuk dashboard interaktif
-- `addons/icofr/static/src/css/icofr_styles.css` - Stylesheet untuk antarmuka ICORF
-- `addons/icofr/tests/test_icofr_control.py` - Unit test untuk model kontrol
-- `addons/icofr/tests/test_icofr_risk.py` - Unit test untuk model risiko
-- `addons/icofr/tests/test_icofr_testing.py` - Unit test untuk model pengujian
+- `addons/icofr/models/icofr_pojk_report.py` - Core model for the regulatory report; needs Digital Signature logic.
+- `addons/icofr/views/pojk_report_views.xml` - Views for the report; needs "Sign Now" button.
+- `addons/icofr/models/icofr_testing.py` - Testing model; needs distinct TOD/TOE types and fields.
+- `addons/icofr/views/testing_views.xml` - Testing views; needs structural update for TOD vs TOE.
+- `addons/icofr/models/icofr_audit_population.py` - Population model; needs better linkage to Testing.
+- `addons/icofr/views/audit_population_views.xml` - Population views.
+- `addons/icofr/data/icofr_data.xml` - Master data; ensuring defaults match new requirements.
 
 ### Notes
 
-- Unit tests should typically be placed alongside the code files they are testing (e.g., `icofr_control.py` and `test_icofr_control.py` in the same directory).
-- Use `python odoo-bin -d [database_name] -i icofr` to install the module.
-- Module harus mendukung Bahasa Indonesia sebagai default interface language.
+- **Digital Signature:** For MVP, we will use Odoo's standard `portal.mixin` / `sign` concepts if available, or simulate a robust digital signature flow (e.g., storing a hash + timestamp + user ID as a "signature") if external providers are not configured. The PRD mentions "integration with digital signature provider", so we will add hooks for this.
+- **TOD vs TOE:** Currently `test_type` has `compliance`, `substantive`, `walkthrough`. We need to map these or replace them to strictly follow `Test of Design` and `Test of Operating Effectiveness`.
 
 ## Instructions for Completing Tasks
 
@@ -41,35 +25,35 @@ Update the file after completing each sub-task, not just after completing an ent
 ## Tasks
 
 - [x] 0.0 Create feature branch
-  - [x] 0.1 Create and checkout a new branch for this feature (e.g., `git checkout -b feature/icofr-module`)
-- [x] 1.0 Setup struktur dasar modul Odoo
-  - [x] 1.1 Buat direktori dasar `icofr` di folder `addons`
-  - [x] 1.2 Buat file `__init__.py` di direktori `icofr`
-  - [x] 1.3 Buat file `__manifest__.py` dengan informasi modul yang sesuai
-  - [x] 1.4 Buat struktur direktori untuk models, views, security, data, controllers, reports, dan static
-  - [x] 1.5 Definisikan dependensi modul di manifest (akuntansi, dll.)
-- [x] 2.0 Implementasi model dan database untuk kontrol internal
-  - [x] 2.1 Buat model `icofr_control` untuk mengelola kontrol internal
-  - [x] 2.2 Buat model `icofr_risk` untuk mengelola risiko terkait kontrol
-  - [x] 2.3 Buat model `icofr_testing` untuk mendokumentasikan pengujian kontrol
-  - [x] 2.4 Tambahkan field-field sesuai dengan kebutuhan fungsional #1-3
-  - [x] 2.5 Buat view-form, view-tree, dan view-search untuk semua model
-  - [x] 2.6 Definisikan access rights untuk model-model tersebut
-- [x] 3.0 Buat interface pengujian kontrol dan dashboard
-  - [x] 3.1 Buat view dashboard utk monitoring kontrol
-  - [x] 3.2 Implementasi fitur notifikasi dan pengingat (kebutuhan fungsional #11)
-  - [x] 3.3 Buat komponen untuk menampilkan real-time status kontrol
-  - [x] 3.4 Tambahkan grafik dan metrik efektivitas kontrol
-  - [x] 3.5 Implementasi fitur export data kontrol (kebutuhan fungsional #9)
-- [x] 4.0 Implementasi fitur pelaporan dan sertifikasi ICORF
-  - [x] 4.1 Buat model `icofr_certification` untuk proses sertifikasi
-  - [x] 4.2 Bangun laporan sesuai format POJK 15/2024
-  - [x] 4.3 Tambahkan fitur manajemen temuan dan action plan (kebutuhan fungsional #6)
-  - [x] 4.4 Implementasi audit trail untuk semua aktivitas penting (kebutuhan fungsional #12)
-  - [x] 4.5 Buat template laporan dalam format PDF dan Excel
-- [x] 5.0 Tambahkan fitur manajemen workflow dan kalender
-  - [x] 5.1 Buat model `icofr_workflow` untuk proses approval
-  - [x] 5.2 Implementasi fitur penjadwalan pengujian kontrol
-  - [x] 5.3 Tambahkan notifikasi otomatis untuk jadwal yang akan datang
-  - [x] 5.4 Buat kalender interaktif untuk perencanaan kontrol
-  - [x] 5.5 Integrasikan workflow dengan proses sertifikasi
+  - [x] 0.1 Create and checkout a new branch `feature/icofr-refinement`
+
+- [x] 1.0 Implement Digital Signature Integration for POJK Reports
+  - [x] 1.1 Modify `icofr.pojk.report` model to add signature fields (`signed_by`, `signed_date`, `signature_hash`, `signature_image`).
+  - [x] 1.2 Implement a `action_sign_report` method that captures the current user's signature (simulated or via widget) and freezes the report state.
+  - [x] 1.3 Update `icofr.pojk.report` form view to show a "Sign Report" button for the CEO/CFO when status is 'approved'.
+  - [x] 1.4 Add a logical check: Report cannot be modified after signing.
+
+- [x] 2.0 Refine Testing Module for Explicit TOD & TOE Workflows
+  - [x] 2.1 Modify `icofr.testing` model: Update `test_type` selection to include `tod` (Test of Design) and `toe` (Test of Operating Effectiveness).
+  - [x] 2.2 Add specific fields for TOD: `design_description`, `design_conclusion` (Effective/Ineffective).
+  - [x] 2.3 Add specific fields for TOE: `population_reference`, `sample_selection_method`, `testing_steps`, `exceptions_noted`.
+  - [x] 2.4 Update `icofr.testing` form view to conditionally show TOD vs TOE fields based on `test_type`.
+  - [x] 2.5 Ensure `sample_size_calculated` logic in `icofr.testing` is applied primarily when `test_type` is `toe`.
+
+- [x] 3.0 Enhance Audit Sampling & Population Selection UI
+  - [x] 3.1 Modify `icofr.audit.population` to allow bulk selection of records to be "linked" to a specific `icofr.testing` record (currently it links one-by-one or via upload).
+  - [x] 3.2 Create a wizard `icofr.sample.selection.wizard` that allows an auditor to:
+    - Select a `icofr.testing` record (TOE).
+    - Filter `icofr.audit.population` records.
+    - Randomly or manually select $N$ records.
+    - Link them to the test.
+  - [x] 3.3 Update `icofr.testing` view to show a smart button or notebook tab listing the specific "Selected Samples" from the population.
+
+- [x] 4.0 Compliance Polish (POJK 15/2024 & SK BUMN Alignment)
+  - [x] 4.1 Verify `icofr.control` model has all specific SK BUMN attributes (Assertions are already there, check for `risk_level` alignment with Table 22).
+  - [x] 4.2 Ensure `icofr.finding` model correctly maps "Deficiency" -> "Significant Deficiency" -> "Material Weakness" logic (Review `_compute_deficiency_classification`).
+  - [x] 4.3 Add a "Generate CEO Statement" button on `icofr.pojk.report` that populates the `management_response_detail` with the standard legal text from Lampiran 11.
+
+- [x] 5.0 Final System Verification & Data flow Test
+  - [x] 5.1 Verify flow: Upload Population -> Create TOE Test -> Select Samples -> Record Result -> Create Finding -> Remediation.
+  - [x] 5.2 Verify flow: Create Report -> Approve -> Digital Sign -> Lock.

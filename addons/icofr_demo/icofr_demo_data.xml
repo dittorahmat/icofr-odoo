@@ -215,6 +215,81 @@
         <field name="implementation_steps">Semua staf yang menangani pengeluaran harus mengikuti pelatihan ulang</field>
     </record>
 
+    <!-- Control for Policy Communication - referenced in finding but not defined -->
+    <record id="demo_ctrl_policy_001" model="icofr.control">
+        <field name="name">Komunikasi Kebijakan Kontrol Internal</field>
+        <field name="code">CTRL-POLICY-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Kontrol untuk memastikan kebijakan kontrol internal disosialisasikan secara efektif ke seluruh unit organisasi</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>  <!-- Using general process as it relates to policy communication -->
+        <field name="frequency">quarterly</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">active</field>
+        <field name="control_owner_line">line_2</field>  <!-- Lini 2 responsibility -->
+        <field name="assertion_existence" eval="True"/>
+        <field name="assertion_completeness" eval="True"/>
+        <field name="assertion_accuracy" eval="True"/>
+        <field name="assertion_authorization" eval="True"/>
+        <field name="assertion_valuation" eval="True"/>
+        <field name="control_type_detailed">manual</field>
+        <field name="frequency_detailed">quarterly</field>
+        <field name="significance_level">significant</field>
+        <field name="testing_frequency">quarterly</field>
+        <field name="testing_procedures">Verifikasi distribusi kebijakan dan kehadiran pelatihan terkait kontrol internal</field>
+        <field name="evidence_required">Dokumen distribusi kebijakan, daftar kehadiran pelatihan, sertifikat pelatihan</field>
+        <field name="key_performance_indicator">% unit yang telah menerima kebijakan dan menyelesaikan pelatihan</field>
+    </record>
+
+    <!-- Control for Reconciliation - referenced in finding but not defined -->
+    <record id="demo_ctrl_recon_001" model="icofr.control">
+        <field name="name">Rekonsiliasi Antar Rekening</field>
+        <field name="code">CTRL-RECON-001</field>
+        <field name="control_type">detective</field>
+        <field name="description">Kontrol untuk memastikan rekonsiliasi antar rekening dilakukan secara berkala dan akurat</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>  <!-- Using cash receipt process as it relates to reconciliation -->
+        <field name="frequency">monthly</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">active</field>
+        <field name="control_owner_line">line_1</field>  <!-- Process owner responsibility -->
+        <field name="assertion_existence" eval="True"/>
+        <field name="assertion_completeness" eval="True"/>
+        <field name="assertion_accuracy" eval="True"/>
+        <field name="assertion_authorization" eval="True"/>
+        <field name="assertion_valuation" eval="True"/>
+        <field name="control_type_detailed">manual</field>
+        <field name="frequency_detailed">monthly</field>
+        <field name="significance_level">significant</field>
+        <field name="testing_frequency">monthly</field>
+        <field name="testing_procedures">Verifikasi dokumen rekonsiliasi dan validasi perhitungan</field>
+        <field name="evidence_required">Dokumen rekonsiliasi, supporting calculation sheets, approval signatures</field>
+        <field name="key_performance_indicator">Jumlah rekonsiliasi yang tidak selesai tepat waktu / Total rekonsiliasi yang harus diselesaikan</field>
+    </record>
+
+    <!-- Control for Accounts Receivable - referenced in finding but not defined -->
+    <record id="demo_ctrl_ar_001" model="icofr.control">
+        <field name="name">Validasi Estimasi Piutang Tak Tertagih</field>
+        <field name="code">CTRL-AR-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Kontrol untuk memastikan estimasi piutang tak tertagih dibuat secara akurat dan konsisten</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>  <!-- Using cash receipt process as it relates to AR -->
+        <field name="frequency">monthly</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">active</field>
+        <field name="control_owner_line">line_1</field>  <!-- Process owner responsibility -->
+        <field name="assertion_existence" eval="True"/>
+        <field name="assertion_completeness" eval="True"/>
+        <field name="assertion_accuracy" eval="True"/>
+        <field name="assertion_authorization" eval="True"/>
+        <field name="assertion_valuation" eval="True"/>
+        <field name="control_type_detailed">manual</field>
+        <field name="frequency_detailed">monthly</field>
+        <field name="significance_level">significant</field>
+        <field name="testing_frequency">quarterly</field>
+        <field name="testing_procedures">Review estimasi piutang tak tertagih dan dokumentasi pendukungnya</field>
+        <field name="evidence_required">Dokumen estimasi, analisis historis, justifikasi manajemen</field>
+        <field name="key_performance_indicator">Deviasi estimasi terhadap realisasi aktual</field>
+    </record>
+
     <!-- New Control from Skenario 4 -->
     <record id="demo_ctrl_payroll_001" model="icofr.control">
         <field name="name">Otorisasi Ganda untuk Pembayaran Gaji &amp;gt;Rp. 5,000,000</field>
@@ -474,6 +549,2340 @@
         <field name="description">Integrasi sistem otorisasi dengan sistem pengeluaran untuk mencegah transaksi tanpa otorisasi</field>
         <field name="implementation_steps">Desain sistem, pengembangan modul, uji coba, implementasi</field>
         <field name="created_by_id" ref="demo_user_jane_smith"/>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- ADDITIONAL DEMO DATA: COBIT ITGC Mapping -->
+    <!-- ========================================== -->
+
+    <!-- COBIT ITGC Elements for Internal Controls -->
+    <record id="demo_cobit_dss05_01" model="icofr.cobit.element">
+        <field name="name">Manage Data</field>
+        <field name="code">DSS05.01</field>
+        <field name="description">Mengelola data dalam sistem TI untuk mendukung kebutuhan informasi organisasi</field>
+        <field name="domain">D - Deliver, Service, and Support</field>
+        <field name="process_group">Data Governance</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">data_governance</field>
+        <field name="it_asset_type">data</field>
+        <field name="maturity_level">3</field>
+        <field name="notes">Kontrol penting untuk menjamin kualitas dan keamanan data keuangan</field>
+    </record>
+
+    <record id="demo_cobit_dss04_01" model="icofr.cobit.element">
+        <field name="name">Manage Security</field>
+        <field name="code">DSS04.01</field>
+        <field name="description">Mengelola keamanan informasi untuk melindungi aset informasi organisasi</field>
+        <field name="domain">D - Deliver, Service, and Support</field>
+        <field name="process_group">Security Management</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">security_management</field>
+        <field name="it_asset_type">application</field>
+        <field name="maturity_level">4</field>
+        <field name="notes">Kontrol keamanan penting untuk mencegah akses tidak sah ke data keuangan</field>
+    </record>
+
+    <record id="demo_cobit_dss06_01" model="icofr.cobit.element">
+        <field name="name">Manage Access</field>
+        <field name="code">DSS06.01</field>
+        <field name="description">Mengelola akses ke sistem TI untuk menjamin hanya pengguna yang sah yang dapat mengakses</field>
+        <field name="domain">D - Deliver, Service, and Support</field>
+        <field name="process_group">Access Management</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">access_management</field>
+        <field name="it_asset_type">application</field>
+        <field name="maturity_level">4</field>
+        <field name="notes">Kontrol akses penting untuk memenuhi prinsip segregation of duties</field>
+    </record>
+
+    <record id="demo_cobit_bai03_01" model="icofr.cobit.element">
+        <field name="name">Manage Change</field>
+        <field name="code">BAI03.01</field>
+        <field name="description">Mengelola perubahan dalam sistem TI untuk memastikan perubahan dilakukan secara terkendali</field>
+        <field name="domain">B - Build, Acquire, and Implement</field>
+        <field name="process_group">Change Management</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">change_management</field>
+        <field name="it_asset_type">application</field>
+        <field name="maturity_level">3</field>
+        <field name="notes">Pengendalian perubahan penting untuk mencegah perubahan yang dapat mempengaruhi akurasi data keuangan</field>
+    </record>
+
+
+    <!-- ========================================== -->
+    <!-- ADDITIONAL DEMO DATA: Qualitative Risk Assessment -->
+    <!-- ========================================== -->
+
+    <!-- Account Mapping records for qualitative assessment -->
+    <record id="demo_account_mapping_cash" model="icofr.account.mapping">
+        <field name="name">Kas - Cash Account</field>
+        <field name="gl_account">1101.001</field>
+        <field name="account_description">Kas di Tangan</field>
+        <field name="fsl_item">Cash</field>
+        <field name="account_balance">500000000.0</field>
+        <field name="has_fraud_risk" eval="False"/>
+        <field name="is_complex_transaction" eval="False"/>
+        <field name="has_related_party" eval="False"/>
+        <field name="significance_level">significant</field>
+    </record>
+
+    <record id="demo_account_mapping_ar" model="icofr.account.mapping">
+        <field name="name">Piutang Usaha - Accounts Receivable</field>
+        <field name="gl_account">1110.001</field>
+        <field name="account_description">Piutang Dagang</field>
+        <field name="fsl_item">Accounts Receivable</field>
+        <field name="account_balance">1500000000.0</field>
+        <field name="has_fraud_risk" eval="True"/>
+        <field name="is_complex_transaction" eval="False"/>
+        <field name="has_related_party" eval="True"/>
+        <field name="significance_level">significant</field>
+    </record>
+
+    <record id="demo_account_mapping_inventory" model="icofr.account.mapping">
+        <field name="name">Persediaan - Inventory</field>
+        <field name="gl_account">1203.001</field>
+        <field name="account_description">Persediaan Barang Dagangan</field>
+        <field name="fsl_item">Inventory</field>
+        <field name="account_balance">3000000000.0</field>
+        <field name="has_fraud_risk" eval="True"/>
+        <field name="is_complex_transaction" eval="True"/>
+        <field name="has_related_party" eval="False"/>
+        <field name="significance_level">significant</field>
+    </record>
+
+    <!-- Qualitative Assessment Questions and Answers for Cash Account -->
+    <record id="demo_qual_assessment_cash_complexity" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_cash"/>
+        <field name="question">Kompleksitas transaksi pada akun ini?</field>
+        <field name="answer">0</field>
+        <field name="notes">Transaksi kas sederhana dan rutin</field>
+    </record>
+
+    <record id="demo_qual_assessment_cash_fraud" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_cash"/>
+        <field name="question">Kerawanan terhadap fraud atau penyalahgunaan?</field>
+        <field name="answer">1</field>
+        <field name="notes">Kas rawan terhadap pencurian, namun kontrol otorisasi sudah diterapkan</field>
+    </record>
+
+    <record id="demo_qual_assessment_cash_unusual" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_cash"/>
+        <field name="question">Volume transaksi yang tidak rutin?</field>
+        <field name="answer">0</field>
+        <field name="notes">Mayoritas transaksi bersifat rutin harian</field>
+    </record>
+
+    <record id="demo_qual_assessment_cash_subjective" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_cash"/>
+        <field name="question">Ketergantungan pada estimasi atau penilaian subjektif manajemen?</field>
+        <field name="answer">0</field>
+        <field name="notes">Tidak memerlukan estimasi atau penilaian subjektif</field>
+    </record>
+
+    <record id="demo_qual_assessment_cash_related" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_cash"/>
+        <field name="question">Adanya transaksi dengan pihak berelasi?</field>
+        <field name="answer">0</field>
+        <field name="notes">Transaksi dengan pihak eksternal biasa</field>
+    </record>
+
+    <!-- Qualitative Assessment Questions and Answers for Accounts Receivable -->
+    <record id="demo_qual_assessment_ar_complexity" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_ar"/>
+        <field name="question">Kompleksitas transaksi pada akun ini?</field>
+        <field name="answer">1</field>
+        <field name="notes">Terdapat berbagai jenis pelanggan dan kebijakan kredit</field>
+    </record>
+
+    <record id="demo_qual_assessment_ar_fraud" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_ar"/>
+        <field name="question">Kerawanan terhadap fraud atau penyalahgunaan?</field>
+        <field name="answer">2</field>
+        <field name="notes">Terdapat risiko kredit fiktif atau pelanggan fiktif</field>
+    </record>
+
+    <record id="demo_qual_assessment_ar_unusual" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_ar"/>
+        <field name="question">Volume transaksi yang tidak rutin?</field>
+        <field name="answer">1</field>
+        <field name="notes">Beberapa penjualan besar dan tidak rutin terjadi</field>
+    </record>
+
+    <record id="demo_qual_assessment_ar_subjective" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_ar"/>
+        <field name="question">Ketergantungan pada estimasi atau penilaian subjektif manajemen?</field>
+        <field name="answer">2</field>
+        <field name="notes">Penilaian terhadap kemampuan pelanggan untuk membayar (estimasi allowance)</field>
+    </record>
+
+    <record id="demo_qual_assessment_ar_related" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_ar"/>
+        <field name="question">Adanya transaksi dengan pihak berelasi?</field>
+        <field name="answer">2</field>
+        <field name="notes">Terdapat penjualan ke pihak berelasi</field>
+    </record>
+
+    <!-- Qualitative Assessment Questions and Answers for Inventory -->
+    <record id="demo_qual_assessment_inv_complexity" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_inventory"/>
+        <field name="question">Kompleksitas transaksi pada akun ini?</field>
+        <field name="answer">2</field>
+        <field name="notes">Berbagai jenis barang dengan metode penilaian yang kompleks</field>
+    </record>
+
+    <record id="demo_qual_assessment_inv_fraud" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_inventory"/>
+        <field name="question">Kerawanan terhadap fraud atau penyalahgunaan?</field>
+        <field name="answer">2</field>
+        <field name="notes">Rawan terhadap pencurian fisik dan manipulasi penilaian</field>
+    </record>
+
+    <record id="demo_qual_assessment_inv_unusual" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_inventory"/>
+        <field name="question">Volume transaksi yang tidak rutin?</field>
+        <field name="answer">1</field>
+        <field name="notes">Beberapa barang dengan sifat musiman dan siklus hidup produk</field>
+    </record>
+
+    <record id="demo_qual_assessment_inv_subjective" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_inventory"/>
+        <field name="question">Ketergantungan pada estimasi atau penilaian subjektif manajemen?</field>
+        <field name="answer">2</field>
+        <field name="notes">Penilaian terhadap barang yang tidak laku (obsolete), metode costing</field>
+    </record>
+
+    <record id="demo_qual_assessment_inv_related" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_inventory"/>
+        <field name="question">Adanya transaksi dengan pihak berelasi?</field>
+        <field name="answer">0</field>
+        <field name="notes">Transaksi normal dengan pihak eksternal</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- ADDITIONAL DEMO DATA: BPM/SOP Document Repository -->
+    <!-- ========================================== -->
+
+    <!-- BPM/SOP Documents for Cash Process -->
+    <record id="demo_bpm_cash_proc" model="icofr.bpm.document">
+        <field name="name">BPM Proses Pengelolaan Kas Masuk</field>
+        <field name="document_type">bpm_flowchart</field>
+        <field name="version">1.2</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>
+        <field name="status">active</field>
+        <field name="description">Flowchart BPM untuk proses pengelolaan kas masuk perusahaan</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="file_name">bpm_cash_inflow_v1.2.pdf</field>
+    </record>
+
+    <record id="demo_sop_cash_proc" model="icofr.bpm.document">
+        <field name="name">SOP Penerimaan Kas</field>
+        <field name="document_type">sop</field>
+        <field name="version">1.0</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>
+        <field name="status">active</field>
+        <field name="description">SOP untuk penerimaan kas dalam berbagai bentuk (tunai, cek, giro)</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="file_name">sop_cash_receipt_v1.0.pdf</field>
+    </record>
+
+    <!-- BPM/SOP Documents for Cash Out Process -->
+    <record id="demo_bpm_cash_out_proc" model="icofr.bpm.document">
+        <field name="name">BPM Proses Pengelolaan Kas Keluar</field>
+        <field name="document_type">bpm_flowchart</field>
+        <field name="version">1.1</field>
+        <field name="process_id" ref="demo_proc_cashout_001"/>
+        <field name="status">active</field>
+        <field name="description">Flowchart BPM untuk proses pengelolaan kas keluar perusahaan</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="file_name">bpm_cash_outflow_v1.1.pdf</field>
+    </record>
+
+    <record id="demo_sop_cash_out_proc" model="icofr.bpm.document">
+        <field name="name">SOP Pembayaran Vendor</field>
+        <field name="document_type">sop</field>
+        <field name="version">1.0</field>
+        <field name="process_id" ref="demo_proc_cashout_001"/>
+        <field name="status">active</field>
+        <field name="description">SOP untuk pembayaran kepada vendor/supplier</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="file_name">sop_vendor_payment_v1.0.pdf</field>
+    </record>
+
+    <!-- BPM/SOP Documents for Payroll Process -->
+    <record id="demo_bpm_payroll_proc" model="icofr.bpm.document">
+        <field name="name">BPM Proses Penggajian</field>
+        <field name="document_type">bpm_flowchart</field>
+        <field name="version">1.0</field>
+        <field name="process_id" ref="demo_proc_payroll_001"/>
+        <field name="status">active</field>
+        <field name="description">Flowchart BPM untuk proses penggajian karyawan</field>
+        <field name="owner_id" ref="demo_user_hr_manager"/>
+        <field name="file_name">bpm_payroll_v1.0.pdf</field>
+    </record>
+
+    <record id="demo_sop_payroll_proc" model="icofr.bpm.document">
+        <field name="name">SOP Penggajian Karyawan</field>
+        <field name="document_type">sop</field>
+        <field name="version">1.1</field>
+        <field name="process_id" ref="demo_proc_payroll_001"/>
+        <field name="status">active</field>
+        <field name="description">SOP untuk proses perhitungan dan pembayaran gaji karyawan</field>
+        <field name="owner_id" ref="demo_user_hr_manager"/>
+        <field name="file_name">sop_payroll_v1.1.pdf</field>
+    </record>
+
+    <!-- Policy Document -->
+    <record id="demo_policy_auth" model="icofr.bpm.document">
+        <field name="name">Kebijakan Otorisasi Transaksi Keuangan</field>
+        <field name="document_type">policy</field>
+        <field name="version">2.0</field>
+        <field name="process_id" ref="demo_proc_cashout_001"/>
+        <field name="status">active</field>
+        <field name="description">Kebijakan perusahaan mengenai otorisasi untuk transaksi keuangan</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="file_name">policy_transaction_authorization_v2.0.pdf</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- ADDITIONAL DEMO DATA: Audit Sampling Population -->
+    <!-- ========================================== -->
+
+    <!-- Transaction Population for Cash In Process -->
+    <record id="demo_pop_cashin_001" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-001</field>
+        <field name="transaction_date" eval="time.strftime('2024-01-15')"/>
+        <field name="amount">15000000.0</field>
+        <field name="description">Penerimaan kas dari pelanggan PT ABC</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="notes">Transaksi valid dengan otorisasi yang sesuai</field>
+    </record>
+
+    <record id="demo_pop_cashin_002" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-002</field>
+        <field name="transaction_date" eval="time.strftime('2024-01-18')"/>
+        <field name="amount">25000000.0</field>
+        <field name="description">Penerimaan kas dari pelanggan PT XYZ</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="notes">Transaksi valid dengan otorisasi yang sesuai</field>
+    </record>
+
+    <record id="demo_pop_cashin_003" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-003</field>
+        <field name="transaction_date" eval="time.strftime('2024-01-22')"/>
+        <field name="amount">8500000.0</field>
+        <field name="description">Penerimaan hasil sewa gedung</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="notes">Transaksi valid, perlu konfirmasi tambahan</field>
+    </record>
+
+    <record id="demo_pop_cashin_004" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-004</field>
+        <field name="transaction_date" eval="time.strftime('2024-02-05')"/>
+        <field name="amount">50000000.0</field>
+        <field name="description">Penerimaan dari penjualan produk besar</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="notes">Transaksi besar, perlu verifikasi lebih lanjut</field>
+    </record>
+
+    <record id="demo_pop_cashin_005" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-005</field>
+        <field name="transaction_date" eval="time.strftime('2024-02-10')"/>
+        <field name="amount">12500000.0</field>
+        <field name="description">Penerimaan dari kontrak jasa</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="notes">Transaksi valid dengan dokumentasi lengkap</field>
+    </record>
+
+    <!-- Transaction Population for Cash Out Process -->
+    <record id="demo_pop_cashout_001" model="icofr.audit.population">
+        <field name="transaction_no">CO-2024-001</field>
+        <field name="transaction_date" eval="time.strftime('2024-01-10')"/>
+        <field name="amount">30000000.0</field>
+        <field name="description">Pembayaran tagihan supplier PT Supplier A</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="uploaded_by_id" ref="demo_user_finance_manager"/>
+        <field name="notes">Transaksi telah melalui otorisasi yang sesuai</field>
+    </record>
+
+    <record id="demo_pop_cashout_002" model="icofr.audit.population">
+        <field name="transaction_no">CO-2024-002</field>
+        <field name="transaction_date" eval="time.strftime('2024-01-15')"/>
+        <field name="amount">45000000.0</field>
+        <field name="description">Pembayaran gaji bulanan karyawan</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="uploaded_by_id" ref="demo_user_finance_manager"/>
+        <field name="notes">Transaksi rutin bulanan, sistematis</field>
+    </record>
+
+    <record id="demo_pop_cashout_003" model="icofr.audit.population">
+        <field name="transaction_no">CO-2024-003</field>
+        <field name="transaction_date" eval="time.strftime('2024-01-20')"/>
+        <field name="amount">15000000.0</field>
+        <field name="description">Pembayaran biaya operasional</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="uploaded_by_id" ref="demo_user_finance_manager"/>
+        <field name="notes">Transaksi valid dengan dokumentasi lengkap</field>
+    </record>
+
+    <record id="demo_pop_cashout_004" model="icofr.audit.population">
+        <field name="transaction_no">CO-2024-004</field>
+        <field name="transaction_date" eval="time.strftime('2024-02-01')"/>
+        <field name="amount">75000000.0</field>
+        <field name="description">Pembayaran kontrak IT tahunan</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="uploaded_by_id" ref="demo_user_finance_manager"/>
+        <field name="notes">Transaksi besar, perlu verifikasi tambahan</field>
+    </record>
+
+    <record id="demo_pop_cashout_005" model="icofr.audit.population">
+        <field name="transaction_no">CO-2024-005</field>
+        <field name="transaction_date" eval="time.strftime('2024-02-15')"/>
+        <field name="amount">22000000.0</field>
+        <field name="description">Pembayaran sewa gedung kantor</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="uploaded_by_id" ref="demo_user_finance_manager"/>
+        <field name="notes">Transaksi rutin bulanan, sistematis</field>
+    </record>
+
+    <!-- Transaction Population for Payroll Process -->
+    <record id="demo_pop_payroll_001" model="icofr.audit.population">
+        <field name="transaction_no">PAY-2024-001</field>
+        <field name="transaction_date" eval="time.strftime('2024-01-25')"/>
+        <field name="amount">250000000.0</field>
+        <field name="description">Pembayaran gaji karyawan bulan Januari</field>
+        <field name="control_id" ref="demo_ctrl_payroll_001"/>
+        <field name="uploaded_by_id" ref="demo_user_hr_manager"/>
+        <field name="notes">Pembayaran gaji untuk 50 karyawan</field>
+    </record>
+
+    <record id="demo_pop_payroll_002" model="icofr.audit.population">
+        <field name="transaction_no">PAY-2024-002</field>
+        <field name="transaction_date" eval="time.strftime('2024-02-25')"/>
+        <field name="amount">255000000.0</field>
+        <field name="description">Pembayaran gaji karyawan bulan Februari</field>
+        <field name="control_id" ref="demo_ctrl_payroll_001"/>
+        <field name="uploaded_by_id" ref="demo_user_hr_manager"/>
+        <field name="notes">Pembayaran gaji untuk 52 karyawan (penambahan 2 staff)</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- ADDITIONAL DEMO DATA: Deficiency Quantification Examples -->
+    <!-- ========================================== -->
+
+    <!-- Material Weakness Example -->
+    <record id="demo_finding_material_weakness" model="icofr.finding">
+        <field name="name">Kelemahan Material dalam Pengendalian Kas</field>
+        <field name="code">FIND-MATW-001</field>
+        <field name="finding_type">material_weakness</field>
+        <field name="severity_level">critical</field>
+        <field name="description">Ditemukan kelemahan material dalam pengendalian kas keluar perusahaan terkait dengan otorisasi ganda</field>
+        <field name="impact_assessment">Risiko kerugian finansial yang signifikan akibat pengeluaran tidak sah</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="risk_id" ref="demo_risk_unauth_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">open</field>
+        <field name="root_cause">Proses otorisasi manual tidak konsisten diterapkan</field>
+        <field name="recommendation">Implementasi sistem otorisasi otomatis dengan approval workflow</field>
+        <field name="created_by_id" ref="demo_user_jane_smith"/>
+        <field name="quantitative_impact_amount">2500000000.0</field>
+        <field name="qualitative_impact_score">5.0</field>
+        <field name="deficiency_category">material_weakness</field>
+        <field name="impact_assessment_method">hybrid</field>
+        <field name="manual_monetary_impact_amount">2000000000.0</field>
+        <field name="manual_qualitative_impact_score">4.8</field>
+    </record>
+
+    <!-- Significant Deficiency Example -->
+    <record id="demo_finding_signif_deficiency" model="icofr.finding">
+        <field name="name">Kekurangan Signifikan dalam Proses Rekonsiliasi Bank</field>
+        <field name="code">FIND-SIGD-001</field>
+        <field name="finding_type">significant_deficiency</field>
+        <field name="severity_level">high</field>
+        <field name="description">Proses rekonsiliasi bank tidak dilakukan secara tepat waktu dan tidak terdokumentasi dengan baik</field>
+        <field name="impact_assessment">Potensi kesalahan dalam pencatatan keuangan dan risiko tidak terdeteksinya ketidaksesuaian</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="risk_id" ref="demo_risk_unauth_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">in_progress</field>
+        <field name="root_cause">Kurangnya sumber daya dan penjadwalan yang tidak teratur</field>
+        <field name="recommendation">Pembuatan jadwal rekonsiliasi tetap dan penunjukan staf khusus</field>
+        <field name="created_by_id" ref="demo_user_jane_smith"/>
+        <field name="quantitative_impact_amount">250000000.0</field>
+        <field name="qualitative_impact_score">4.0</field>
+        <field name="deficiency_category">significant_deficiency</field>
+        <field name="impact_assessment_method">automatic</field>
+    </record>
+
+    <!-- Control Deficiency Example -->
+    <record id="demo_finding_control_deficiency" model="icofr.finding">
+        <field name="name">Kekurangan Kontrol dalam Verifikasi Vendor Baru</field>
+        <field name="code">FIND-CONTD-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">medium</field>
+        <field name="description">Proses verifikasi vendor baru tidak memiliki otorisasi ganda sebelum setup</field>
+        <field name="impact_assessment">Risiko terhadap pembayaran ke vendor fiktif</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="risk_id" ref="demo_risk_unauth_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">in_progress</field>
+        <field name="root_cause">Prosedur tidak diikuti secara konsisten</field>
+        <field name="recommendation">Implementasi checklist verifikasi vendor dengan otorisasi ganda</field>
+        <field name="created_by_id" ref="demo_user_jane_smith"/>
+        <field name="quantitative_impact_amount">50000000.0</field>
+        <field name="qualitative_impact_score">2.5</field>
+        <field name="deficiency_category">control_deficiency</field>
+        <field name="impact_assessment_method">automatic</field>
+    </record>
+
+    <!-- Finding with Management Override Example -->
+    <record id="demo_finding_with_override" model="icofr.finding">
+        <field name="name">Kesalahan dalam Prosedur Penagihan</field>
+        <field name="code">FIND-OVERRIDE-001</field>
+        <field name="finding_type">process_inefficiency</field>
+        <field name="severity_level">high</field>
+        <field name="description">Ditemukan keterlambatan dalam proses penagihan yang menyebabkan cash flow negatif</field>
+        <field name="impact_assessment">Pengaruh langsung terhadap cash flow perusahaan</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="risk_id" ref="demo_risk_fraud_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">in_progress</field>
+        <field name="root_cause">Kurangnya koordinasi antar departemen</field>
+        <field name="recommendation">Peningkatan komunikasi dan sistem tracking penagihan</field>
+        <field name="created_by_id" ref="demo_user_jane_smith"/>
+        <field name="quantitative_impact_amount">150000000.0</field>
+        <field name="qualitative_impact_score">3.8</field>
+        <field name="deficiency_category">process_inefficiency</field>
+        <field name="impact_assessment_method">hybrid</field>
+        <field name="manual_monetary_impact_amount">100000000.0</field>
+        <field name="manual_qualitative_impact_score">3.5</field>
+        <field name="override_deficiency_classification">significant_deficiency</field>
+        <field name="override_reason">Manajemen menilai dampak operasional lebih besar dari yang dihitung sistem</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- ADDITIONAL DEMO DATA: CSA Campaign Workflow with Multiple Participants -->
+    <!-- ========================================== -->
+
+    <!-- CSA Campaign for Q2 2024 -->
+    <record id="demo_csa_campaign_q2_2024" model="icofr.csa.campaign">
+        <field name="name">CSA Q2 2024</field>
+        <field name="campaign_code">CSA-Q2-2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="period_start_date" eval="time.strftime('2024-04-01')"/>
+        <field name="period_end_date" eval="time.strftime('2024-06-30')"/>
+        <field name="description">Kampanye CSA Kuartal 2 Tahun 2024 untuk proses bisnis utama</field>
+        <field name="creator_id" ref="demo_user_jane_smith"/>
+        <field name="process_ids" eval="[(6, 0, [ref('demo_proc_cashin_001'), ref('demo_proc_cashout_001'), ref('demo_proc_payroll_001')])]"/>
+        <field name="control_ids" eval="[(6, 0, [ref('demo_ctrl_cash_001'), ref('demo_ctrl_withdraw_001'), ref('demo_ctrl_payroll_001')])]"/>
+        <field name="status">ongoing</field>
+    </record>
+
+    <!-- CSA assignments from the campaign -->
+    <record id="demo_csa_cashin" model="icofr.csa">
+        <field name="name">CSA: Otorisasi transaksi lebih dari Rp. 10.000.000 - CSA Q2 2024</field>
+        <field name="code">CSA-CASHIN-001</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="assessment_period">Q2 2024</field>
+        <field name="assessment_date" eval="time.strftime('2024-05-15')"/>
+        <field name="control_owner_id" ref="demo_user_john_doe"/>
+        <field name="reviewer_id" ref="demo_user_jane_smith"/>
+        <field name="status">completed</field>
+        <field name="design_effective" eval="True"/>
+        <field name="operating_effective" eval="True"/>
+        <field name="frequency_complied" eval="True"/>
+        <field name="documentation_accurate" eval="True"/>
+        <field name="compliance_result">fully_compliant</field>
+        <field name="effectiveness_result">highly_effective</field>
+        <field name="sample_size">30</field>
+        <field name="testing_evidence">Sampel transaksi diperiksa, semuanya memiliki otorisasi yang valid</field>
+        <field name="campaign_id" ref="demo_csa_campaign_q2_2024"/>
+    </record>
+
+    <record id="demo_csa_cashout" model="icofr.csa">
+        <field name="name">CSA: Otorisasi Pencairan Dana - CSA Q2 2024</field>
+        <field name="code">CSA-CASHOUT-001</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="assessment_period">Q2 2024</field>
+        <field name="assessment_date" eval="time.strftime('2024-05-20')"/>
+        <field name="control_owner_id" ref="demo_user_finance_manager"/>
+        <field name="reviewer_id" ref="demo_user_jane_smith"/>
+        <field name="status">in_progress</field>
+        <field name="design_effective" eval="True"/>
+        <field name="operating_effective" eval="False"/>
+        <field name="frequency_complied" eval="True"/>
+        <field name="documentation_accurate" eval="False"/>
+        <field name="compliance_result">partially_compliant</field>
+        <field name="effectiveness_result">partially_effective</field>
+        <field name="sample_size">25</field>
+        <field name="testing_evidence">Beberapa transaksi tidak memiliki dokumentasi yang lengkap</field>
+        <field name="findings">Ditemukan beberapa transaksi yang tidak memiliki otorisasi lengkap</field>
+        <field name="recommendations">Perbaikan proses dokumentasi dan peningkatan kontrol otorisasi</field>
+        <field name="campaign_id" ref="demo_csa_campaign_q2_2024"/>
+    </record>
+
+    <record id="demo_csa_payroll" model="icofr.csa">
+        <field name="name">CSA: Otorisasi Ganda untuk Pembayaran Gaji - CSA Q2 2024</field>
+        <field name="code">CSA-PAYROLL-001</field>
+        <field name="control_id" ref="demo_ctrl_payroll_001"/>
+        <field name="assessment_period">Q2 2024</field>
+        <field name="assessment_date" eval="time.strftime('2024-05-25')"/>
+        <field name="control_owner_id" ref="demo_user_hr_manager"/>
+        <field name="reviewer_id" ref="demo_user_jane_smith"/>
+        <field name="status">in_progress</field>
+        <field name="design_effective" eval="True"/>
+        <field name="operating_effective" eval="True"/>
+        <field name="frequency_complied" eval="True"/>
+        <field name="documentation_accurate" eval="True"/>
+        <field name="compliance_result">mostly_compliant</field>
+        <field name="effectiveness_result">effective</field>
+        <field name="sample_size">20</field>
+        <field name="testing_evidence">Proses otorisasi ganda berjalan dengan baik</field>
+        <field name="findings">Proses berjalan dengan baik, beberapa minor improvement ditemukan</field>
+        <field name="campaign_id" ref="demo_csa_campaign_q2_2024"/>
+    </record>
+
+    <!-- Additional CSA for the same campaign showing different status -->
+    <record id="demo_csa_verification" model="icofr.csa">
+        <field name="name">CSA: Verifikasi sistem otorisasi - CSA Q2 2024</field>
+        <field name="code">CSA-VERIFY-001</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_002"/>
+        <field name="assessment_period">Q2 2024</field>
+        <field name="assessment_date" eval="time.strftime('2024-06-10')"/>
+        <field name="control_owner_id" ref="demo_user_it_manager"/>
+        <field name="reviewer_id" ref="demo_user_jane_smith"/>
+        <field name="status">planned</field>
+        <field name="campaign_id" ref="demo_csa_campaign_q2_2024"/>
+    </record>
+
+    <!-- Create a finding from one of the CSA results -->
+    <record id="demo_finding_from_csa" model="icofr.finding">
+        <field name="name">Temuan dari CSA Pengeluaran Kas Q2 2024</field>
+        <field name="code">FIND-CSA-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">medium</field>
+        <field name="description">Ditemukan kekurangan dalam dokumentasi otorisasi pengeluaran kas selama CSA Q2 2024</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="risk_id" ref="demo_risk_unauth_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">in_progress</field>
+        <field name="root_cause">Kurangnya dokumentasi yang terpadu untuk proses otorisasi</field>
+        <field name="recommendation">Implementasi sistem dokumentasi terpadu untuk semua transaksi</field>
+        <field name="created_by_id" ref="demo_user_jane_smith"/>
+        <field name="csa_id" ref="demo_csa_cashout"/>
+        <field name="quantitative_impact_amount">50000000.0</field>
+        <field name="qualitative_impact_score">3.0</field>
+        <field name="deficiency_category">control_deficiency</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- ADDITIONAL DEMO DATA: Cross-Module Linkages -->
+    <!-- ========================================== -->
+
+    <!-- Link finding to POJK report -->
+    <record id="demo_finding_from_csa" model="icofr.finding">
+        <field name="pojk_report_id" ref="demo_pojk_report_2024"/>  <!-- Link to POJK report -->
+    </record>
+
+    <!-- Link action plan to certification -->
+    <record id="demo_action_plan_pay_001" model="icofr.action.plan">
+        <field name="certification_id" ref="demo_certification_2024"/>  <!-- Link to certification -->
+    </record>
+
+    <!-- Link additional findings to POJK report -->
+    <record id="demo_finding_pay_001" model="icofr.finding">
+        <field name="pojk_report_id" ref="demo_pojk_report_2024"/>  <!-- Link to POJK report -->
+    </record>
+
+    <record id="demo_finding_outcash_001" model="icofr.finding">
+        <field name="pojk_report_id" ref="demo_pojk_report_2024"/>  <!-- Link to POJK report -->
+    </record>
+
+    <record id="demo_finding_negative_scenario7" model="icofr.finding">
+        <field name="pojk_report_id" ref="demo_pojk_report_2024"/>  <!-- Link to POJK report -->
+    </record>
+
+
+
+    <!-- ========================================== -->
+    <!-- ADDITIONAL DEMO DATA: Multi-Company Examples -->
+    <!-- ========================================== -->
+
+    <!-- Additional companies for multi-company demo -->
+    <record id="demo_company_subsidiary" model="res.company">
+        <field name="name">PT Subsidiary ABC</field>
+        <field name="email">info@subsidiaryabc.com</field>
+        <field name="phone">+62 21 1234 5678</field>
+        <field name="street">Jl. Merdeka No. 10</field>
+        <field name="city">Bandung</field>
+        <field name="zip">40115</field>
+        <field name="country_id" ref="base.id"/>
+        <!-- <field name="parent_id" ref="base.main_company"/> This causes error on update if hierarchy exists -->
+    </record>
+
+    <record id="demo_company_another" model="res.company">
+        <field name="name">PT ABC Lainnya</field>
+        <field name="email">info@abclainnya.com</field>
+        <field name="phone">+62 21 8765 4321</field>
+        <field name="street">Jl. Sudirman No. 123</field>
+        <field name="city">Surabaya</field>
+        <field name="zip">60221</field>
+        <field name="country_id" ref="base.id"/>
+        <!-- <field name="parent_id" ref="base.main_company"/> This causes error on update if hierarchy exists -->
+    </record>
+
+    <!-- User for subsidiary company -->
+    <record id="demo_user_subsidiary_mgr" model="res.users">
+        <field name="name">Manager Subsidiary</field>
+        <field name="login">subsidiary_mgr</field>
+        <field name="password">SubsidiaryMgr123</field>
+        <field name="email">mgr@subsidiaryabc.com</field>
+        <field name="company_id" ref="demo_company_subsidiary"/>
+        <field name="company_ids" eval="[(4, ref('demo_company_subsidiary')), (4, ref('base.main_company'))]"/>
+    </record>
+
+    <!-- Business process for subsidiary -->
+    <record id="demo_proc_subsidiary_sales" model="icofr.process">
+        <field name="name">Proses Penjualan Subsidiary</field>
+        <field name="code">PROC-SUBSALE-001</field>
+        <field name="description">Proses penjualan untuk anak perusahaan</field>
+        <field name="category">operational</field>
+        <field name="owner_id" ref="demo_user_subsidiary_mgr"/>
+        <field name="status">active</field>
+        <field name="company_id" ref="demo_company_subsidiary"/>
+    </record>
+
+    <!-- Risk for subsidiary -->
+    <record id="demo_risk_subsidiary" model="icofr.risk">
+        <field name="name">Risiko Penagihan Subsidiary</field>
+        <field name="code">RISK-SUB-001</field>
+        <field name="risk_category">operational</field>
+        <field name="risk_type">inherent</field>
+        <field name="description">Risiko terkait penagihan di anak perusahaan</field>
+        <field name="process_id" ref="demo_proc_subsidiary_sales"/>
+        <field name="owner_id" ref="demo_user_subsidiary_mgr"/>
+        <field name="likelihood">medium</field>
+        <field name="impact">high</field>
+        <field name="status">identified</field>
+        <field name="company_id" ref="demo_company_subsidiary"/>
+    </record>
+
+    <!-- Control for subsidiary -->
+    <record id="demo_ctrl_subsidiary" model="icofr.control">
+        <field name="name">Otorisasi Penjualan Subsidiary</field>
+        <field name="code">CTRL-SUB-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Kontrol otorisasi penjualan di anak perusahaan</field>
+        <field name="process_id" ref="demo_proc_subsidiary_sales"/>
+        <field name="risk_ids" eval="[(4, ref('demo_risk_subsidiary'))]"/>
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="demo_user_subsidiary_mgr"/>
+        <field name="status">active</field>
+        <field name="company_id" ref="demo_company_subsidiary"/>
+    </record>
+
+    <!-- Testing for subsidiary -->
+    <record id="demo_testing_subsidiary" model="icofr.testing">
+        <field name="name">Pengujian Kontrol Penjualan Subsidiary</field>
+        <field name="control_id" ref="demo_ctrl_subsidiary"/>
+        <field name="test_type">compliance</field>
+        <field name="tester_id" ref="demo_user_subsidiary_mgr"/>
+        <field name="test_date" eval="time.strftime('2024-05-20')"/>
+        <field name="status">completed</field>
+        <field name="testing_procedures">Menguji otorisasi penjualan di sistem</field>
+        <field name="test_results">Semua transaksi penjualan memiliki otorisasi yang valid</field>
+        <field name="effectiveness">effective</field>
+        <field name="company_id" ref="demo_company_subsidiary"/>
+    </record>
+
+    <!-- Finding for subsidiary -->
+    <record id="demo_finding_subsidiary" model="icofr.finding">
+        <field name="name">Temuan Pengujian Subsidiary</field>
+        <field name="code">FIND-SUB-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">medium</field>
+        <field name="description">Ditemukan beberapa kekurangan dalam proses otorisasi penjualan</field>
+        <field name="control_id" ref="demo_ctrl_subsidiary"/>
+        <field name="risk_id" ref="demo_risk_subsidiary"/>
+        <field name="owner_id" ref="demo_user_subsidiary_mgr"/>
+        <field name="status">in_progress</field>
+        <field name="impact_assessment">Dampak ringan terhadap kepatuhan internal</field>
+        <field name="root_cause">Prosedur tidak diikuti secara konsisten</field>
+        <field name="company_id" ref="demo_company_subsidiary"/>
+    </record>
+
+    <!-- Account mapping for subsidiary -->
+    <record id="demo_account_mapping_subsidiary" model="icofr.account.mapping">
+        <field name="name">Penjualan Subsidiary - Sales Account</field>
+        <field name="gl_account">4101.002</field>
+        <field name="account_description">Penjualan Produk Subsidiary</field>
+        <field name="fsl_item">Sales Revenue</field>
+        <field name="account_balance">2000000000.0</field>
+        <field name="has_fraud_risk" eval="False"/>
+        <field name="is_complex_transaction" eval="False"/>
+        <field name="has_related_party" eval="True"/>
+        <field name="significance_level">significant</field>
+    </record>
+
+    <!-- CSA for subsidiary -->
+    <record id="demo_csa_subsidiary" model="icofr.csa">
+        <field name="name">CSA: Otorisasi Penjualan Subsidiary - Q2 2024</field>
+        <field name="code">CSA-SUB-001</field>
+        <field name="control_id" ref="demo_ctrl_subsidiary"/>
+        <field name="assessment_period">Q2 2024</field>
+        <field name="assessment_date" eval="time.strftime('2024-05-15')"/>
+        <field name="control_owner_id" ref="demo_user_subsidiary_mgr"/>
+        <field name="status">completed</field>
+        <field name="design_effective" eval="True"/>
+        <field name="operating_effective" eval="True"/>
+        <field name="frequency_complied" eval="True"/>
+        <field name="sample_size">20</field>
+        <field name="testing_evidence">Sampel transaksi penjualan diuji, semuanya memiliki otorisasi yang valid</field>
+        <field name="company_id" ref="demo_company_subsidiary"/>
+    </record>
+
+    <!-- Audit population for subsidiary -->
+    <record id="demo_pop_subsidiary_001" model="icofr.audit.population">
+        <field name="transaction_no">SUB-2024-001</field>
+        <field name="transaction_date" eval="time.strftime('2024-01-15')"/>
+        <field name="amount">50000000.0</field>
+        <field name="description">Penjualan produk ke pelanggan di Subsidiary ABC</field>
+        <field name="control_id" ref="demo_ctrl_subsidiary"/>
+        <field name="uploaded_by_id" ref="demo_user_subsidiary_mgr"/>
+        <field name="company_id" ref="demo_company_subsidiary"/>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- ADDITIONAL DEMO DATA: Timeline-based Annual ICORF Cycle -->
+    <!-- ========================================== -->
+
+    <!-- Annual Campaign for 2024 -->
+    <record id="demo_annual_campaign_2024" model="icofr.csa.campaign">
+        <field name="name">Kampanye CSA Tahunan 2024</field>
+        <field name="campaign_code">CSA-ANN-2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="period_start_date" eval="time.strftime('2024-01-01')"/>
+        <field name="period_end_date" eval="time.strftime('2024-12-31')"/>
+        <field name="description">Kampanye CSA tahunan untuk seluruh proses bisnis utama</field>
+        <field name="creator_id" ref="demo_user_jane_smith"/>
+        <field name="process_ids" eval="[(6, 0, [ref('demo_proc_cashin_001'), ref('demo_proc_cashout_001'), ref('demo_proc_payroll_001'), ref('demo_proc_subsidiary_sales')])]"/>
+        <field name="control_ids" eval="[(6, 0, [ref('demo_ctrl_cash_001'), ref('demo_ctrl_withdraw_001'), ref('demo_ctrl_payroll_001'), ref('demo_ctrl_subsidiary')])]"/>
+        <field name="status">ongoing</field>
+    </record>
+
+    <!-- Q1 2024 Testing Schedule -->
+    <record id="demo_schedule_q1_2024" model="icofr.testing.schedule">
+        <field name="name">Jadwal Pengujian Q1 2024</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="schedule_type">recurring</field>
+        <field name="frequency">quarterly</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('2024-03-01')"/>
+        <field name="end_date" eval="(datetime.now() + timedelta(days=365)).strftime('%Y-%m-%d')"/>
+        <field name="status">active</field>
+        <field name="description">Pengujian kuartalan terhadap kontrol otorisasi pencairan dana</field>
+    </record>
+
+    <!-- Q2 2024 Testing Schedule -->
+    <record id="demo_schedule_q2_2024" model="icofr.testing.schedule">
+        <field name="name">Jadwal Pengujian Q2 2024</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="schedule_type">recurring</field>
+        <field name="frequency">quarterly</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('2024-06-01')"/>
+        <field name="end_date" eval="(datetime.now() + timedelta(days=365)).strftime('%Y-%m-%d')"/>
+        <field name="status">active</field>
+        <field name="description">Pengujian kuartalan terhadap kontrol otorisasi transaksi di atas Rp. 10.000.000</field>
+    </record>
+
+    <!-- Annual Risk Assessment for 2024 -->
+    <record id="demo_risk_assessment_2024" model="icofr.risk">
+        <field name="name">Penilaian Risiko Tahunan 2024</field>
+        <field name="code">RISK-ANN-2024</field>
+        <field name="risk_category">strategic</field>
+        <field name="risk_type">inherent</field>
+        <field name="description">Penilaian risiko tahunan untuk tahun fiskal 2024</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="likelihood">high</field>
+        <field name="impact">high</field>
+        <field name="status">assessed</field>
+        <field name="last_assessment_date" eval="time.strftime('2024-01-15')"/>
+    </record>
+
+    <!-- Materiality calculation for 2024 -->
+    <record id="demo_materiality_2024" model="icofr.materiality">
+        <field name="name">Perhitungan Materialitas Tahun 2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="revenue_amount" eval="50000000000.0"/>  <!-- 50 billion -->
+        <field name="total_assets_amount" eval="80000000000.0"/>  <!-- 80 billion -->
+        <field name="net_income_amount" eval="5000000000.0"/>  <!-- 5 billion -->
+        <field name="overall_materiality_percent">0.5</field>
+        <field name="performance_materiality_percent">75.0</field>
+        <field name="calculation_method">percent_revenue</field>
+        <field name="materiality_basis">revenue</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Additional materiality calculation referenced elsewhere -->
+    <record id="demo_materiality_calc_2024" model="icofr.materiality">
+        <field name="name">Perhitungan Materialitas Tahun 2024 (Kalkulasi)</field>
+        <field name="fiscal_year">2024</field>
+        <field name="revenue_amount" eval="50000000000.0"/>  <!-- 50 billion -->
+        <field name="total_assets_amount" eval="80000000000.0"/>  <!-- 80 billion -->
+        <field name="net_income_amount" eval="5000000000.0"/>  <!-- 5 billion -->
+        <field name="overall_materiality_percent">0.5</field>
+        <field name="performance_materiality_percent">75.0</field>
+        <field name="calculation_method">percent_revenue</field>
+        <field name="materiality_basis">revenue</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Notification for Q2 CSA deadline -->
+    <record id="demo_notification_q2_csa" model="icofr.notification.scheduler">
+        <field name="name">Notifikasi CSA Q2 2024</field>
+        <field name="notification_type">csa_assignment</field>
+        <field name="model_ref">icofr.csa,1</field>  <!-- Reference to first CSA -->
+        <field name="next_run_date" eval="time.strftime('2024-05-01 09:00:00')"/>
+        <field name="recipient_ids" eval="[(6, 0, [ref('demo_user_john_doe'), ref('demo_user_finance_manager'), ref('demo_user_hr_manager')])]"/>
+        <field name="notification_message">Pengingat: CSA Q2 2024 Harus Diselesaikan\n\nIni adalah pengingat bahwa CSA Q2 2024 harus diselesaikan sebelum akhir bulan ini.</field>
+        <field name="active" eval="True"/>
+        <field name="interval_number">7</field>  <!-- Repeat every 7 days -->
+        <field name="interval_type">days</field>
+    </record>
+
+    <!-- Certification timeline for 2024 -->
+    <record id="demo_certification_timeline" model="icofr.certification">
+        <field name="name">Sertifikasi ICORF Q4 2024 Timeline</field>
+        <field name="fiscal_year">2024</field>
+        <field name="certification_date" eval="time.strftime('2024-12-15')"/>
+        <field name="certified_by_id" ref="demo_user_ceo"/>
+        <field name="status">approved</field>
+        <field name="scope">Semua kontrol internal atas pelaporan keuangan</field>
+        <field name="effectiveness_statement">Berdasarkan penilaian manajemen, kontrol internal atas pelaporan keuangan efektif</field>
+    </record>
+
+    <!-- Timeline of events for the full ICORF cycle -->
+    <!-- January: Annual planning -->
+    <record id="demo_timeline_jan_2024" model="icofr.testing.schedule">
+        <field name="name">Perencanaan Tahunan ICORF 2024</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>  <!-- Add required control_id field -->
+        <field name="schedule_type">one_time</field>
+        <field name="frequency">yearly</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('2024-01-15')"/>
+        <field name="end_date" eval="time.strftime('2024-01-15')"/>
+        <field name="status">completed</field>
+        <field name="description">Perencanaan untuk siklus ICORF tahun 2024</field>
+    </record>
+
+    <!-- March: Q1 CSA execution -->
+    <record id="demo_timeline_mar_2024" model="icofr.testing.schedule">
+        <field name="name">Eksekusi CSA Q1 2024</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>  <!-- Add required control_id field -->
+        <field name="schedule_type">one_time</field>
+        <field name="frequency">quarterly</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('2024-03-15')"/>
+        <field name="end_date" eval="time.strftime('2024-03-31')"/>
+        <field name="status">completed</field>
+        <field name="description">Eksekusi CSA untuk kuartal pertama tahun 2024</field>
+    </record>
+
+    <!-- June: Q2 CSA execution -->
+    <record id="demo_timeline_jun_2024" model="icofr.testing.schedule">
+        <field name="name">Eksekusi CSA Q2 2024</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>  <!-- Add required control_id field -->
+        <field name="schedule_type">one_time</field>
+        <field name="frequency">quarterly</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('2024-06-15')"/>
+        <field name="end_date" eval="time.strftime('2024-06-30')"/>
+        <field name="status">active</field>
+        <field name="description">Eksekusi CSA untuk kuartal kedua tahun 2024</field>
+    </record>
+
+    <!-- September: Q3 CSA execution -->
+    <record id="demo_timeline_sep_2024" model="icofr.testing.schedule">
+        <field name="name">Eksekusi CSA Q3 2024</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>  <!-- Add required control_id field -->
+        <field name="schedule_type">one_time</field>
+        <field name="frequency">quarterly</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('2024-09-15')"/>
+        <field name="end_date" eval="time.strftime('2024-09-30')"/>
+        <field name="status">active</field>
+        <field name="description">Eksekusi CSA untuk kuartal ketiga tahun 2024</field>
+    </record>
+
+    <!-- December: Q4 CSA and Annual Certification -->
+    <record id="demo_timeline_dec_2024" model="icofr.testing.schedule">
+        <field name="name">Eksekusi CSA Q4 dan Sertifikasi Tahunan 2024</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>  <!-- Add required control_id field -->
+        <field name="schedule_type">one_time</field>
+        <field name="frequency">yearly</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('2024-12-01')"/>
+        <field name="end_date" eval="time.strftime('2024-12-15')"/>
+        <field name="status">active</field>
+        <field name="description">Eksekusi CSA untuk kuartal keempat dan sertifikasi tahunan 2024</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- COMPREHENSIVE DEMO DATA: COBIT ITGC Mapping with IT Controls -->
+    <!-- ========================================== -->
+
+    <!-- COBIT Domain A - Evaluate, Direct, and Monitor -->
+    <record id="demo_cobit_edm01_01" model="icofr.cobit.element">
+        <field name="name">Manage IT Governance Framework</field>
+        <field name="code">EDM01.01</field>
+        <field name="description">Mengelola kerangka tata kelola TI organisasi untuk menjamin bahwa TI mendukung pencapaian tujuan organisasi</field>
+        <field name="domain">A - Evaluate, Direct and Monitor</field>
+        <field name="process_group">Governance Framework</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">data_governance</field>
+        <field name="it_asset_type">application</field>
+        <field name="maturity_level">4</field>
+        <field name="notes">Kontrol penting untuk menjamin arah TI selaras dengan strategi bisnis</field>
+    </record>
+
+    <record id="demo_cobit_edm03_01" model="icofr.cobit.element">
+        <field name="name">Establish Direction for IT</field>
+        <field name="code">EDM03.01</field>
+        <field name="description">Mengembangkan dan menerapkan visi, misi, dan strategi TI yang selaras dengan strategi dan arah organisasi</field>
+        <field name="domain">A - Evaluate, Direct and Monitor</field>
+        <field name="process_group">IT Strategy</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">data_governance</field>
+        <field name="it_asset_type">application</field>
+        <field name="maturity_level">4</field>
+        <field name="notes">Menjamin bahwa investasi TI mendukung tujuan organisasi</field>
+    </record>
+
+    <!-- COBIT Domain B - Align, Plan, and Organize -->
+    <record id="demo_cobit_apo13_01" model="icofr.cobit.element">
+        <field name="name">Manage Security</field>
+        <field name="code">APO13.01</field>
+        <field name="description">Mengelola keamanan informasi untuk melindungi aset informasi organisasi</field>
+        <field name="domain">B - Align, Plan and Organize</field>
+        <field name="process_group">Security Management</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">security_management</field>
+        <field name="it_asset_type">database</field>
+        <field name="maturity_level">5</field>
+        <field name="notes">Kontrol penting untuk perlindungan data keuangan</field>
+    </record>
+
+    <record id="demo_cobit_apo07_01" model="icofr.cobit.element">
+        <field name="name">Manage Human Resources</field>
+        <field name="code">APO07.01</field>
+        <field name="description">Mengelola SDM TI untuk menjamin bahwa personel TI terpilih, dikembangkan, dan dipertahankan sesuai dengan peran dan tanggung jawabnya</field>
+        <field name="domain">B - Align, Plan and Organize</field>
+        <field name="process_group">Human Resource Management</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">security_management</field>
+        <field name="it_asset_type">end_user_device</field>
+        <field name="maturity_level">3</field>
+        <field name="notes">Kontrol penting untuk menjamin integritas personel TI</field>
+    </record>
+
+    <!-- COBIT Domain C - Build, Acquire, and Implement -->
+    <record id="demo_cobit_bai03_01" model="icofr.cobit.element">
+        <field name="name">Manage Changes</field>
+        <field name="code">BAI03.01</field>
+        <field name="description">Mengelola perubahan dalam sistem TI untuk menjamin bahwa perubahan dilakukan secara terkendali</field>
+        <field name="domain">C - Build, Acquire and Implement</field>
+        <field name="process_group">Change Management</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">change_management</field>
+        <field name="it_asset_type">application</field>
+        <field name="maturity_level">5</field>
+        <field name="notes">Kontrol penting untuk mencegah perubahan yang dapat mempengaruhi akurasi data keuangan</field>
+    </record>
+
+    <record id="demo_cobit_bai06_01" model="icofr.cobit.element">
+        <field name="name">Manage Configuration</field>
+        <field name="code">BAI06.01</field>
+        <field name="description">Mengelola konfigurasi TI untuk menjamin bahwa konfigurasi sistem TI didefinisikan dan dikontrol</field>
+        <field name="domain">C - Build, Acquire and Implement</field>
+        <field name="process_group">Configuration Management</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">change_management</field>
+        <field name="it_asset_type">server</field>
+        <field name="maturity_level">4</field>
+        <field name="notes">Menjamin konfigurasi TI konsisten dengan kebutuhan bisnis</field>
+    </record>
+
+    <!-- COBIT Domain D - Deliver, Service, and Support -->
+    <record id="demo_cobit_dss01_01" model="icofr.cobit.element">
+        <field name="name">Manage Operations</field>
+        <field name="code">DSS01.01</field>
+        <field name="description">Mengelola operasi TI secara efisien dan efektif untuk menjamin ketersediaan, kapabilitas, dan kinerja sistem TI</field>
+        <field name="domain">D - Deliver, Service and Support</field>
+        <field name="process_group">Operations Management</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">it_operations</field>
+        <field name="it_asset_type">server</field>
+        <field name="maturity_level">4</field>
+        <field name="notes">Kontrol penting untuk menjamin ketersediaan data keuangan</field>
+    </record>
+
+    <record id="demo_cobit_dss05_01" model="icofr.cobit.element">
+        <field name="name">Manage Data</field>
+        <field name="code">DSS05.01</field>
+        <field name="description">Mengelola data dalam sistem TI untuk mendukung kebutuhan informasi organisasi</field>
+        <field name="domain">D - Deliver, Service and Support</field>
+        <field name="process_group">Data Management</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">data_governance</field>
+        <field name="it_asset_type">data</field>
+        <field name="maturity_level">4</field>
+        <field name="notes">Kontrol penting untuk menjamin kualitas dan keamanan data keuangan</field>
+    </record>
+
+    <record id="demo_cobit_dss06_01" model="icofr.cobit.element">
+        <field name="name">Manage Business Process Controls</field>
+        <field name="code">DSS06.01</field>
+        <field name="description">Mengelola kontrol proses bisnis untuk menjamin bahwa proses bisnis berjalan efektif</field>
+        <field name="domain">D - Deliver, Service and Support</field>
+        <field name="process_group">Application Control Management</field>
+        <field name="is_itgc" eval="True"/>
+        <field name="it_risk_area">security_management</field>
+        <field name="it_asset_type">application</field>
+        <field name="maturity_level">5</field>
+        <field name="notes">Kontrol aplikasi yang penting untuk menjamin akurasi data keuangan</field>
+    </record>
+
+    <!-- IT Processes for ITGC Mapping -->
+    <record id="demo_proc_it_change_mgt" model="icofr.process">
+        <field name="name">Manajemen Perubahan TI</field>
+        <field name="code">PROC-IT-CHANGE</field>
+        <field name="description">Proses manajemen perubahan untuk aplikasi keuangan dan sistem TI terkait</field>
+        <field name="category">supporting</field>
+        <field name="owner_id" ref="demo_user_it_manager"/>
+        <field name="status">active</field>
+        <field name="process_type">it_process</field>  <!-- Assuming this field exists for IT processes -->
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="demo_proc_it_access_mgt" model="icofr.process">
+        <field name="name">Manajemen Akses TI</field>
+        <field name="code">PROC-IT-ACCESS</field>
+        <field name="description">Proses manajemen akses pengguna untuk sistem keuangan dan TI</field>
+        <field name="category">supporting</field>
+        <field name="owner_id" ref="demo_user_it_manager"/>
+        <field name="status">active</field>
+        <field name="process_type">it_process</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="demo_proc_data_security" model="icofr.process">
+        <field name="name">Keamanan Data TI</field>
+        <field name="code">PROC-IT-DATASEC</field>
+        <field name="description">Proses keamanan data untuk melindungi informasi keuangan dalam sistem TI</field>
+        <field name="category">supporting</field>
+        <field name="owner_id" ref="demo_user_it_manager"/>
+        <field name="status">active</field>
+        <field name="process_type">it_process</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- IT Controls linked to COBIT Elements -->
+    <record id="demo_it_control_change_mgt" model="icofr.control">
+        <field name="name">Validasi Perubahan Aplikasi</field>
+        <field name="code">ITCTRL-CHG-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Validasi bahwa semua perubahan pada aplikasi keuangan telah melalui proses change management yang sesuai</field>
+        <field name="process_id" ref="demo_proc_it_change_mgt"/>
+        <field name="frequency">every_change</field>
+        <field name="owner_id" ref="demo_user_it_manager"/>
+        <field name="status">active</field>
+        <field name="control_owner_line">line_2</field>  <!-- Lini 2 responsibility -->
+        <field name="assertion_existence" eval="True"/>
+        <field name="assertion_completeness" eval="True"/>
+        <field name="assertion_accuracy" eval="True"/>
+        <field name="assertion_authorization" eval="True"/>
+        <field name="assertion_valuation" eval="True"/>
+        <field name="control_type_detailed">it_dependent</field>
+        <field name="frequency_detailed">event_driven</field>
+        <field name="cobit_element_ids" eval="[(4, ref('demo_cobit_bai03_01'))]"/>  <!-- Link to ITGC element -->
+        <field name="significance_level">significant</field>
+        <field name="testing_frequency">quarterly</field>
+        <field name="testing_procedures">Verifikasi dokumentasi change request dan approval sebelum implementasi perubahan</field>
+        <field name="evidence_required">Dokumen change request, approval matrix, dokumentasi implementasi</field>
+        <field name="key_performance_indicator">Jumlah perubahan tanpa approval / Jumlah permintaan perubahan * 100%</field>
+    </record>
+
+    <record id="demo_it_control_access_mgt" model="icofr.control">
+        <field name="name">Pengecekan Akses Pengguna TI</field>
+        <field name="code">ITCTRL-ACC-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Pengecekan bahwa akses pengguna TI hanya diberikan sesuai dengan prinsip least privilege dan role-based access</field>
+        <field name="process_id" ref="demo_proc_it_access_mgt"/>
+        <field name="frequency">monthly</field>
+        <field name="owner_id" ref="demo_user_it_manager"/>
+        <field name="status">active</field>
+        <field name="control_owner_line">line_2</field>  <!-- Lini 2 responsibility -->
+        <field name="assertion_existence" eval="True"/>
+        <field name="assertion_completeness" eval="True"/>
+        <field name="assertion_accuracy" eval="True"/>
+        <field name="assertion_authorization" eval="True"/>
+        <field name="assertion_valuation" eval="False"/>
+        <field name="control_type_detailed">it_dependent</field>
+        <field name="frequency_detailed">monthly</field>
+        <field name="cobit_element_ids" eval="[(4, ref('demo_cobit_apo13_01'))]"/>  <!-- Link to ITGC element -->
+        <field name="significance_level">significant</field>
+        <field name="testing_frequency">monthly</field>
+        <field name="testing_procedures">Revieuw access logs, verifikasi approval matrix, dan user access certifications</field>
+        <field name="evidence_required">Access logs, user certifications, approval documents</field>
+        <field name="key_performance_indicator">% pengguna dengan akses tidak sah</field>
+    </record>
+
+    <record id="demo_it_control_data_mgt" model="icofr.control">
+        <field name="name">Validasi Keamanan Data</field>
+        <field name="code">ITCTRL-DATA-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Validasi bahwa data keuangan dienkripsi dan dilindungi sesuai dengan kebijakan keamanan TI</field>
+        <field name="process_id" ref="demo_proc_data_security"/>
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="demo_user_it_manager"/>
+        <field name="status">active</field>
+        <field name="control_owner_line">line_2</field>  <!-- Lini 2 responsibility -->
+        <field name="assertion_existence" eval="True"/>
+        <field name="assertion_completeness" eval="True"/>
+        <field name="assertion_accuracy" eval="True"/>
+        <field name="assertion_authorization" eval="True"/>
+        <field name="assertion_valuation" eval="True"/>
+        <field name="control_type_detailed">it_dependent</field>
+        <field name="frequency_detailed">daily</field>
+        <field name="cobit_element_ids" eval="[(4, ref('demo_cobit_dss05_01'))]"/>  <!-- Link to ITGC element -->
+        <field name="significance_level">significant</field>
+        <field name="testing_frequency">quarterly</field>
+        <field name="testing_procedures">Verifikasi enkripsi data, access controls, dan backup procedures</field>
+        <field name="evidence_required">Dokumentasi kebijakan keamanan, hasil pengecekan enkripsi, backup logs</field>
+        <field name="key_performance_indicator">% data keuangan yang tidak terenkripsi</field>
+    </record>
+
+    <!-- IT Processes moved to before IT Controls section to ensure proper reference loading -->
+
+    <!-- ========================================== -->
+    <!-- COMPREHENSIVE DEMO DATA: Qualitative Account Assessment Workflows -->
+    <!-- ========================================== -->
+
+    <!-- Add qualitative assessments to existing account mappings -->
+    <record id="demo_qual_assess_cash_complexity" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_cash"/>
+        <field name="question">Kompleksitas transaksi pada akun ini?</field>
+        <field name="answer">1</field>
+        <field name="notes">Transaksi kas pada akun ini relatif sederhana tetapi perlu pengawasan tambahan</field>
+    </record>
+
+    <record id="demo_qual_assess_cash_fraud" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_cash"/>
+        <field name="question">Kerawanan terhadap fraud atau penyalahgunaan?</field>
+        <field name="answer">2</field>
+        <field name="notes">Akun kas rawan terhadap risiko fraud, terutama dalam transaksi tunai besar</field>
+    </record>
+
+    <record id="demo_qual_assess_cash_unusual" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_cash"/>
+        <field name="question">Volume transaksi yang tidak rutin?</field>
+        <field name="answer">1</field>
+        <field name="notes">Beberapa transaksi besar dilakukan secara tidak rutin yang memerlukan perhatian khusus</field>
+    </record>
+
+    <record id="demo_qual_assess_cash_subjective" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_cash"/>
+        <field name="question">Ketergantungan pada estimasi atau penilaian subjektif manajemen?</field>
+        <field name="answer">0</field>
+        <field name="notes">Akun kas tidak banyak bergantung pada estimasi subjektif</field>
+    </record>
+
+    <record id="demo_qual_assess_cash_related" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_cash"/>
+        <field name="question">Adanya transaksi dengan pihak berelasi?</field>
+        <field name="answer">1</field>
+        <field name="notes">Terdapat beberapa transaksi kas dengan pihak afiliasi</field>
+    </record>
+
+    <!-- Qualitative assessment for Accounts Receivable -->
+    <record id="demo_qual_assess_ar_complexity" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_ar"/>
+        <field name="question">Kompleksitas transaksi pada akun ini?</field>
+        <field name="answer">2</field>
+        <field name="notes">Ada berbagai jenis pelanggan dan kebijakan kredit yang membuat transaksi kompleks</field>
+    </record>
+
+    <record id="demo_qual_assess_ar_fraud" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_ar"/>
+        <field name="question">Kerawanan terhadap fraud atau penyalahgunaan?</field>
+        <field name="answer">2</field>
+        <field name="notes">Risiko fraud dalam piutang terkait dengan pelanggan fiktif atau penagihan palsu</field>
+    </record>
+
+    <record id="demo_qual_assess_ar_subjective" model="icofr.qualitative.assessment">
+        <field name="account_mapping_id" ref="demo_account_mapping_ar"/>
+        <field name="question">Ketergantungan pada estimasi atau penilaian subjektif manajemen?</field>
+        <field name="answer">3</field>
+        <field name="notes">Penilaian terhadap collectibility sangat bergantung pada estimasi manajemen</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- COMPREHENSIVE DEMO DATA: BPM/SOP Document Repository -->
+    <!-- ========================================== -->
+
+    <!-- BPM/SOP Documents for Cash Receipt Process -->
+    <record id="demo_bpm_cash_receipt_proc" model="icofr.bpm.document">
+        <field name="name">SOP Penerimaan Kas</field>
+        <field name="document_type">sop</field>
+        <field name="version">2.1</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>
+        <field name="status">active</field>
+        <field name="description">Standard Operating Procedure untuk proses penerimaan kas dalam berbagai bentuk (tunai, cek, wire transfer)</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="file_name">sop_cash_receipt_v2.1.pdf</field>
+        <field name="document_file" type="base64" file="icofr_demo/sop_cash_receipt_v2.1.pdf"/>
+    </record>
+
+    <record id="demo_bpm_cash_receipt_flow" model="icofr.bpm.document">
+        <field name="name">Business Process Flow - Penerimaan Kas</field>
+        <field name="document_type">business_process_flow</field>
+        <field name="version">1.0</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>
+        <field name="status">active</field>
+        <field name="description">Flowchart proses bisnis untuk penerimaan kas dari customer</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="file_name">bpf_cash_receipt_v1.0.png</field>
+        <field name="document_file" type="base64" file="icofr_demo/bpf_cash_receipt_v1.0.png"/>
+    </record>
+
+    <record id="demo_bpm_cash_disbursement_proc" model="icofr.bpm.document">
+        <field name="name">SOP Pengeluaran Kas</field>
+        <field name="document_type">sop</field>
+        <field name="version">2.0</field>
+        <field name="process_id" ref="demo_proc_cashout_001"/>
+        <field name="status">active</field>
+        <field name="description">Standard Operating Procedure untuk proses pengeluaran kas dan otorisasi pembayaran</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="file_name">sop_cash_disbursement_v2.0.pdf</field>
+        <field name="document_file" type="base64" file="icofr_demo/sop_cash_disbursement_v2.0.pdf"/>
+    </record>
+
+    <record id="demo_bpm_cash_disbursement_flow" model="icofr.bpm.document">
+        <field name="name">Business Process Flow - Pengeluaran Kas</field>
+        <field name="document_type">business_process_flow</field>
+        <field name="version">1.0</field>
+        <field name="process_id" ref="demo_proc_cashout_001"/>
+        <field name="status">active</field>
+        <field name="description">Flowchart proses bisnis untuk pengeluaran kas dan proses otorisasi</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="file_name">bpf_cash_disbursement_v1.0.png</field>
+        <field name="document_file" type="base64" file="icofr_demo/bpf_cash_disbursement_v1.0.png"/>
+    </record>
+
+    <!-- BPM/SOP Documents for Payroll Process -->
+    <record id="demo_bpm_payroll_proc" model="icofr.bpm.document">
+        <field name="name">SOP Penggajian Karyawan</field>
+        <field name="document_type">sop</field>
+        <field name="version">1.3</field>
+        <field name="process_id" ref="demo_proc_payroll_001"/>
+        <field name="status">active</field>
+        <field name="description">SOP untuk perhitungan dan pembayaran gaji serta manajemen informasi pribadi karyawan</field>
+        <field name="owner_id" ref="demo_user_hr_manager"/>
+        <field name="file_name">sop_payroll_v1.3.pdf</field>
+        <field name="document_file" type="base64" file="icofr_demo/sop_payroll_v1.3.pdf"/>
+    </record>
+
+    <record id="demo_bpm_payroll_flow" model="icofr.bpm.document">
+        <field name="name">Business Process Flow - Penggajian</field>
+        <field name="document_type">business_process_flow</field>
+        <field name="version">1.1</field>
+        <field name="process_id" ref="demo_proc_payroll_001"/>
+        <field name="status">active</field>
+        <field name="description">Flowchart proses penggajian dari perhitungan hingga pembayaran</field>
+        <field name="owner_id" ref="demo_user_hr_manager"/>
+        <field name="file_name">bpf_payroll_v1.1.png</field>
+        <field name="document_file" type="base64" file="icofr_demo/bpf_payroll_v1.1.png"/>
+    </record>
+
+    <!-- BPM/SOP Documents for IT Change Management Process -->
+    <record id="demo_bpm_it_change_proc" model="icofr.bpm.document">
+        <field name="name">SOP Manajemen Perubahan TI</field>
+        <field name="document_type">sop</field>
+        <field name="version">1.2</field>
+        <field name="process_id" ref="demo_proc_it_change_mgt"/>
+        <field name="status">active</field>
+        <field name="description">SOP untuk manajemen perubahan aplikasi dan sistem TI yang mempengaruhi pelaporan keuangan</field>
+        <field name="owner_id" ref="demo_user_it_manager"/>
+        <field name="file_name">sop_it_change_mgt_v1.2.pdf</field>
+        <field name="document_file" type="base64" file="icofr_demo/sop_it_change_mgt_v1.2.pdf"/>
+    </record>
+
+    <record id="demo_bpm_it_change_flow" model="icofr.bpm.document">
+        <field name="name">Business Process Flow - Perubahan TI</field>
+        <field name="document_type">business_process_flow</field>
+        <field name="version">1.0</field>
+        <field name="process_id" ref="demo_proc_it_change_mgt"/>
+        <field name="status">active</field>
+        <field name="description">Flowchart proses perubahan sistem TI dari permintaan hingga implementasi</field>
+        <field name="owner_id" ref="demo_user_it_manager"/>
+        <field name="file_name">bpf_it_change_v1.0.png</field>
+        <field name="document_file" type="base64" file="icofr_demo/bpf_it_change_v1.0.png"/>
+    </record>
+
+    <!-- Policies -->
+    <record id="demo_policy_fraud_prevention" model="icofr.bpm.document">
+        <field name="name">Kebijakan Pencegahan Fraud</field>
+        <field name="document_type">policy</field>
+        <field name="version">3.0</field>
+        <field name="process_id" ref="demo_proc_cashout_001"/>
+        <field name="status">active</field>
+        <field name="description">Kebijakan perusahaan untuk mencegah, mendeteksi, dan menindaklanjuti fraud</field>
+        <field name="owner_id" ref="demo_user_jane_smith"/>
+        <field name="file_name">policy_fraud_prevention_v3.0.pdf</field>
+        <field name="document_file" type="base64" file="icofr_demo/policy_fraud_prevention_v3.0.pdf"/>
+    </record>
+
+    <record id="demo_policy_authorizations" model="icofr.bpm.document">
+        <field name="name">Kebijakan Otorisasi Transaksi</field>
+        <field name="document_type">policy</field>
+        <field name="version">2.5</field>
+        <field name="process_id" ref="demo_proc_cashout_001"/>
+        <field name="status">active</field>
+        <field name="description">Kebijakan batas otorisasi untuk berbagai jenis transaksi keuangan</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="file_name">policy_transaction_authorizations_v2.5.pdf</field>
+        <field name="document_file" type="base64" file="icofr_demo/policy_transaction_authorizations_v2.5.pdf"/>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- COMPREHENSIVE DEMO DATA: Audit Sampling with Statistical Calculations -->
+    <!-- ========================================== -->
+
+    <!-- ========================================== -->
+    <!-- COMPREHENSIVE DEMO DATA: Three Lines of Defense Workflows -->
+    <!-- ========================================== -->
+
+    <!-- Lini 1 (Process Owner) performing CSA for Cash Receipt Process -->
+    <record id="demo_lini1_csa_cashin" model="icofr.csa">
+        <field name="name">CSA: Otorisasi Transaksi di Atas Rp. 10.000.000 - Q2 2024</field>
+        <field name="code">CSA-L1-001</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="assessment_period">Q2 2024</field>
+        <field name="assessment_date" eval="time.strftime('2024-06-10')"/>
+        <field name="control_owner_id" ref="demo_user_john_doe"/>  <!-- Lini 1 owner -->
+        <field name="reviewer_id" ref="demo_user_jane_smith"/>  <!-- Lini 2 reviewer -->
+        <field name="status">completed</field>
+        <field name="design_effective" eval="True"/>
+        <field name="operating_effective" eval="True"/>
+        <field name="frequency_complied" eval="True"/>
+        <field name="documentation_accurate" eval="True"/>
+        <field name="compliance_result">fully_compliant</field>
+        <field name="effectiveness_result">highly_effective</field>
+        <field name="sample_size">25</field>
+        <field name="testing_evidence">Sampel transaksi diperiksa, semuanya memiliki otorisasi yang valid</field>
+        <field name="findings">Tidak ditemukan temuan signifikan</field>
+        <field name="recommendations">Tidak ada rekomendasi perbaikan saat ini</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Lini 1 (Process Owner) performing CSA for Cash Disbursement Process -->
+    <record id="demo_lini1_csa_cashout" model="icofr.csa">
+        <field name="name">CSA: Otorisasi Pencairan Dana - Q2 2024</field>
+        <field name="code">CSA-L1-002</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="assessment_period">Q2 2024</field>
+        <field name="assessment_date" eval="time.strftime('2024-06-12')"/>
+        <field name="control_owner_id" ref="demo_user_finance_manager"/>  <!-- Lini 1 owner -->
+        <field name="reviewer_id" ref="demo_user_jane_smith"/>  <!-- Lini 2 reviewer -->
+        <field name="status">completed</field>
+        <field name="design_effective" eval="True"/>
+        <field name="operating_effective" eval="False"/>
+        <field name="frequency_complied" eval="True"/>
+        <field name="documentation_accurate" eval="False"/>
+        <field name="compliance_result">partially_compliant</field>
+        <field name="effectiveness_result">partially_effective</field>
+        <field name="sample_size">15</field>
+        <field name="testing_evidence">Beberapa transaksi tidak memiliki dokumentasi lengkap</field>
+        <field name="findings">Ditemukan beberapa transaksi yang tidak memiliki otorisasi lengkap</field>
+        <field name="recommendations">Perbaikan proses dokumentasi dan peningkatan kontrol otorisasi</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Lini 2 (Risk/ICOFR Team) reviewing and validating CSA results -->
+    <record id="demo_lini2_review_csa" model="icofr.csa">
+        <field name="name">Review CSA oleh Lini 2 - Laporan Q2 2024</field>
+        <field name="code">CSA-L2-001</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="assessment_period">Q2 2024</field>
+        <field name="assessment_date" eval="time.strftime('2024-07-15')"/>
+        <field name="control_owner_id" ref="demo_user_john_doe"/>  <!-- Lini 1 originally performed CSA -->
+        <field name="reviewer_id" ref="demo_user_jane_smith"/>  <!-- Lini 2 reviewer -->
+        <field name="status">reviewed</field>
+        <field name="design_effective" eval="True"/>
+        <field name="operating_effective" eval="True"/>
+        <field name="frequency_complied" eval="True"/>
+        <field name="documentation_accurate" eval="True"/>
+        <field name="compliance_result">fully_compliant</field>
+        <field name="effectiveness_result">highly_effective</field>
+        <field name="sample_size">25</field>
+        <field name="testing_evidence">Hasil CSA diverifikasi dan divalidasi oleh Lini 2</field>
+        <field name="findings">CSA Lini 1 efektif, tidak ditemukan kelemahan signifikan</field>
+        <field name="recommendations">Tidak ada rekomendasi perbaikan dari Lini 2</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Lini 3 (Internal Audit) conducting testing for Cash Process -->
+    <record id="demo_lini3_testing_cash" model="icofr.testing">
+        <field name="name">Pengujian oleh Lini 3 - Kontrol Otorisasi Transaksi</field>
+        <field name="code">TEST-L3-001</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="test_type">compliance</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>  <!-- Lini 3 tester -->
+        <field name="test_date" eval="time.strftime('2024-08-20')"/>
+        <field name="status">completed</field>
+        <field name="testing_procedures">Verifikasi bahwa semua transaksi di atas Rp. 10.000.000 memiliki otorisasi</field>
+        <field name="test_results">Ditemukan 2 transaksi yang tidak memiliki otorisasi yang memadai dari 25 sampel</field>
+        <field name="effectiveness">partially_effective</field>
+        <field name="sample_size">25</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Lini 3 (Internal Audit) conducting testing for Cash Disbursement Process -->
+    <record id="demo_lini3_testing_cashout" model="icofr.testing">
+        <field name="name">Pengujian oleh Lini 3 - Kontrol Pencairan Dana</field>
+        <field name="code">TEST-L3-002</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="test_type">substantive</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>  <!-- Lini 3 tester -->
+        <field name="test_date" eval="time.strftime('2024-08-22')"/>
+        <field name="status">completed</field>
+        <field name="testing_procedures">Verifikasi bahwa semua pencairan dana memiliki otorisasi ganda</field>
+        <field name="test_results">Ditemukan 5 dari 15 transaksi tanpa otorisasi ganda yang memadai</field>
+        <field name="effectiveness">ineffective</field>
+        <field name="sample_size">15</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Finding generated by Lini 3 Internal Audit -->
+    <record id="demo_lini3_finding_001" model="icofr.finding">
+        <field name="name">Temuan dari Pengujian Lini 3 - Otorisasi Pencairan Dana</field>
+        <field name="code">FIND-L3-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">high</field>
+        <field name="description">Internal audit menemukan 5 dari 15 transaksi tanpa otorisasi ganda yang memadai</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>  <!-- Process owner (Lini 1) to address the finding -->
+        <field name="status">in_progress</field>
+        <field name="impact_assessment">Risiko kehilangan aset karena pengeluaran tanpa otorisasi yang layak</field>
+        <field name="root_cause">Ketidakpatuhan terhadap kebijakan otorisasi ganda, peningkatan volume pekerjaan tanpa peningkatan sumber daya</field>
+        <field name="recommended_action">Perkuat pengawasan terhadap otorisasi pencairan dana, berikan pelatihan tambahan kepada staf</field>
+        <field name="quantitative_impact_amount">75000000.0</field>
+        <field name="qualitative_impact_score">4.0</field>
+        <field name="deficiency_category">control_deficiency</field>
+        <field name="deficiency_classified">significant_deficiency</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Action plan for the Lini 3 finding -->
+    <record id="demo_lini3_action_plan_001" model="icofr.action.plan">
+        <field name="name">Rencana Tindakan untuk Perbaikan Otorisasi Pencairan Dana</field>
+        <field name="finding_id" ref="demo_lini3_finding_001"/>
+        <field name="description">Tindakan korektif untuk menangani temuan dari internal audit terkait dengan otorisasi pencairan dana</field>
+        <field name="action_owner_id" ref="demo_user_finance_manager"/>  <!-- Lini 1 - Process owner responsible for implementation -->
+        <field name="target_completion_date" eval="time.strftime('2024-10-30')"/>
+        <field name="status">in_progress</field>
+        <field name="priority">high</field>
+        <field name="implementation_steps">1. Audit ulang terhadap semua transaksi pencairan dana Q2 2024, 2. Implementasi checklist verifikasi otorisasi, 3. Pelatihan staf terhadap kebijakan otorisasi ganda</field>
+        <field name="resource_requirement">PIC Finance: 10 jam, Sistem TI: 5 jam untuk checklist otomatis</field>
+        <field name="cost_estimate">5000000.0</field>
+        <field name="effectiveness_check">Verifikasi bahwa semua transaksi pencairan dana memiliki otorisasi ganda</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- COMPREHENSIVE DEMO DATA: Deficiency Classification with Management Override -->
+    <!-- ========================================== -->
+
+    <!-- Example of automatic deficiency classification -->
+    <record id="demo_auto_deficiency_classified" model="icofr.finding">
+        <field name="name">Temuan Automatis - Pengeluaran Tanpa Otorisasi</field>
+        <field name="code">FIND-AUTO-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">high</field>
+        <field name="description">Sistem secara otomatis mendeteksi kelemahan dalam kontrol otorisasi pengeluaran kas</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">in_progress</field>
+        <field name="impact_assessment">Risiko kerugian finansial karena pengeluaran tanpa otorisasi yang memadai</field>
+        <field name="root_cause">Prosedur otorisasi tidak diikuti secara konsisten</field>
+        <field name="recommended_action">Perkuat kontrol otorisasi dan lakukan pelatihan kembali</field>
+        <field name="quantitative_impact_amount">125000000.0</field>
+        <field name="qualitative_impact_score">4.0</field>
+        <field name="deficiency_category">control_deficiency</field>
+        <field name="deficiency_classified">significant_deficiency</field>  <!-- Automatically classified as significant deficiency -->
+        <field name="classification_method">automatic</field>
+        <field name="deficiency_classification_reason">Klasifikasi otomatis berdasarkan dampak kuantitatif (di atas threshold) dan skor kualitatif tinggi</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Example of management override for deficiency classification -->
+    <record id="demo_management_override_finding" model="icofr.finding">
+        <field name="name">Temuan dengan Override - Estimasi Piutang</field>
+        <field name="code">FIND-OVR-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">high</field>
+        <field name="description">Temuan kontrol dalam proses estimasi piutang tak tertagih</field>
+        <field name="control_id" ref="demo_ctrl_ar_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">in_progress</field>
+        <field name="impact_assessment">Risiko terhadap estimasi keuangan yang tidak akurat</field>
+        <field name="root_cause">Proses estimasi manual yang tidak konsisten</field>
+        <field name="recommended_action">Implementasi metode estimasi yang lebih konsisten dan otomatis</field>
+        <field name="quantitative_impact_amount">200000000.0</field>
+        <field name="qualitative_impact_score">3.5</field>
+        <field name="deficiency_category">control_deficiency</field>
+        <field name="deficiency_classified">significant_deficiency</field>  <!-- System automatic classification -->
+        <field name="classification_method">automatic</field>
+        <field name="deficiency_classification_reason">Klasifikasi otomatis berdasarkan dampak finansial yang tinggi</field>
+        <field name="override_deficiency_classification">material_weakness</field>  <!-- Management override -->
+        <field name="override_reason">Manajemen menilai dampak reputasi terhadap perusahaan lebih besar daripada yang dihitung sistem, karena berhubungan dengan KAP</field>
+        <field name="overridden_by_id" ref="demo_user_ceo"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Finding with manual classification -->
+    <record id="demo_manual_classification_finding" model="icofr.finding">
+        <field name="name">Temuan Klasifikasi Manual - Komunikasi Kebijakan</field>
+        <field name="code">FIND-MANUAL-001</field>
+        <field name="finding_type">process_inefficiency</field>
+        <field name="severity_level">medium</field>
+        <field name="description">Ketidakcukupan komunikasi kebijakan kontrol internal ke seluruh unit</field>
+        <field name="control_id" ref="demo_ctrl_policy_001"/>
+        <field name="owner_id" ref="demo_user_jane_smith"/>
+        <field name="status">planned</field>
+        <field name="impact_assessment">Risiko terhadap konsistensi implementasi kontrol internal</field>
+        <field name="root_cause">Kurangnya mekanisme distribusi kebijakan yang efektif</field>
+        <field name="recommended_action">Perbaikan mekanisme distribusi dan pelatihan berkala</field>
+        <field name="quantitative_impact_amount">0.0</field>
+        <field name="qualitative_impact_score">2.5</field>
+        <field name="deficiency_category">process_deficiency</field>
+        <field name="deficiency_classified">control_deficiency</field>  <!-- Manual classification by management -->
+        <field name="classification_method">manual</field>
+        <field name="deficiency_classification_reason">Klasifikasi manual berdasarkan pertimbangan profesional manajemen</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Deficiency classification with hybrid approach (automatic + manual justification) -->
+    <record id="demo_hybrid_classification_finding" model="icofr.finding">
+        <field name="name">Temuan Klasifikasi Hybrid - Rekonsiliasi Bank</field>
+        <field name="code">FIND-HYBRID-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">medium</field>
+        <field name="description">Delay dalam rekonsiliasi bank bulanan</field>
+        <field name="control_id" ref="demo_ctrl_recon_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">open</field>
+        <field name="impact_assessment">Risiko deteksi ketidaksesuaian yang terlambat</field>
+        <field name="root_cause">Kurangnya sumber daya dan beban kerja yang tinggi di akhir bulan</field>
+        <field name="recommended_action">Pembuatan jadwal rekonsiliasi yang lebih tersebar atau tambahan sumber daya</field>
+        <field name="quantitative_impact_amount">50000000.0</field>
+        <field name="qualitative_impact_score">3.0</field>
+        <field name="deficiency_category">timing_deficiency</field>
+        <field name="deficiency_classified">control_deficiency</field>  <!-- System classification -->
+        <field name="classification_method">hybrid</field>
+        <field name="deficiency_classification_reason">Sistem klasifikasi menunjukkan control_deficiency, tetapi manajemen menilai perlu perhatian khusus karena risiko deteksi ketidaksesuaian</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- COMPREHENSIVE DEMO DATA: End-to-End Cross-Module Linkage Examples -->
+    <!-- ========================================== -->
+
+    <!-- Complete cycle: Risk -> Control -> Testing -> Finding -> Action Plan -> Certification -->
+    <!-- Step 1: Risk Identification -->
+    <record id="demo_cross_module_risk" model="icofr.risk">
+        <field name="name">Risiko Fraud dalam Proses Penerimaan Kas</field>
+        <field name="code">RISK-CROSS-001</field>
+        <field name="risk_category">operational</field>
+        <field name="risk_type">control</field>
+        <field name="description">Risiko bahwa penerimaan kas tidak diotorisasi atau direkonsiliasi dengan benar</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="likelihood">medium</field>
+        <field name="impact">high</field>
+        <field name="status">assessed</field>
+        <field name="risk_date" eval="time.strftime('2024-01-10')"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Step 2: Control Creation linked to the risk -->
+    <record id="demo_cross_module_control" model="icofr.control">
+        <field name="name">Verifikasi dan Otorisasi Penerimaan Kas</field>
+        <field name="code">CTRL-CROSS-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Verifikasi bahwa setiap penerimaan kas telah melalui proses otorisasi yang sesuai</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>
+        <field name="risk_ids" eval="[(4, ref('demo_cross_module_risk'))]"/>  <!-- Link to the risk -->
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="demo_user_john_doe"/>
+        <field name="status">active</field>
+        <field name="control_owner_line">line_1</field>
+        <field name="assertion_existence" eval="True"/>
+        <field name="assertion_completeness" eval="True"/>
+        <field name="assertion_accuracy" eval="True"/>
+        <field name="assertion_authorization" eval="True"/>
+        <field name="assertion_valuation" eval="True"/>
+        <field name="control_type_detailed">manual_automatic</field>
+        <field name="frequency_detailed">daily</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Step 3: Testing Schedule for the control -->
+    <record id="demo_cross_module_schedule" model="icofr.testing.schedule">
+        <field name="name">Jadwal Pengujian Verifikasi Penerimaan Kas</field>
+        <field name="control_id" ref="demo_cross_module_control"/>  <!-- Link to control -->
+        <field name="schedule_type">recurring</field>
+        <field name="frequency">weekly</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('2024-02-01')"/>
+        <field name="end_date" eval="time.strftime('2024-12-31')"/>
+        <field name="status">active</field>
+        <field name="description">Pengujian mingguan terhadap kontrol verifikasi penerimaan kas</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Step 4: Actual testing result that identifies a finding -->
+    <record id="demo_cross_module_testing" model="icofr.testing">
+        <field name="name">Pengujian Kontrol Verifikasi Penerimaan Kas - Minggu 24</field>
+        <field name="control_id" ref="demo_cross_module_control"/>  <!-- Link to control -->
+        <field name="schedule_id" ref="demo_cross_module_schedule"/>  <!-- Link to schedule -->
+        <field name="test_type">compliance</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="test_date" eval="time.strftime('2024-06-10')"/>
+        <field name="status">completed</field>
+        <field name="testing_procedures">Verifikasi otorisasi pada penerimaan kas di atas Rp. 10.000.000</field>
+        <field name="test_results">Ditemukan 3 dari 25 transaksi yang tidak memiliki otorisasi lengkap</field>
+        <field name="effectiveness">partially_effective</field>
+        <field name="sample_size">25</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Step 5: Finding generated from the testing -->
+    <record id="demo_cross_module_finding" model="icofr.finding">
+        <field name="name">Temuan Kontrol Penerimaan Kas - Kurang Otorisasi</field>
+        <field name="code">FIND-CROSS-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">high</field>
+        <field name="description">Ditemukan kelemahan dalam proses otorisasi penerimaan kas harian</field>
+        <field name="control_id" ref="demo_cross_module_control"/>  <!-- Link to control -->
+        <field name="risk_id" ref="demo_cross_module_risk"/>  <!-- Link to risk -->
+        <field name="owner_id" ref="demo_user_finance_manager"/>  <!-- Process owner responsible for fixing -->
+        <field name="status">in_progress</field>
+        <field name="impact_assessment">Risiko fraud dalam penerimaan kas yang tidak diotorisasi dengan benar</field>
+        <field name="root_cause">Ketidakpatuhan terhadap kebijakan otorisasi karena volume transaksi yang tinggi</field>
+        <field name="recommended_action">Peningkatan pelatihan staf dan potensi otomatisasi proses otorisasi</field>
+        <field name="test_id" ref="demo_cross_module_testing"/>  <!-- Link to the testing that found it -->
+        <field name="quantitative_impact_amount">150000000.0</field>
+        <field name="qualitative_impact_score">4.0</field>
+        <field name="deficiency_category">control_deficiency</field>
+        <field name="deficiency_classified">significant_deficiency</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Step 6: Action plan to address the finding -->
+    <record id="demo_cross_module_action_plan" model="icofr.action.plan">
+        <field name="name">Rencana Tindakan untuk Perbaikan Otorisasi Penerimaan Kas</field>
+        <field name="finding_id" ref="demo_cross_module_finding"/>  <!-- Link to finding -->
+        <field name="description">Rencana tindakan untuk mengatasi kelemahan dalam otorisasi penerimaan kas</field>
+        <field name="action_owner_id" ref="demo_user_finance_manager"/>  <!-- Process owner responsible -->
+        <field name="target_completion_date" eval="(datetime.now() + timedelta(days=60)).strftime('%Y-%m-%d')"/>
+        <field name="status">in_progress</field>
+        <field name="priority">high</field>
+        <field name="implementation_steps">1. Audit ulang terhadap semua penerimaan kas Q2, 2. Implementasi prosedur otorisasi ganda untuk transaksi di atas Rp. 15.000.000, 3. Pelatihan staf terhadap kebijakan otorisasi</field>
+        <field name="resource_requirement">PIC Finance: 20 jam, Sistem TI: 10 jam untuk checklist otomatis</field>
+        <field name="cost_estimate">10000000.0</field>
+        <field name="effectiveness_check">Verifikasi bahwa semua penerimaan kas telah melalui proses otorisasi yang sesuai</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Step 7: Account mapping that connects to the process and risk -->
+    <record id="demo_cross_module_account_mapping" model="icofr.account.mapping">
+        <field name="name">Pemetaan Akun Kas - Cash Account Mapping</field>
+        <field name="code">ACCMAP-CROSS-001</field>
+        <field name="gl_account">1101.001</field>
+        <field name="account_description">Kas di Tangan</field>
+        <field name="fsl_item">Cash and Cash Equivalents</field>
+        <field name="process_id" ref="demo_proc_cashin_001"/>  <!-- Link to process -->
+        <field name="risk_ids" eval="[(4, ref('demo_cross_module_risk'))]"/>  <!-- Link to risk -->
+        <field name="control_ids" eval="[(4, ref('demo_cross_module_control'))]"/>  <!-- Link to control -->
+        <field name="account_balance">5000000000.0</field>
+        <field name="has_fraud_risk" eval="True"/>
+        <field name="is_complex_transaction" eval="False"/>
+        <field name="has_related_party" eval="False"/>
+        <field name="significance_level">significant</field>
+        <field name="materiality_id" ref="demo_materiality_calc_2024"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Step 8: Link the finding to POJK Report -->
+    <record id="demo_cross_module_pojk_report" model="icofr.pojk.report">
+        <field name="name">Laporan POJK ICORF Q2 2024 - Temuan dari Cross Module</field>
+        <field name="reporting_period">Q2 2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="report_date" eval="time.strftime('2024-07-15')"/>
+        <field name="status">submitted</field>
+        <field name="prepared_by_id" ref="demo_user_jane_smith"/>
+        <field name="reviewed_by_id" ref="demo_user_jane_smith"/>
+        <field name="approved_by_id" ref="demo_user_ceo"/>
+        <field name="total_controls">50</field>
+        <field name="effective_controls">45</field>
+        <field name="total_risks">20</field>
+        <field name="high_risks">5</field>
+        <field name="total_findings">8</field>  <!-- Includes our cross-module finding -->
+        <field name="closed_findings">6</field>
+        <field name="pending_findings">2</field>
+        <field name="effectiveness_percentage">0.9</field>
+        <field name="finding_ids" eval="[(4, ref('demo_cross_module_finding'))]"/>  <!-- Link the finding to the report -->
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Step 9: Include the certification that considers all these elements -->
+    <record id="demo_cross_module_certification" model="icofr.certification">
+        <field name="name">Sertifikasi ICORF Q3 2024 - Evaluasi Temuan Lintas Modul</field>
+        <field name="fiscal_year">2024</field>
+        <field name="certification_date" eval="time.strftime('2024-10-15')"/>
+        <field name="certified_by_id" ref="demo_user_ceo"/>
+        <field name="status">approved</field>
+        <field name="scope">Seluruh kontrol internal atas pelaporan keuangan termasuk temuan dari Q2</field>
+        <field name="effectiveness_statement">Berdasarkan evaluasi manajemen, meskipun ditemukan beberapa kelemahan signifikan, kontrol internal secara keseluruhan efektif</field>
+        <field name="finding_ids" eval="[(4, ref('demo_cross_module_finding'))]"/>  <!-- Link to the finding -->
+        <field name="action_plan_ids" eval="[(4, ref('demo_cross_module_action_plan'))]"/>  <!-- Link to the action plan -->
+        <field name="pojk_report_ids" eval="[(4, ref('demo_cross_module_pojk_report'))]"/>  <!-- Link to the POJK report -->
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- COMPREHENSIVE DEMO DATA: Audit Sampling with Statistical Calculations -->
+    <!-- ========================================== -->
+
+    <!-- Sampling Calculator Parameters for Different Control Frequencies -->
+    <record id="demo_testing_cash_daily" model="icofr.testing">
+        <field name="name">Pengujian Kontrol Harian - Otorisasi Transaksi Kas</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="test_type">compliance</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="test_date" eval="time.strftime('2024-06-15')"/>
+        <field name="status">completed</field>
+        <field name="testing_procedures">Verifikasi otorisasi pada transaksi kas harian</field>
+        <field name="test_results">100% compliance rate - semua transaksi memiliki otorisasi yang sesuai</field>
+        <field name="effectiveness">effective</field>
+        <field name="sample_size">25</field>
+        <field name="control_frequency">daily</field>
+        <field name="population_size">375</field>  <!-- Approximate daily transactions for 25 days -->
+        <field name="confidence_level">95.0</field>
+        <field name="sampling_method">statistical</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="demo_testing_withdraw_weekly" model="icofr.testing">
+        <field name="name">Pengujian Kontrol Mingguan - Pencairan Dana</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="test_type">compliance</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="test_date" eval="time.strftime('2024-06-20')"/>
+        <field name="status">in_progress</field>
+        <field name="testing_procedures">Verifikasi otorisasi ganda pada pencairan dana mingguan</field>
+        <field name="test_results">Sample testing in progress</field>
+        <field name="effectiveness">not_tested</field>
+        <field name="sample_size">6</field>
+        <field name="control_frequency">weekly</field>
+        <field name="population_size">26</field>  <!-- 26 weeks in half year -->
+        <field name="confidence_level">90.0</field>
+        <field name="sampling_method">judgmental</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="demo_testing_payroll_monthly" model="icofr.testing">
+        <field name="name">Pengujian Kontrol Bulanan - Penggajian</field>
+        <field name="control_id" ref="demo_ctrl_payroll_001"/>
+        <field name="test_type">compliance</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="test_date" eval="time.strftime('2024-06-25')"/>
+        <field name="status">planned</field>
+        <field name="testing_procedures">Verifikasi otorisasi penggajian bulanan</field>
+        <field name="test_results"></field>
+        <field name="effectiveness">not_tested</field>
+        <field name="sample_size">3</field>
+        <field name="control_frequency">monthly</field>
+        <field name="population_size">6</field>  <!-- 6 months in semester -->
+        <field name="confidence_level">95.0</field>
+        <field name="sampling_method">statistical</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Transaction Populations for Audit Sampling -->
+    <record id="demo_pop_cashin_001" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-001</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-01')"/>
+        <field name="amount">15000000.0</field>
+        <field name="description">Penerimaan kas dari pelanggan PT ABC</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Transaksi valid dengan otorisasi yang sesuai</field>
+    </record>
+
+    <record id="demo_pop_cashin_002" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-002</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-02')"/>
+        <field name="amount">25000000.0</field>
+        <field name="description">Penerimaan hasil sewa gedung</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Transaksi valid, perlu konfirmasi tambahan</field>
+    </record>
+
+    <record id="demo_pop_cashin_003" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-003</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-03')"/>
+        <field name="amount">8500000.0</field>
+        <field name="description">Penerimaan pelunasan piutang usaha dari pelanggan</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Transaksi valid dengan dokumentasi lengkap</field>
+    </record>
+
+    <record id="demo_pop_cashin_004" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-004</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-04')"/>
+        <field name="amount">50000000.0</field>
+        <field name="description">Penerimaan dari kontrak jasa dengan pemerintah</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Transaksi besar, perlu verifikasi tambahan</field>
+    </record>
+
+    <record id="demo_pop_cashin_005" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-005</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-05')"/>
+        <field name="amount">12500000.0</field>
+        <field name="description">Penerimaan lain-lain (bunga deposito)</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Transaksi valid dengan dokumentasi lengkap</field>
+    </record>
+
+    <!-- Cash Disbursement Populations -->
+    <record id="demo_pop_cashout_001" model="icofr.audit.population">
+        <field name="transaction_no">CO-2024-001</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-01')"/>
+        <field name="amount">30000000.0</field>
+        <field name="description">Pembayaran tagihan supplier PT Supplier A</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="uploaded_by_id" ref="demo_user_finance_manager"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Transaksi telah melalui otorisasi yang sesuai</field>
+    </record>
+
+    <record id="demo_pop_cashout_002" model="icofr.audit.population">
+        <field name="transaction_no">CO-2024-002</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-05')"/>
+        <field name="amount">45000000.0</field>
+        <field name="description">Pembayaran gaji bulanan karyawan</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="uploaded_by_id" ref="demo_user_finance_manager"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Transaksi rutin bulanan, sistematis</field>
+    </record>
+
+    <record id="demo_pop_cashout_003" model="icofr.audit.population">
+        <field name="transaction_no">CO-2024-003</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-10')"/>
+        <field name="amount">15000000.0</field>
+        <field name="description">Pembayaran biaya operasional kantor</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="uploaded_by_id" ref="demo_user_finance_manager"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Transaksi valid dengan dokumentasi lengkap</field>
+    </record>
+
+    <record id="demo_pop_cashout_004" model="icofr.audit.population">
+        <field name="transaction_no">CO-2024-004</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-15')"/>
+        <field name="amount">75000000.0</field>
+        <field name="description">Pembayaran kontrak TI tahunan</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="uploaded_by_id" ref="demo_user_finance_manager"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Transaksi besar, perlu verifikasi tambahan</field>
+    </record>
+
+    <record id="demo_pop_cashout_005" model="icofr.audit.population">
+        <field name="transaction_no">CO-2024-005</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-20')"/>
+        <field name="amount">22000000.0</field>
+        <field name="description">Pembayaran sewa gedung kantor</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="uploaded_by_id" ref="demo_user_finance_manager"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Transaksi rutin bulanan, sistematis</field>
+    </record>
+
+    <!-- Population for Payroll Process -->
+    <record id="demo_pop_payroll_001" model="icofr.audit.population">
+        <field name="transaction_no">PY-2024-001</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-25')"/>
+        <field name="amount">250000000.0</field>
+        <field name="description">Pembayaran gaji karyawan bulan Juni 2024</field>
+        <field name="control_id" ref="demo_ctrl_payroll_001"/>
+        <field name="uploaded_by_id" ref="demo_user_hr_manager"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Pembayaran gaji untuk 50 karyawan, termasuk lembur dan tunjangan</field>
+    </record>
+
+    <record id="demo_pop_payroll_002" model="icofr.audit.population">
+        <field name="transaction_no">PY-2024-002</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-26')"/>
+        <field name="amount">15000000.0</field>
+        <field name="description">Pembayaran bonus kinerja kuartal 2 tahun 2024</field>
+        <field name="control_id" ref="demo_ctrl_payroll_001"/>
+        <field name="uploaded_by_id" ref="demo_user_hr_manager"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="notes">Bonus kinerja yang memerlukan otorisasi tingkat tinggi</field>
+    </record>
+
+    <!-- Selected items for testing from the population -->
+    <record id="demo_sampling_selection_cash_01" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-004</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-04')"/>
+        <field name="amount">50000000.0</field>
+        <field name="description">Penerimaan dari kontrak jasa dengan pemerintah - Dipilih untuk Pengujian</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="selected_for_testing" eval="True"/>
+        <field name="testing_result">pass</field>
+        <field name="testing_notes">Otorisasi lengkap dan dokumentasi memadai</field>
+    </record>
+
+    <record id="demo_sampling_selection_cash_02" model="icofr.audit.population">
+        <field name="transaction_no">CI-2024-001</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-01')"/>
+        <field name="amount">15000000.0</field>
+        <field name="description">Penerimaan kas dari pelanggan PT ABC - Dipilih untuk Pengujian</field>
+        <field name="control_id" ref="demo_ctrl_cash_001"/>
+        <field name="uploaded_by_id" ref="demo_user_john_doe"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="selected_for_testing" eval="True"/>
+        <field name="testing_result">pass</field>
+        <field name="testing_notes">Otorisasi standar berjalan dengan baik</field>
+    </record>
+
+    <record id="demo_sampling_selection_cash_03" model="icofr.audit.population">
+        <field name="transaction_no">CO-2024-004</field>
+        <field name="transaction_date" eval="time.strftime('2024-06-15')"/>
+        <field name="amount">75000000.0</field>
+        <field name="description">Pembayaran kontrak TI tahunan - Dipilih untuk Pengujian</field>
+        <field name="control_id" ref="demo_ctrl_withdraw_001"/>
+        <field name="uploaded_by_id" ref="demo_user_finance_manager"/>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="selected_for_testing" eval="True"/>
+        <field name="testing_result">pass</field>
+        <field name="testing_notes">Otorisasi ganda berjalan dengan baik</field>
+    </record>
+
+    <!-- ========================================== -->
+    <!-- COMPREHENSIVE DEMO DATA: Multi-Company Examples with Consolidated Reporting -->
+    <!-- ========================================== -->
+
+    <!-- Additional companies for multi-company scenarios -->
+    <record id="demo_company_subsidiary_a" model="res.company">
+        <field name="name">PT ABC Subsidiary A</field>
+        <field name="email">info@abcsubsidiarya.com</field>
+        <field name="phone">+62 21 1234 5678</field>
+        <field name="street">Jl. Industri No. 10</field>
+        <field name="city">Jakarta</field>
+        <field name="zip">12345</field>
+        <field name="country_id" ref="base.id"/>
+        <!-- <field name="parent_id" ref="base.main_company"/> Make it a child of main company -->
+    </record>
+
+    <!-- User for subsidiary company -->
+    <record id="demo_user_subsidiary_mgr_a" model="res.users">
+        <field name="name">Manager Subsidiary A</field>
+        <field name="login">manager_subsidiary_a</field>
+        <field name="password">ManagerSubsidiaryA123</field>
+        <field name="email">mgr_a@abcsubsidiarya.com</field>
+        <field name="company_id" ref="demo_company_subsidiary_a"/>
+        <field name="company_ids" eval="[(6, 0, [ref('demo_company_subsidiary_a'), ref('base.main_company')])]"/>
+    </record>
+
+    <!-- Business process for subsidiary -->
+    <record id="demo_proc_subsidiary_sales_a" model="icofr.process">
+        <field name="name">Proses Penjualan Subsidiary A</field>
+        <field name="code">PROC-SUBA-SALE-001</field>
+        <field name="description">Proses penjualan untuk anak perusahaan A</field>
+        <field name="category">operational</field>
+        <field name="owner_id" ref="demo_user_subsidiary_mgr_a"/>
+        <field name="status">active</field>
+        <field name="company_id" ref="demo_company_subsidiary_a"/>
+    </record>
+
+    <!-- Risk for subsidiary -->
+    <record id="demo_risk_subsidiary_a" model="icofr.risk">
+        <field name="name">Risiko Penagihan Subsidiary A</field>
+        <field name="code">RISK-SUBA-001</field>
+        <field name="risk_category">operational</field>
+        <field name="risk_type">inherent</field>
+        <field name="description">Risiko terkait penagihan di anak perusahaan A</field>
+        <field name="process_id" ref="demo_proc_subsidiary_sales_a"/>
+        <field name="owner_id" ref="demo_user_subsidiary_mgr_a"/>
+        <field name="likelihood">medium</field>
+        <field name="impact">high</field>
+        <field name="status">identified</field>
+        <field name="company_id" ref="demo_company_subsidiary_a"/>
+    </record>
+
+    <!-- Control for subsidiary -->
+    <record id="demo_ctrl_subsidiary_a" model="icofr.control">
+        <field name="name">Otorisasi Penjualan Subsidiary A</field>
+        <field name="code">CTRL-SUBA-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Kontrol otorisasi penjualan di anak perusahaan A</field>
+        <field name="process_id" ref="demo_proc_subsidiary_sales_a"/>
+        <field name="risk_ids" eval="[(4, ref('demo_risk_subsidiary_a'))]"/>
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="demo_user_subsidiary_mgr_a"/>
+        <field name="status">active</field>
+        <field name="control_owner_line">line_1</field>
+        <field name="company_id" ref="demo_company_subsidiary_a"/>
+    </record>
+
+    <!-- Testing for subsidiary -->
+    <record id="demo_testing_subsidiary_a" model="icofr.testing">
+        <field name="name">Pengujian Kontrol Penjualan Subsidiary A</field>
+        <field name="control_id" ref="demo_ctrl_subsidiary_a"/>
+        <field name="test_type">compliance</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="test_date" eval="time.strftime('2024-05-20')"/>
+        <field name="status">completed</field>
+        <field name="testing_procedures">Menguji otorisasi penjualan di sistem</field>
+        <field name="test_results">100% compliance rate - semua transaksi penjualan memiliki otorisasi yang valid</field>
+        <field name="effectiveness">effective</field>
+        <field name="company_id" ref="demo_company_subsidiary_a"/>
+    </record>
+
+    <!-- Account mapping for subsidiary -->
+    <record id="demo_account_mapping_subsidiary_a" model="icofr.account.mapping">
+        <field name="name">Penjualan Subsidiary A - Sales Account</field>
+        <field name="gl_account">4101.002</field>
+        <field name="account_description">Penjualan Produk Subsidiary A</field>
+        <field name="fsl_item">Sales Revenue</field>
+        <field name="process_id" ref="demo_proc_subsidiary_sales_a"/>
+        <field name="account_balance">2000000000.0</field>
+        <field name="has_fraud_risk" eval="False"/>
+        <field name="is_complex_transaction" eval="False"/>
+        <field name="has_related_party" eval="True"/>
+        <field name="significance_level">significant</field>
+        <field name="materiality_id" ref="demo_materiality_calc_2024"/>
+        <field name="company_id" ref="demo_company_subsidiary_a"/>
+    </record>
+
+    <!-- CSA for subsidiary -->
+    <record id="demo_csa_subsidiary_a" model="icofr.csa">
+        <field name="name">CSA: Otorisasi Penjualan Subsidiary A - Q2 2024</field>
+        <field name="code">CSA-SUBA-001</field>
+        <field name="control_id" ref="demo_ctrl_subsidiary_a"/>
+        <field name="assessment_period">Q2 2024</field>
+        <field name="assessment_date" eval="time.strftime('2024-05-15')"/>
+        <field name="control_owner_id" ref="demo_user_subsidiary_mgr_a"/>
+        <field name="reviewer_id" ref="demo_user_jane_smith"/>
+        <field name="status">completed</field>
+        <field name="design_effective" eval="True"/>
+        <field name="operating_effective" eval="True"/>
+        <field name="frequency_complied" eval="True"/>
+        <field name="compliance_result">fully_compliant</field>
+        <field name="effectiveness_result">highly_effective</field>
+        <field name="sample_size">15</field>
+        <field name="testing_evidence">Sampel transaksi penjualan diuji, semuanya memiliki otorisasi yang valid</field>
+        <field name="company_id" ref="demo_company_subsidiary_a"/>
+    </record>
+
+    <!-- Finding for subsidiary -->
+    <record id="demo_finding_subsidiary_a" model="icofr.finding">
+        <field name="name">Temuan dari Pengujian Subsidiary A</field>
+        <field name="code">FIND-SUBA-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">medium</field>
+        <field name="description">Ditemukan beberapa ketidaksesuaian minor dalam proses otorisasi penjualan di Subsidiary A</field>
+        <field name="control_id" ref="demo_ctrl_subsidiary_a"/>
+        <field name="owner_id" ref="demo_user_subsidiary_mgr_a"/>
+        <field name="status">in_progress</field>
+        <field name="impact_assessment">Dampak rendah terhadap kepatuhan internal</field>
+        <field name="root_cause">Ketidakkonsistenan dalam pelaksanaan prosedur otorisasi</field>
+        <field name="recommended_action">Peningkatan pelatihan staf penjualan terhadap prosedur otorisasi</field>
+        <field name="company_id" ref="demo_company_subsidiary_a"/>
+    </record>
+
+    <!-- Action plan for subsidiary finding -->
+    <record id="demo_action_plan_subsidiary_a" model="icofr.action.plan">
+        <field name="name">Rencana Tindakan untuk Perbaikan Penjualan Subsidiary A</field>
+        <field name="finding_id" ref="demo_finding_subsidiary_a"/>
+        <field name="description">Tindakan perbaikan untuk temuan dari pengujian kontrol penjualan di Subsidiary A</field>
+        <field name="action_owner_id" ref="demo_user_subsidiary_mgr_a"/>
+        <field name="target_completion_date" eval="(datetime.now() + timedelta(days=45)).strftime('%Y-%m-%d')"/>
+        <field name="status">in_progress</field>
+        <field name="priority">medium</field>
+        <field name="implementation_steps">1. Pelatihan staf penjualan tentang prosedur otorisasi, 2. Peningkatan dokumentasi prosedur, 3. Review periodik terhadap kepatuhan</field>
+        <field name="resource_requirement">PIC Subsidiary A: 10 jam</field>
+        <field name="cost_estimate">5000000.0</field>
+        <field name="effectiveness_check">100% kepatuhan terhadap prosedur otorisasi penjualan</field>
+        <field name="company_id" ref="demo_company_subsidiary_a"/>
+    </record>
+
+    <!-- POJK Report for subsidiary -->
+    <record id="demo_pojk_report_subsidiary_a" model="icofr.pojk.report">
+        <field name="name">Laporan POJK Subsidiary A 2024</field>
+        <field name="reporting_period">2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="report_date" eval="time.strftime('2024-12-10')"/>
+        <field name="status">submitted</field>
+        <field name="prepared_by_id" ref="demo_user_subsidiary_mgr_a"/>
+        <field name="reviewed_by_id" ref="demo_user_jane_smith"/>
+        <field name="approved_by_id" ref="demo_user_ceo"/>
+        <field name="total_controls">15</field>
+        <field name="effective_controls">14</field>
+        <field name="total_risks">8</field>
+        <field name="high_risks">1</field>
+        <field name="total_findings">2</field>
+        <field name="closed_findings">1</field>
+        <field name="pending_findings">1</field>
+        <field name="effectiveness_percentage">0.93</field>
+        <field name="finding_ids" eval="[(4, ref('demo_finding_subsidiary_a'))]"/>
+        <field name="company_id" ref="demo_company_subsidiary_a"/>
+    </record>
+
+    <!-- Consolidated POJK Report (Parent Company Level) -->
+    <record id="demo_consolidated_pojk_report" model="icofr.pojk.report">
+        <field name="name">Laporan POJK Konsolidasi 2024</field>
+        <field name="reporting_period">2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="report_date" eval="time.strftime('2024-12-20')"/>
+        <field name="status">submitted</field>
+        <field name="prepared_by_id" ref="demo_user_jane_smith"/>
+        <field name="reviewed_by_id" ref="demo_user_ceo"/>
+        <field name="approved_by_id" ref="demo_user_ceo"/>
+        <field name="total_controls">120</field>  <!-- Including subsidiaries -->
+        <field name="effective_controls">105</field>
+        <field name="total_risks">40</field>      <!-- Including subsidiaries -->
+        <field name="high_risks">8</field>         <!-- Including subsidiaries -->
+        <field name="total_findings">25</field>    <!-- Including subsidiaries -->
+        <field name="closed_findings">20</field>
+        <field name="pending_findings">5</field>
+        <field name="effectiveness_percentage">0.88</field>
+        <field name="framework_description">Kerangka kerja kontrol internal konsolidasi mengikuti standar COSO 2013</field>
+        <field name="control_environment_assessment">Lingkungan kontrol konsolidasi secara keseluruhan memadai</field>
+        <field name="is_consolidated" eval="True"/>  <!-- Mark as consolidated report -->
+        <field name="entities_included">Semua entitas anak dan cabang terafiliasi</field>
+        <field name="notes">Laporan konsolidasi mencakup laporan dari entitas anak PT ABC Subsidiary A dan entitas lainnya</field>
+        <field name="company_id" ref="base.main_company"/>  <!-- Parent company report -->
+    </record>
+
+    <!-- Certification for consolidated reporting -->
+    <record id="demo_consolidated_certification" model="icofr.certification">
+        <field name="name">Sertifikasi Konsolidasi ICORF 2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="certification_date" eval="time.strftime('2024-12-20')"/>
+        <field name="certified_by_id" ref="demo_user_ceo"/>
+        <field name="status">approved</field>
+        <field name="scope">Konsolidasi kontrol internal atas pelaporan keuangan dari seluruh entitas grup</field>
+        <field name="effectiveness_statement">Berdasarkan penilaian manajemen, kontrol internal konsolidasi atas pelaporan keuangan efektif secara keseluruhan</field>
+        <field name="is_consolidated" eval="True"/>  <!-- Mark as consolidated certification -->
+        <field name="entities_covered">Termasuk seluruh anak perusahaan dan entitas terafiliasi</field>
+        <field name="material_weaknesses_identified">0</field>
+        <field name="significant_deficiencies_identified">2</field>
+        <field name="notes">Beberapa kelemahan signifikan sedang dalam proses perbaikan sesuai rencana aksi</field>
+        <field name="company_id" ref="base.main_company"/>  <!-- Parent company certification -->
+    </record>
+    <!-- ========================================== -->
+    <!-- POJK 15/2024 SPECIFIC EXAMPLES             -->
+    <!-- ========================================== -->
+
+    <!-- Process: Financial Closing (Table 7 - Sub-proses Tutup Buku dan Pelaporan) -->
+    <record id="demo_proc_closing_001" model="icofr.process">
+        <field name="name">Tutup Buku dan Pelaporan</field>
+        <field name="code">PROC-CLOSE-001</field>
+        <field name="description">Proses tutup buku akhir periode dan penyusunan laporan keuangan</field>
+        <field name="category">financial</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">active</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Risk: Fraud - Fictitious Revenue (Table 9 - Manipulasi Laporan Keuangan) -->
+    <record id="demo_risk_fraud_revenue" model="icofr.risk">
+        <field name="name">Pencatatan Pendapatan Fiktif</field>
+        <field name="code">RISK-FRAUD-REV</field>
+        <field name="risk_category">financial</field>
+        <field name="risk_type">inherent</field>
+        <field name="risk_type_detailed">inherent</field>
+        <field name="description">Risiko manajemen mencatat pendapatan atas penjualan fiktif atau mengakui pendapatan sebelum waktunya untuk meningkatkan laba</field>
+        <field name="process_id" ref="demo_proc_closing_001"/>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="likelihood">low</field>
+        <field name="impact">very_high</field>
+        <field name="status">identified</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Control: MRC Example (Table 21 - Pengendalian MRC) -->
+    <record id="demo_ctrl_mrc_expense" model="icofr.control">
+        <field name="name">Reviu Analitis Biaya Operasional (MRC)</field>
+        <field name="code">CTRL-MRC-001</field>
+        <field name="control_type">detective</field>
+        <field name="control_specific_type">mrc</field>
+        <field name="description">Analisis perbandingan biaya aktual vs anggaran/tahun lalu oleh Kepala Cabang/CFO untuk mengidentifikasi anomali signifikan</field>
+        <field name="process_id" ref="demo_proc_closing_001"/>
+        <field name="frequency">monthly</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">active</field>
+        <field name="control_owner_line">line_1</field>
+        <field name="control_risk_level">high</field>
+        <field name="significance_level">significant</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="assertion_existence" eval="True"/>
+        <field name="assertion_completeness" eval="True"/>
+        <field name="assertion_accuracy" eval="True"/>
+        <field name="assertion_valuation" eval="True"/>
+    </record>
+
+    <!-- Control: EUC Example (Page 43 - End User Computing) -->
+    <record id="demo_ctrl_euc_depreciation" model="icofr.control">
+        <field name="name">Kontrol Spreadsheet Penyusutan Aset (EUC)</field>
+        <field name="code">CTRL-EUC-001</field>
+        <field name="control_type">preventive</field>
+        <field name="control_specific_type">euc</field>
+        <field name="description">Pengendalian atas spreadsheet perhitungan penyusutan (Version control, Access control, Input validation, Locked Formulas)</field>
+        <field name="process_id" ref="demo_proc_closing_001"/>
+        <field name="frequency">monthly</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+        <field name="status">active</field>
+        <field name="control_owner_line">line_1</field>
+        <field name="control_risk_level">low</field>
+        <field name="significance_level">medium</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="assertion_accuracy" eval="True"/>
+        <field name="assertion_valuation" eval="True"/>
     </record>
 
 </odoo>

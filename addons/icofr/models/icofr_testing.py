@@ -9,6 +9,14 @@ class IcofrTesting(models.Model):
     _description = 'Pengujian Kontrol Internal'
     _order = 'test_date desc'
 
+    code = fields.Char(
+        string='Kode Pengujian',
+        required=True,
+        copy=False,
+        default=lambda self: self.env['ir.sequence'].next_by_code('icofr.testing') or '/',
+        help='Kode unik untuk identifikasi pengujian'
+    )
+
     name = fields.Char(
         string='Nama Pengujian',
         required=True,
@@ -23,12 +31,51 @@ class IcofrTesting(models.Model):
     )
     
     test_type = fields.Selection([
-        ('compliance', 'Kepatuhan'),
-        ('substantive', 'Substantif'),
-        ('walkthrough', 'Walkthrough')
+        ('tod', 'Test of Design (TOD)'),
+        ('toe', 'Test of Operating Effectiveness (TOE)'),
+        ('walkthrough', 'Walkthrough'),
+        ('compliance', 'Kepatuhan (General)'),
+        ('substantive', 'Substantif')
     ], string='Jenis Pengujian', required=True,
-       help='Jenis dari pengujian kontrol')
+       default='toe',
+       help='Jenis dari pengujian kontrol (TOD atau TOE sesuai Juknis)')
     
+    # TOD Specific Fields
+    design_description = fields.Text(
+        string='Deskripsi Desain Kontrol',
+        help='Evaluasi apakah desain kontrol secara logis dapat memitigasi risiko'
+    )
+    
+    design_conclusion = fields.Selection([
+        ('effective', 'Desain Efektif'),
+        ('ineffective', 'Desain Tidak Efektif')
+    ], string='Kesimpulan Desain',
+       help='Kesimpulan atas efektivitas rancangan pengendalian (TOD)')
+
+    # TOE Specific Fields
+    population_reference = fields.Char(
+        string='Referensi Populasi',
+        help='Keterangan mengenai sumber populasi data (misalnya: Jurnal Penjualan Jan-Des)'
+    )
+    
+    sample_selection_method = fields.Selection([
+        ('random', 'Acak'),
+        ('systematic', 'Sistematik'),
+        ('judgmental', 'Penilaian Profesional'),
+        ('block', 'Blok')
+    ], string='Metode Pemilihan Sampel',
+       help='Metode yang digunakan untuk memilih sampel dari populasi')
+    
+    testing_steps = fields.Text(
+        string='Langkah-langkah Pengujian',
+        help='Rincian langkah yang dilakukan saat menguji sampel'
+    )
+    
+    exceptions_noted = fields.Text(
+        string='Pengecualian yang Ditemukan',
+        help='Rincian jika ditemukan sampel yang gagal atau tidak sesuai'
+    )
+
     test_date = fields.Date(
         string='Tanggal Pengujian',
         required=True,
@@ -111,7 +158,8 @@ class IcofrTesting(models.Model):
         ('random', 'Acak'),
         ('systematic', 'Sistematik'),
         ('judgmental', 'Penilaian Profesional'),
-        ('block', 'Blok')
+        ('block', 'Blok'),
+        ('statistical', 'Statistikal')
     ], string='Metode Sampling', default='random',
        help='Metode sampling yang digunakan')
 
@@ -131,26 +179,47 @@ class IcofrTesting(models.Model):
         help='Area kerja untuk mendokumentasikan hasil pengujian'
     )
 
-    @api.depends('control_frequency', 'population_size', 'confidence_level')
+    @api.depends('test_type', 'control_frequency', 'population_size', 'confidence_level', 'control_id.control_risk_level', 'control_id.control_type_detailed')
     def _compute_sample_size(self):
-        """Compute sample size based on frequency, population size, and confidence level"""
+        """
+        Compute sample size based on frequency and risk level according to 
+        Table 22: Ilustrasi - Penentuan Jumlah Sampel (Juknis ICOFR BUMN)
+        """
         for record in self:
-            # Simple calculation based on frequency and population
-            if record.control_frequency == 'daily':
-                # High frequency controls need larger samples
-                calculated_size = min(50, record.population_size or 1000)  # Cap at population size
-            elif record.control_frequency == 'weekly':
-                calculated_size = min(25, record.population_size or 1000)
-            elif record.control_frequency == 'monthly':
-                calculated_size = min(15, record.population_size or 1000)
-            elif record.control_frequency == 'quarterly':
-                calculated_size = min(9, record.population_size or 1000)
-            elif record.control_frequency == 'yearly':
-                calculated_size = min(6, record.population_size or 1000)
-            else:
-                calculated_size = 25  # Default value
+            # Default to 0 if not TOE
+            if record.test_type != 'toe':
+                record.sample_size_calculated = 0
+                continue
 
-            record.sample_size_calculated = calculated_size
+            size = 0
+            # Check for Automated Controls (1 sample per scenario)
+            if record.control_id.control_type_detailed == 'automated':
+                size = 1
+            else:
+                # Manual / ITDM Controls logic based on Frequency & Risk
+                risk = record.control_id.control_risk_level or 'low'
+                freq = record.control_frequency or record.control_id.frequency
+                
+                if freq == 'yearly': # Tahunan
+                    size = 1
+                elif freq == 'quarterly': # Kuartalan
+                    size = 2 if risk == 'low' else 3
+                elif freq == 'monthly': # Bulanan
+                    size = 2 if risk == 'low' else 5
+                elif freq == 'weekly': # Mingguan
+                    size = 5 if risk == 'low' else 15
+                elif freq == 'daily': # Harian
+                    size = 15 if risk == 'low' else 40
+                elif freq in ('per_transaction', 'every_change', 'event_driven'): 
+                    size = 30 if risk == 'low' else 60
+                else:
+                    size = 25
+
+            # Cap at population size if known and non-zero
+            if record.population_size and record.population_size > 0:
+                size = min(size, record.population_size)
+                
+            record.sample_size_calculated = size
     
     recommendation = fields.Text(
         string='Rekomendasi',
@@ -184,6 +253,13 @@ class IcofrTesting(models.Model):
         'icofr.testing.schedule',
         string='Jadwal Terkait',
         help='Jadwal yang terkait dengan pengujian ini'
+    )
+
+    sample_ids = fields.One2many(
+        'icofr.audit.population',
+        'testing_id',
+        string='Sampel Terpilih',
+        help='Item populasi yang dipilih sebagai sampel untuk pengujian ini'
     )
     
     @api.onchange('control_id')

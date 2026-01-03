@@ -29,6 +29,65 @@
               action="action_icofr_notification_scheduler"
               groups="group_icofr_line_2"/>
 
+    <!-- Submenu untuk Utility/Alat Bantu -->
+    <menuitem id="menu_icofr_utilities"
+              name="Utilitas"
+              sequence="25"
+              parent="menu_icofr_root"/>
+
+    <!-- Menu untuk Upload Excel Pemetaan Akun -->
+    <menuitem id="menu_icofr_account_mapping_upload_wizard"
+              name="Upload Excel Pemetaan Akun"
+              sequence="10"
+              parent="menu_icofr_utilities"
+              action="action_icofr_account_mapping_upload_wizard"/>
+
+    <!-- Menu untuk Upload Data Master -->
+    <menuitem id="menu_icofr_master_data_upload_wizard"
+              name="Upload Data Master"
+              sequence="55"
+              parent="menu_icofr_utilities"
+              action="action_icofr_master_data_upload_wizard"
+              groups="group_icofr_line_2"/>
+
+    <!-- Menu untuk Upload RCM -->
+    <menuitem id="menu_icofr_rcm_upload_wizard"
+              name="Upload RCM (Risk-Control Matrix)"
+              sequence="60"
+              parent="menu_icofr_utilities"
+              action="action_icofr_rcm_upload_wizard"
+              groups="group_icofr_line_2"/>
+
+    <!-- Menu untuk Upload Populasi -->
+    <menuitem id="menu_icofr_population_upload_wizard"
+              name="Upload Populasi untuk Sampling"
+              sequence="70"
+              parent="menu_icofr_utilities"
+              action="action_icofr_population_upload_wizard"
+              groups="group_icofr_line_1,group_icofr_line_2"/>
+
+    <!-- Submenu untuk Pengujian dan Pelaporan -->
+    <menuitem id="menu_icofr_operational"
+              name="Operasional"
+              sequence="20"
+              parent="menu_icofr_root"/>
+
+    <!-- Menu untuk Kampanye CSA -->
+    <menuitem id="menu_icofr_csa_campaign"
+              name="Kampanye CSA"
+              sequence="65"
+              parent="menu_icofr_operational"
+              action="action_icofr_csa_campaign"
+              groups="group_icofr_line_2"/>
+
+    <!-- Menu untuk Data Populasi -->
+    <menuitem id="menu_icofr_audit_population"
+              name="Data Populasi Audit"
+              sequence="75"
+              parent="menu_icofr_operational"
+              action="action_icofr_audit_population"
+              groups="group_icofr_line_2,group_icofr_line_3"/>
+
     <!-- Menu untuk Dokumen BPM dan SOP -->
     <menuitem id="menu_icofr_bpm_document"
               name="Dokumen BPM/SOP"
@@ -44,25 +103,6 @@
               parent="menu_icofr_master"
               action="action_icofr_qualitative_assessment"
               groups="group_icofr_line_2"/>
-
-    <!-- Submenu untuk Pengujian dan Pelaporan -->
-    <menuitem id="menu_icofr_operational"
-              name="Operasional"
-              sequence="20"
-              parent="menu_icofr_root"/>
-
-    <!-- Submenu untuk Utility/Alat Bantu -->
-    <menuitem id="menu_icofr_utilities"
-              name="Utilitas"
-              sequence="25"
-              parent="menu_icofr_root"/>
-
-    <!-- Menu untuk Upload Excel Pemetaan Akun -->
-    <menuitem id="menu_icofr_account_mapping_upload_wizard"
-              name="Upload Excel Pemetaan Akun"
-              sequence="10"
-              parent="menu_icofr_utilities"
-              action="action_icofr_account_mapping_upload_wizard"/>
 
     <!-- Submenu untuk Sertifikasi dan Approval -->
     <menuitem id="menu_icofr_compliance"

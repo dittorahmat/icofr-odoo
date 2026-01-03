@@ -101,7 +101,19 @@ class IcofrCobitElement(models.Model):
 
     @api.model
     def create(self, vals):
-        # Generate code if not provided
-        if 'code' not in vals or not vals.get('code'):
-            vals['code'] = self.env['ir.sequence'].next_by_code('icofr.cobit.element') or '/'
-        return super(IcofrCobitElement, self).create(vals)
+        # Handle both single and batch creation
+        if isinstance(vals, list):
+            # Process each item in the list
+            processed_vals = []
+            for val_dict in vals:
+                new_val_dict = val_dict.copy()
+                if 'code' not in new_val_dict or not new_val_dict.get('code'):
+                    new_val_dict['code'] = self.env['ir.sequence'].next_by_code('icofr.cobit.element') or '/'
+                processed_vals.append(new_val_dict)
+            return super(IcofrCobitElement, self).create(processed_vals)
+        else:
+            # Single record creation
+            new_vals = vals.copy()
+            if 'code' not in new_vals or not new_vals.get('code'):
+                new_vals['code'] = self.env['ir.sequence'].next_by_code('icofr.cobit.element') or '/'
+            return super(IcofrCobitElement, self).create(new_vals)

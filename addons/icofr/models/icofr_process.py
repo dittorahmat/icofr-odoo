@@ -85,6 +85,16 @@ class IcofrProcess(models.Model):
         help='Perusahaan yang memiliki proses ini'
     )
 
+    process_type = fields.Selection([
+        ('business_process', 'Proses Bisnis'),
+        ('support_process', 'Proses Dukungan'),
+        ('it_process', 'Proses TI'),
+        ('financial_process', 'Proses Finansial'),
+        ('compliance_process', 'Proses Kepatuhan'),
+        ('operational_process', 'Proses Operasional')
+    ], string='Tipe Proses', default='business_process',
+       help='Tipe dari proses bisnis')
+
     notes = fields.Text(
         string='Catatan Tambahan',
         help='Catatan tambahan terkait proses'

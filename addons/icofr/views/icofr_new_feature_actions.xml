@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Actions for New Features -->
+
+    <!-- Action for Master Data Upload Wizard -->
+    <record id="action_icofr_master_data_upload_wizard" model="ir.actions.act_window">
+        <field name="name">Upload Data Master (Lokasi &amp; Proses Bisnis)</field>
+        <field name="res_model">icofr.master.data.upload.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Upload data master (lokasi dan proses bisnis) melalui Excel!
+            </p>
+            <p>
+                Gunakan wizard ini untuk mengupload data master dari file Excel.
+                Format file harus sesuai dengan template yang ditentukan.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action for RCM Upload Wizard -->
+    <record id="action_icofr_rcm_upload_wizard" model="ir.actions.act_window">
+        <field name="name">Upload RCM (Risk-Control Matrix)</field>
+        <field name="res_model">icofr.rcm.upload.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Upload data RCM (Risk-Control Matrix) melalui Excel!
+            </p>
+            <p>
+                Gunakan wizard ini untuk mengupload data RCM dari file Excel.
+                Format file harus sesuai dengan template yang ditentukan.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action for CSA Campaign -->
+    <record id="action_icofr_csa_campaign" model="ir.actions.act_window">
+        <field name="name">Kampanye CSA (Control Self-Assessment)</field>
+        <field name="res_model">icofr.csa.campaign</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Buat kampanye CSA pertama Anda!
+            </p>
+            <p>
+                Kampanye ini digunakan untuk mengelola periode CSA dan distribusi tugas ke Lini 1.
+                Anda dapat mengelola jadwal CSA, menetapkan kontrol dan proses yang akan dinilai,
+                serta melacak penyelesaian CSA.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action for Population Upload Wizard -->
+    <record id="action_icofr_population_upload_wizard" model="ir.actions.act_window">
+        <field name="name">Upload Data Populasi untuk Audit Sampling</field>
+        <field name="res_model">icofr.population.upload.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Upload data populasi transaksi untuk keperluan audit sampling!
+            </p>
+            <p>
+                Gunakan wizard ini untuk mengupload data populasi transaksi dari file Excel.
+                Data ini akan digunakan oleh Lini 3 (Internal Audit) untuk keperluan sampling.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action for Audit Population Data -->
+    <record id="action_icofr_audit_population" model="ir.actions.act_window">
+        <field name="name">Data Populasi Audit</field>
+        <field name="res_model">icofr.audit.population</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Data populasi transaksi untuk audit sampling!
+            </p>
+            <p>
+                Daftar transaksi yang diupload oleh Lini 1 dan dapat dipilih oleh Lini 3 untuk sampling.
+            </p>
+        </field>
+    </record>
+</odoo>

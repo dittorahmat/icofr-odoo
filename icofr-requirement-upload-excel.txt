@@ -1,0 +1,122 @@
+Tentu, ini adalah pendekatan yang sangat pragmatis dan masuk akal untuk fase awal (MVP - Minimum Viable Product). Menunda integrasi ERP akan mempercepat time-to-market aplikasi dan mengurangi kompleksitas teknis di awal.
+
+Sebagai gantinya, fitur Import/Export (Excel/CSV) menjadi sangat krusial agar user tidak kelelahan melakukan input data satu per satu.
+
+Berikut adalah Revised Requirements untuk Aplikasi ICOFR Versi 1 (Standalone/Manual Input):
+
+1. Strategi Pengembangan: "Excel-First Approach"
+
+Karena integrasi ERP ditunda, aplikasi akan bertindak sebagai Agregator dan Workflow Engine. Data keuangan (Neraca/Laba Rugi) dan daftar akun akan dimasukkan melalui fitur Bulk Upload menggunakan template Excel yang dibakukan oleh sistem.
+
+2. Functional Requirements (Revised)
+A. Modul Admin & Master Data
+
+Organizational Structure: Setup manual struktur organisasi (Holding, Anak Perusahaan, Divisi, Departemen).
+
+User Management (RBAC): Tetap memisahkan peran Lini 1, 2, 3, dan Manajemen.
+
+Master Data Import: Fitur untuk upload master data awal (Daftar Lokasi, Daftar Proses Bisnis) via Excel.
+
+B. Modul Scoping & Planning (Input Data Keuangan Manual)
+
+Financial Data Uploader (Pengganti Integrasi ERP):
+
+Menyediakan template standar Excel untuk diunduh user (format: Kode Akun, Nama Akun, Saldo Akhir Tahun, Saldo Tahun Lalu).
+
+Fitur Upload Trial Balance (TB) atau Laporan Keuangan.
+
+Validasi upload (misal: memastikan Debet/Kredit seimbang, format angka benar).
+
+Materiality Calculator:
+
+Sistem otomatis menghitung OM (Overall Materiality) dan PM (Performance Materiality) berdasarkan angka yang di-upload user tadi.
+
+User bisa memilih benchmark (Total Aset/Revenue/Laba Rugi) secara manual.
+
+Account Significance Mapping:
+
+Sistem otomatis menandai akun "Signifikan" jika saldo > PM.
+
+User secara manual mencentang akun signifikan secara kualitatif (berdasarkan professional judgement).
+
+C. Modul Documentation (RCM Repository)
+
+RCM Bulk Import/Export:
+
+Ini fitur paling kritikal. User pasti sudah punya RCM di Excel. Aplikasi harus bisa menerima upload RCM massal.
+
+Validasi kolom wajib: ID Risiko, Deskripsi Risiko, ID Kontrol, Deskripsi Kontrol, Asersi, Tipe Kontrol.
+
+Library Control: Setelah di-upload, data menjadi database digital yang bisa diedit via UI (User Interface).
+
+Versioning: Jika user meng-upload RCM revisi, sistem harus menyimpannya sebagai versi baru (v1.0, v1.1) tanpa menimpa histori audit versi sebelumnya.
+
+D. Modul Assessment (CSA - Lini 1)
+
+Campaign Management: Lini 2 membuat "Periode CSA" (misal: Q1 2025) dan mendistribusikan tugas ke Lini 1.
+
+Digital CSA Form:
+
+Lini 1 login dan melihat daftar kontrol mereka.
+
+Input status: Efektif / Tidak Efektif.
+
+Evidence Upload: Wajib melampirkan bukti (PDF/JPG/XLS) secara manual ke dalam sistem sebagai pengganti penarikan data otomatis.
+
+Review Hierarchy: Lini 1 Supervisor me-review inputan staff sebelum masuk ke Lini 2.
+
+E. Modul Evaluation (Audit - Lini 3)
+
+Population Data Upload:
+
+Karena tidak ada koneksi ke ERP, Lini 3 harus bisa meminta data populasi.
+
+Fitur bagi Lini 1 untuk meng-upload listing transaksi (populasi) dalam bentuk Excel ke sistem agar Lini 3 bisa memilih sampel.
+
+Manual Sampling Input: Lini 3 memilih sampel dari file Excel tersebut, lalu menginput hasil pengujian (Pass/Fail) ke aplikasi.
+
+Monetary Impact Input: Jika ada temuan, Lini 3 mengetik manual estimasi dampak Rupiah-nya (tanpa kalkulasi otomatis dari live data).
+
+F. Modul Reporting
+
+Deficiency Aggregation: Sistem merekapitulasi jumlah Pass vs Fail.
+
+Manual Adjustment: Admin/Lini 2 bisa melakukan penyesuaian rating defisiensi (misal: sistem menyarankan "Significant Deficiency", tapi manajemen memutuskan "Material Weakness" berdasarkan diskusi manual).
+
+Export to PDF/Excel: Menghasilkan Laporan Asesmen Manajemen siap cetak.
+
+3. Technical Requirements (Non-Functional)
+
+Robust File Parsing: Sistem harus mampu membaca file Excel (.xlsx, .csv) dengan cepat dan menangani error handling jika format user salah (misal: memberi pesan "Kolom C baris 40 format salah").
+
+Storage Capacity: Karena user akan banyak upload bukti (evidence) berupa file scan/PDF, siapkan penyimpanan (cloud storage/server) yang cukup besar dan scalable.
+
+Audit Log (Jejak Audit): Mencatat siapa yang meng-upload data keuangan. Ini penting karena data diinput manual (rawan manipulasi), jadi log "siapa" dan "kapan" menjadi kontrol integritas datanya.
+
+Security: Virus scan untuk setiap file yang diupload user.
+
+4. Revised User Flow (Alur Kerja)
+
+Admin: Setup user & struktur organisasi.
+
+Lini 2 (Risk): Download template Excel Data Keuangan -> Isi data saldo -> Upload ke Sistem.
+
+Sistem: Menghitung Materialitas & menandai Akun Signifikan.
+
+Lini 2: Menentukan proses bisnis & lokasi (Scoping).
+
+Lini 2: Upload RCM (Excel) untuk masing-masing proses.
+
+Lini 1 (Process Owner): Menerima notifikasi CSA -> Login -> Isi Kuesioner -> Upload Bukti Pendukung -> Submit.
+
+Lini 3 (Audit): Download data populasi (yang diupload Lini 1) -> Pilih Sampel -> Test -> Input Hasil (Pass/Fail).
+
+Sistem: Menghitung skor defisiensi.
+
+Lini 2 & Manajemen: Review dashboard hasil & download laporan final.
+
+Kesimpulan Perubahan
+
+Dengan menghapus integrasi ERP di fase ini, beban pengembangan bergeser dari kompleksitas konektivitas data menjadi kompleksitas validasi file upload.
+
+Aplikasi harus "pintar" membaca Excel agar user tidak frustrasi saat migrasi data manual.

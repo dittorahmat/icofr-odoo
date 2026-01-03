@@ -228,6 +228,49 @@ class IcofrPojkReport(models.Model):
         help='Centang jika laporan mencakup data dari anak perusahaan'
     )
 
+    entities_included = fields.Text(
+        string='Entitas yang Disertakan',
+        help='Daftar entitas yang disertakan dalam laporan konsolidasi'
+    )
+
+    # Digital Signature Fields
+    signed_by = fields.Many2one(
+        'res.users',
+        string='Ditandatangani Oleh',
+        readonly=True,
+        copy=False,
+        help='Pengguna yang menandatangani laporan secara digital'
+    )
+    
+    signed_date = fields.Datetime(
+        string='Tanggal Tanda Tangan',
+        readonly=True,
+        copy=False,
+        help='Waktu saat laporan ditandatangani'
+    )
+    
+    signature_image = fields.Binary(
+        string='Tanda Tangan',
+        readonly=True,
+        copy=False,
+        help='Gambar tanda tangan digital'
+    )
+    
+    signature_hash = fields.Char(
+        string='Hash Tanda Tangan',
+        readonly=True,
+        copy=False,
+        help='Hash unik untuk verifikasi integritas tanda tangan'
+    )
+    
+    is_signed = fields.Boolean(
+        string='Telah Ditandatangani',
+        default=False,
+        readonly=True,
+        copy=False,
+        help='Menandakan apakah laporan telah ditandatangani secara digital'
+    )
+
     @api.depends('finding_ids', 'finding_ids.severity_level', 'finding_ids.deficiency_classified', 'is_consolidated', 'company_id')
     def _compute_deficiency_counts(self):
         for record in self:
@@ -280,6 +323,63 @@ class IcofrPojkReport(models.Model):
                 'approved_by_id': self.env.user.id
             })
         return True
+
+    def action_sign_report(self):
+        """Method untuk menandatangani laporan secara digital"""
+        self.ensure_one()
+        from odoo.exceptions import UserError
+        import hashlib
+        
+        if self.status != 'approved':
+            raise UserError('Hanya laporan yang sudah disetujui yang dapat ditandatangani.')
+            
+        # Create a simple hash as a digital signature placeholder
+        # In a real implementation, this would involve a digital signature provider
+        signature_base = f"{self.name}-{self.approved_by_id.id}-{fields.Datetime.now()}"
+        signature_hash = hashlib.sha256(signature_base.encode()).hexdigest()
+        
+        self.write({
+            'signed_by': self.env.user.id,
+            'signed_date': fields.Datetime.now(),
+            'is_signed': True,
+            'signature_hash': signature_hash,
+            'status': 'published'
+        })
+        return True
+
+    def action_generate_ceo_statement(self):
+        """Method untuk mengenerate pernyataan CEO/CFO sesuai Lampiran 11"""
+        self.ensure_one()
+        ceo_name = self.approved_by_id.name or "[Nama CEO/CFO]"
+        company_name = self.company_id.name or "[Nama Perusahaan]"
+        period = self.reporting_period or "[Periode]"
+        
+        statement = f"""Sesuai dengan Juknis Kementerian BUMN tentang ICOFR, {ceo_name} mewakili {company_name} menyatakan bahwa:
+
+1. Kami telah menelaah laporan keuangan yang berakhir pada {period}.
+2. Berdasarkan pengetahuan kami, laporan keuangan tidak memuat pernyataan yang tidak benar tentang fakta material atau tidak mencantumkan fakta material yang diperlukan untuk membuat pernyataan yang dibuat, mengingat keadaan di mana pernyataan tersebut dibuat, tidak menyesatkan.
+3. Berdasarkan pengetahuan kami, laporan keuangan, dan informasi keuangan lainnya yang termasuk dalam laporan keuangan, secara wajar menyajikan dalam semua hal yang material atas kondisi keuangan dan hasil operasi untuk periode-periode yang disajikan dalam laporan.
+4. Kami telah mengimplementasikan pengendalian dan prosedur atas penyusunan laporan keuangan yang dianggap perlu untuk menyusun dan menyajikan secara wajar laporan keuangan (konsolidasi) dan bebas dari salah saji material.
+5. Kami telah mengungkapkan, berdasarkan hasil evaluasi pengendalian internal atas pelaporan keuangan kepada Dewan Komisaris/Dewan Pengawas, Direksi dan Komite Audit, perihal:
+   a. Seluruh defisiensi signifikan dan kelemahan material dalam rancangan dan pengoperasian pengendalian internal atas pelaporan keuangan.
+   b. Perubahan signifikan dalam kebijakan akuntansi, prosedur dan faktor lainnya.
+   c. Setiap kecurangan (fraud), baik yang berdampak secara material maupun tidak.
+
+Demikian pernyataan ini dibuat untuk digunakan sebagaimana mestinya."""
+        
+        self.write({'management_response_detail': statement})
+        return True
+
+    def write(self, vals):
+        """Override write to prevent modification of signed reports"""
+        from odoo.exceptions import UserError
+        for record in self:
+            if record.is_signed and not self.env.context.get('ignore_signed_check'):
+                # Allow only specific status changes or specific fields if needed, 
+                # but generally block edits on signed reports
+                if set(vals.keys()) - {'message_follower_ids', 'message_ids', 'message_main_attachment_id'}:
+                     raise UserError('Laporan yang telah ditandatangani tidak dapat diubah. Silakan buat revisi baru jika diperlukan.')
+        return super(IcofrPojkReport, self).write(vals)
 
     def print_report(self):
         """Method untuk mencetak laporan"""

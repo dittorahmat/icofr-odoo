@@ -52,6 +52,14 @@ class IcofrCertification(models.Model):
         help='Lingkup dari sertifikasi kontrol internal'
     )
     
+    pojk_report_ids = fields.Many2many(
+        'icofr.pojk.report',
+        'icofr_certification_pojk_report_rel',
+        'certification_id', 'pojk_report_id',
+        string='Laporan POJK Terkait',
+        help='Laporan POJK yang terkait dengan sertifikasi ini'
+    )
+
     finding_ids = fields.One2many(
         'icofr.finding',
         'certification_id',
@@ -124,6 +132,35 @@ class IcofrCertification(models.Model):
         required=True,
         default=lambda self: self.env.company,
         help='Perusahaan yang memiliki sertifikasi ini'
+    )
+
+    is_consolidated = fields.Boolean(
+        string='Sertifikasi Konsolidasi?',
+        default=False,
+        help='Menandakan apakah ini adalah sertifikasi konsolidasi yang mencakup lebih dari satu entitas'
+    )
+
+    entities_covered = fields.Text(
+        string='Entitas yang Dicakup',
+        help='Deskripsi entitas-entitas yang dicakup dalam sertifikasi konsolidasi ini'
+    )
+
+    material_weaknesses_identified = fields.Integer(
+        string='Jumlah Kelemahan Material Teridentifikasi',
+        default=0,
+        help='Jumlah kelemahan material yang diidentifikasi dalam sertifikasi ini'
+    )
+
+    significant_deficiencies_identified = fields.Integer(
+        string='Jumlah Kekurangan Signifikan Teridentifikasi',
+        default=0,
+        help='Jumlah kekurangan signifikan yang diidentifikasi dalam sertifikasi ini'
+    )
+
+    control_deficiencies_identified = fields.Integer(
+        string='Jumlah Kekurangan Kontrol Teridentifikasi',
+        default=0,
+        help='Jumlah kekurangan kontrol yang diidentifikasi dalam sertifikasi ini'
     )
 
     notes = fields.Text(

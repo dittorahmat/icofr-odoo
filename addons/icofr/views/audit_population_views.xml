@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- View untuk Wizard Upload Populasi -->
+    <record id="view_icofr_population_upload_wizard" model="ir.ui.view">
+        <field name="name">icofr.population.upload.wizard.form</field>
+        <field name="model">icofr.population.upload.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Upload Excel Data Populasi untuk Audit Sampling">
+                <group>
+                    <group>
+                        <field name="control_id"/>
+                        <field name="testing_id"/>
+                        <field name="process_owner_id"/>
+                    </group>
+                    <group>
+                        <field name="upload_date"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="excel_file" filename="file_name" widget="binary"/>
+                    <label for="excel_file" string="Format file: XLS atau XLSX (kolom wajib: No Transaksi, Tanggal, Nilai, Deskripsi)"/>
+                </group>
+                <group>
+                    <field name="notes"/>
+                </group>
+                <footer>
+                    <button name="action_download_template" type="object" string="Unduh Template" class="btn-secondary"/>
+                    <button name="action_upload_population_excel" type="object" string="Upload &amp; Import" class="btn-primary" icon="fa-upload"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+                <group col="1" invisible="not import_result">
+                    <separator string="Hasil Import"/>
+                    <field name="import_result" nolabel="1" readonly="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- View untuk data populasi audit -->
+    <record id="view_icofr_audit_population_form" model="ir.ui.view">
+        <field name="name">icofr.audit.population.form</field>
+        <field name="model">icofr.audit.population</field>
+        <field name="arch" type="xml">
+            <form string="Populasi Data Audit">
+                <header>
+                    <button name="action_select_for_testing" type="object" string="Pilih untuk Pengujian" invisible="selected_for_testing == True" class="oe_highlight"/>
+                    <button name="action_deselect_for_testing" type="object" string="Batalkan Pemilihan" invisible="selected_for_testing == False" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="transaction_no"/>
+                            <field name="transaction_date"/>
+                            <field name="amount"/>
+                        </group>
+                        <group>
+                            <field name="control_id"/>
+                            <field name="testing_id"/>
+                            <field name="selected_for_testing"/>
+                            <field name="testing_result"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="uploaded_by_id"/>
+                            <field name="upload_date"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Catatan">
+                            <field name="notes"/>
+                        </page>
+                        <page string="Catatan Pengujian">
+                            <field name="testing_notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View untuk data populasi audit -->
+    <record id="view_icofr_audit_population_list" model="ir.ui.view">
+        <field name="name">icofr.audit.population.list</field>
+        <field name="model">icofr.audit.population</field>
+        <field name="arch" type="xml">
+            <list string="Populasi Data untuk Audit Sampling">
+                <header>
+                    <button name="action_open_sample_wizard" type="object" string="Pilih sebagai Sampel" class="btn-primary" groups="icofr.group_icofr_line_3"/>
+                </header>
+                <field name="transaction_no"/>
+                <field name="transaction_date"/>
+                <field name="amount"/>
+                <field name="description"/>
+                <field name="control_id"/>
+                <field name="testing_id"/>
+                <field name="selected_for_testing"/>
+                <field name="testing_result"/>
+                <field name="uploaded_by_id"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

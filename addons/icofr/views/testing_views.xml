@@ -40,13 +40,71 @@
                         </group>
                         <group>
                             <field name="test_date"/>
+                            <field name="effectiveness"/>
                             <field name="status"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Detail Pengujian">
+                        <page string="Test of Design (TOD)" invisible="test_type != 'tod'">
+                            <group>
+                                <field name="design_description" placeholder="Evaluasi rancangan pengendalian..."/>
+                                <field name="design_conclusion" widget="radio" options="{'horizontal': true}"/>
+                            </group>
+                        </page>
+                        <page string="Test of Operating Effectiveness (TOE)" invisible="test_type != 'toe'">
+                            <group>
+                                <group string="Sampling &amp; Populasi">
+                                    <field name="population_reference"/>
+                                    <field name="sample_selection_method"/>
+                                    <field name="sample_size"/>
+                                </group>
+                                <group string="Hasil Eksekusi">
+                                    <field name="testing_steps"/>
+                                    <field name="exceptions_noted"/>
+                                </group>
+                            </group>
+                            <button name="%(icofr.action_icofr_sample_selection_wizard)d" 
+                                    type="action" string="Pilih Sampel dari Populasi" 
+                                    class="btn-secondary" icon="fa-plus-circle"
+                                    context="{'default_testing_id': id}"/>
+                        </page>
+                        <page string="Sampel Terpilih (Testing Log)" invisible="test_type != 'toe'">
+                            <field name="sample_ids">
+                                <list editable="bottom">
+                                    <field name="transaction_no" readonly="1"/>
+                                    <field name="transaction_date" readonly="1"/>
+                                    <field name="amount" readonly="1"/>
+                                    <field name="description" readonly="1"/>
+                                    <field name="testing_result"/>
+                                    <field name="testing_notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Detail Prosedur &amp; Hasil">
                             <field name="testing_procedures"/>
                             <field name="test_results"/>
+                        </page>
+                        <page string="Kalkulator Sampling (Tabel 22 Juknis)" invisible="test_type != 'toe'">
+                            <group>
+                                <group>
+                                    <field name="control_frequency"/>
+                                    <field name="population_size"/>
+                                    <field name="confidence_level"/>
+                                </group>
+                                <group>
+                                    <field name="sample_size_calculated"/>
+                                    <field name="sampling_method"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Temuan &amp; Rekomendasi">
+                            <group>
+                                <field name="findings"/>
+                                <field name="recommendation"/>
+                            </group>
+                        </page>
+                        <page string="Lampiran Bukti">
+                            <field name="evidence_attachment_ids" widget="many2many_binary"/>
                         </page>
                     </notebook>
                 </sheet>

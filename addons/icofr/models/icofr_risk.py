@@ -169,6 +169,12 @@ class IcofrRisk(models.Model):
         help='Perusahaan yang memiliki risiko ini'
     )
 
+    risk_date = fields.Date(
+        string='Tanggal Risiko',
+        default=fields.Date.context_today,
+        help='Tanggal terkait dengan identifikasi atau penilaian risiko'
+    )
+
     notes = fields.Text(
         string='Catatan Tambahan',
         help='Catatan tambahan terkait risiko'

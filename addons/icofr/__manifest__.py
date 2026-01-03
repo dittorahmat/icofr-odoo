@@ -29,8 +29,19 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/line_report_actions.xml",
         "views/cobit_element_actions.xml",
         "views/additional_actions.xml",
+        "views/csa_campaign_actions.xml",
+        "views/icofr_new_feature_actions.xml",
+        "views/audit_population_actions.xml",
+
+        # Wizards
+        "views/account_mapping_upload_wizard_views.xml",
+        "views/master_data_upload_wizard_views.xml",
+        "views/rcm_upload_wizard_views.xml",
+        "views/sample_selection_wizard_views.xml",
+        "views/copy_period_wizard_views.xml",
 
         # Views
+        "views/audit_population_views.xml",
         "views/icofr_menu.xml",
         "views/control_views.xml",
         "views/risk_views.xml",
@@ -42,7 +53,6 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/materiality_views.xml",
         "views/pojk_report_views.xml",
         "views/csa_views.xml",
-        "views/copy_period_wizard_views.xml",
         "views/schedule_views.xml",
         "views/finding_views.xml",
         "views/workflow_integration_views.xml",
@@ -51,10 +61,10 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/dashboard_views.xml",
         "views/reporting_views.xml",
         "views/icofr_process_views.xml",
-        "views/account_mapping_upload_wizard_views.xml",
         "views/cobit_element_views.xml",
         "views/notification_scheduler_views.xml",
         "views/line_report_views.xml",
+        "views/csa_campaign_views.xml",
 
         # Data
         "data/account_mapping_upload_data.xml",
@@ -63,4 +73,5 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
     "auto_install": False,
     "application": False,
     "license": "LGPL-3",
+    "post_init_hook": "post_init_hook",
 }

@@ -49,15 +49,28 @@ class IcofrMateriality(models.Model):
 
     overall_materiality_percent = fields.Float(
         string='Persentase Overall Materiality',
-        default=0.5,
-        help='Persentase Overall Materiality (contoh: 0.5%)'
+        default=5.0,
+        help='Persentase Overall Materiality (contoh: 5% dari Laba Sebelum Pajak)'
     )
+
+    risk_factor_level = fields.Selection([
+        ('low', 'Risiko Rendah (Haircut 20%)'),
+        ('high', 'Risiko Tinggi (Haircut >55%)')
+    ], string='Faktor Risiko (Haircut)', default='high',
+       help='Tingkat risiko untuk menentukan haircut Performance Materiality (Tabel 4 Juknis)')
 
     performance_materiality_percent = fields.Float(
         string='Persentase Performance Materiality',
-        default=0.75,
-        help='Persentase Performance Materiality sebagai faktor dari Overall Materiality (contoh: 75%)'
+        default=45.0,
+        help='Persentase PM dari OM (100% - Haircut). Risiko Rendah ~80%, Risiko Tinggi <45%'
     )
+
+    @api.onchange('risk_factor_level')
+    def _onchange_risk_factor(self):
+        if self.risk_factor_level == 'low':
+            self.performance_materiality_percent = 80.0  # 100% - 20% haircut
+        elif self.risk_factor_level == 'high':
+            self.performance_materiality_percent = 45.0  # 100% - 55% haircut (conservative)
 
     overall_materiality_amount = fields.Float(
         string='Jumlah Overall Materiality',
@@ -279,3 +292,107 @@ class IcofrMateriality(models.Model):
                 'type': 'success',
             }
         }
+
+    def action_import_financial_data_from_excel(self, excel_file, file_name):
+        """
+        Import financial data from Excel file
+        """
+        self.ensure_one()
+
+        if not excel_file:
+            raise ValidationError("Silakan pilih file Excel terlebih dahulu.")
+
+        if not file_name.lower().endswith(('.xlsx', '.xls')):
+            raise ValidationError("Hanya file Excel (.xlsx atau .xls) yang diperbolehkan.")
+
+        try:
+            # Decode file Excel
+            decoded_file = base64.b64decode(excel_file)
+            import xlrd
+            from io import BytesIO
+            workbook = xlrd.open_workbook(file_contents=decoded_file)
+            worksheet = workbook.sheet_by_index(0)
+
+            # Baca header dari baris pertama
+            headers = [str(worksheet.cell_value(0, col)).strip() for col in range(worksheet.ncols)]
+
+            # Validasi header
+            required_headers = ['Tahun Fiskal', 'Pendapatan', 'Total Aset']
+            for header in required_headers:
+                if header not in headers:
+                    raise ValidationError(f'Header "{header}" tidak ditemukan dalam file Excel. '
+                                          f'Header yang diperlukan: {", ".join(required_headers)}')
+
+            # Proses baris data (mulai dari baris ke-1 karena baris ke-0 adalah header)
+            import_result = {
+                'created': 0,
+                'updated': 0,
+                'errors': []
+            }
+
+            # Hanya proses baris pertama setelah header
+            for row_idx in range(1, min(worksheet.nrows, 2)):  # Batasi hanya 1 baris data
+                try:
+                    row_data = [worksheet.cell_value(row_idx, col) for col in range(worksheet.ncols)]
+
+                    # Konversi ke dictionary
+                    row_dict = dict(zip(headers, row_data))
+
+                    # Ambil data dari Excel
+                    fiscal_year = str(int(row_dict.get('Tahun Fiskal', ''))).strip()
+                    revenue = float(row_dict.get('Pendapatan', 0))
+                    total_assets = float(row_dict.get('Total Aset', 0))
+                    net_income = float(row_dict.get('Laba Bersih', 0)) if row_dict.get('Laba Bersih') else 0.0
+
+                    # Ambil parameter tambahan jika tersedia
+                    om_percent = float(row_dict.get('Persentase Overall Materiality', 0.5)) if row_dict.get('Persentase Overall Materiality') else 0.5
+                    pm_percent = float(row_dict.get('Persentase Performance Materiality', 75)) if row_dict.get('Persentase Performance Materiality') else 75
+                    materiality_basis = str(row_dict.get('Basis Perhitungan', 'revenue')).strip() if row_dict.get('Basis Perhitungan') else 'revenue'
+
+                    # Validasi data
+                    if not fiscal_year or len(fiscal_year) != 4 or not fiscal_year.isdigit():
+                        raise ValidationError(f'Format Tahun Fiskal tidak valid di baris {row_idx + 1}. Harus format YYYY.')
+
+                    # Update data pada record materiality
+                    update_data = {
+                        'fiscal_year': fiscal_year,
+                        'revenue_amount': revenue,
+                        'total_assets_amount': total_assets,
+                        'net_income_amount': net_income,
+                        'overall_materiality_percent': om_percent,
+                        'performance_materiality_percent': pm_percent,
+                        'materiality_basis': materiality_basis,
+                    }
+
+                    self.write(update_data)
+
+                    # Recalculate materiality amounts
+                    self._compute_materiality_amounts()
+
+                    import_result['updated'] += 1
+
+                except Exception as e:
+                    import_result['errors'].append(f'Baris {row_idx + 1}: Error saat memproses data - {str(e)}')
+
+            # Return hasil import
+            result_message = f"Import data keuangan selesai:\n"
+            result_message += f"- Jumlah record diperbarui: {import_result['updated']}\n"
+
+            if import_result['errors']:
+                result_message += f"- Jumlah error: {len(import_result['errors'])}\n"
+                result_message += "Daftar error:\n" + "\n".join(f"  - {err}" for err in import_result['errors'])
+
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'title': 'Import Data Keuangan Selesai',
+                    'message': result_message,
+                    'type': 'success' if not import_result['errors'] else 'warning',
+                }
+            }
+
+        except ValidationError as e:
+            raise e
+        except Exception as e:
+            raise ValidationError(f"Error saat membaca file Excel: {str(e)}")

@@ -1,105 +1,108 @@
-# PRD - Sistem Internal Controls Over Financial Reporting (ICORF) untuk Odoo
+# Product Requirements Document (PRD): ICOFR Odoo Module (POJK 15/2024)
 
 ## 1. Introduction/Overview
+This document outlines the requirements for developing a comprehensive **Internal Control Over Financial Reporting (ICOFR)** module for Odoo 19.0. The system is designed to facilitate compliance with **POJK No. 15 Tahun 2024** and the **COSO 2013** framework for Indonesian State-Owned Enterprises (BUMN).
 
-Sistem ICORF (Internal Controls Over Financial Reporting) untuk Odoo adalah modul komprehensif yang dirancang untuk membantu organisasi, khususnya institusi keuangan dan BUMN di Indonesia, dalam memenuhi persyaratan regulasi POJK No. 15 Tahun 2024 tentang Integritas Pelaporan Keuangan Bank dan standar pengendalian internal lainnya.
-
-Sistem ini akan menyediakan alat untuk mengelola, memonitor, dan melaporkan efektivitas kontrol internal atas pelaporan keuangan, sesuai dengan framework COSO 2013, serta mendukung proses sertifikasi CEO/CFO seperti yang diharuskan oleh regulasi.
-
-Tujuan utama adalah untuk memastikan akurasi dan keandalan laporan keuangan serta memenuhi kewajiban kepatuhan terhadap regulasi internal kontrol keuangan.
+The module will serve as a governance, risk, and compliance (GRC) tool, digitizing the end-to-end ICOFR lifecycle—from scoping and design to self-assessment, independent evaluation, and regulatory reporting. It implements the "Three Lines of Defense" model, ensuring accountability across operational owners, risk management, and internal audit.
 
 ## 2. Goals
-
-1. Membangun sistem manajemen kontrol internal yang komprehensif sesuai standar COSO
-2. Memungkinkan pelacakan dan dokumentasi aktivitas kontrol secara sistematis
-3. Menyediakan alat untuk penilaian risiko dan efektivitas kontrol
-4. Mendukung proses pelaporan kepatuhan ICORF sesuai POJK 15/2024
-5. Menyediakan dokumentasi yang dapat diaudit untuk proses sertifikasi CEO/CFO
-6. Mengintegrasikan dengan modul akuntansi Odoo melalui import/export data
-7. Menyediakan antarmuka yang dapat digunakan oleh berbagai stakeholder (CFO, Controller, auditor internal, manajemen)
+1.  **Full Regulatory Compliance:** Ensure all workflows and outputs align with SK-5/DKU.MBU/11/2024 standards.
+2.  **Digitized "Three Lines" Workflow:** Enable seamless collaboration between Process Owners (L1), Risk/ICOFR Teams (L2), and Internal Audit (L3) within a single platform.
+3.  **Centralized Repository:** Act as the "Single Source of Truth" for all Risk Control Matrices (RCM), Business Process Maps (BPM), and control evidence.
+4.  **Automated Monitoring:** Provide real-time dashboards for control effectiveness, deficiency status, and remediation progress.
+5.  **Efficiency:** Reduce manual administrative overhead for Control Self-Assessments (CSA) and audit reporting.
 
 ## 3. User Stories
 
-**Sebagai** CFO, **saya ingin** dapat melihat ringkasan efektivitas kontrol internal **sehingga** saya dapat mengambil keputusan strategis terkait pengelolaan risiko finansial.
+### L1 - Process Owners (Operational Staff)
+*   "As a Process Owner, I want to view the specific risks and controls assigned to my department so that I know what I am responsible for."
+*   "As a Process Owner, I want to perform Control Self-Assessment (CSA) periodically by uploading evidence and rating effectiveness so that I can certify my controls are working."
+*   "As a Process Owner, I want to receive notifications when a control deficiency is flagged so that I can implement a remediation plan."
 
-**Sebagai** Controller, **saya ingin** dapat mengelola deskripsi kontrol dan parameter kontrol **sehingga** saya dapat memastikan pelaksanaan kontrol internal yang konsisten.
+### L2 - ICOFR/Risk Team (Middle Management)
+*   "As an ICOFR Officer, I want to define and maintain the Risk Control Matrix (RCM) and Business Process Maps (BPM) so that the organization has a standardized control library."
+*   "As an ICOFR Officer, I want to calculate materiality thresholds (Overall & Performance) based on financial data so that we can scope significant accounts and locations."
+*   "As an ICOFR Officer, I want to validate the CSA results submitted by L1 (Test of One) to ensure their assessments are accurate."
 
-**Sebagai** Auditor Internal, **saya ingin** dapat mengakses bukti dokumentasi kontrol dan hasil pengujian **sehingga** saya dapat mengevaluasi efektivitas kontrol internal.
+### L3 - Internal Auditor
+*   "As an Internal Auditor, I want to perform independent Test of Design (TOD) and Test of Operating Effectiveness (TOE) on key controls."
+*   "As an Internal Auditor, I want to classify findings (Deficiency, Significant Deficiency, Material Weakness) based on the regulation's criteria."
+*   "As an Internal Auditor, I want to generate the final Audit Opinion and Regulatory Report (Lampiran 11) for the Board."
 
-**Sebagai** Manajemen Senior, **saya ingin** dapat melihat laporan kepatuhan dan temuan kontrol **sehingga** saya dapat memastikan organisasi memenuhi standar regulasi.
-
-**Sebagai** Admin Sistem, **saya ingin** dapat menetapkan otorisasi akses berdasarkan peran **sehingga** hanya pengguna yang berwenang yang dapat mengakses fungsi-fungsi pententu.
+### Management (CEO/CFO/Audit Committee)
+*   "As a CFO, I want a high-level dashboard showing the overall effectiveness of ICOFR to sign off on the management assessment."
 
 ## 4. Functional Requirements
 
-1. Sistem harus menyediakan modul untuk mengelola master data kontrol internal (jenis kontrol, frekuensi, pemilik kontrol, dll.)
+### 4.1. Master Data & Framework Setup
+1.  **COSO/COBIT Structure:** System must allow users to define Principles, Components, and Attributes (user-input based on choice 3B).
+2.  **Organization Structure:** Define Company, Hierarchy, and Process Owners (L1) mapped to Odoo Departments/Users.
+3.  **Process Hierarchy:** Define Business Cycles (e.g., Order to Cash), Sub-processes, and Activities.
 
-2. Sistem harus memungkinkan pengguna untuk membuat dan mengelola risiko finansial yang terkait dengan kontrol internal
+### 4.2. Phase 1: Scoping (Perancangan Scope)
+4.  **Materiality Calculation:** Form to input/calculate Overall Materiality (OM) and Performance Materiality (PM) based on user-defined benchmarks (e.g., 5% of Profit Before Tax).
+5.  **Account Scoping:** Ability to flag General Ledger accounts as "Significant" based on quantitative (Materiality) and qualitative factors.
+6.  **Location/Unit Scoping:** Ability to select significant subsidiaries or business units for the ICOFR scope.
 
-3. Sistem harus menyediakan fitur untuk mendokumentasikan aktivitas kontrol (deskripsi, frekuensi, pemilik, indikator kinerja)
+### 4.3. Phase 2: Design (Perancangan Control)
+7.  **Risk Repository:** Register for Financial Reporting Risks (Assertions: Existence, Completeness, etc.) and Fraud Risks.
+8.  **Control Repository (RCM):** Comprehensive form to define Controls with fields:
+    *   Control Type (Manual/ITDM/Automated)
+    *   Frequency (Daily/Monthly/Ad-hoc)
+    *   Nature (Preventive/Detective)
+    *   Linked Risk & Assertions
+    *   Control Owner (User Link)
+9.  **BPM Linkage:** Field to link/upload Business Process Flowcharts (PDF/Image) to specific processes.
 
-4. Sistem harus menyediakan interface untuk pengujian dan penilaian efektivitas kontrol (testing results, evidence collection)
+### 4.4. Phase 3: Implementation (CSA - Control Self Assessment)
+10. **CSA Scheduling:** System must generate periodic CSA tasks (e.g., Quarterly) for L1 owners.
+11. **CSA Execution Interface:** Simple portal for L1 to:
+    *   Mark status (Effective/Ineffective/No Transaction).
+    *   Upload evidence documents.
+    *   Add comments.
+12. **L2 Validation:** Workflow for L2 to review L1's CSA. Options: "Validate (Pass)" or "Reject (Request Revision)".
 
-5. Sistem harus menyediakan fitur pelaporan kepatuhan ICORF yang sesuai dengan format POJK 15/2024
+### 4.5. Phase 4: Evaluation (Audit / TOD & TOE)
+13. **Test of Design (TOD):** Form for L3/L2 to assess if the control design is logically sound.
+14. **Test of Operating Effectiveness (TOE):** Form to record manual sample testing results.
+    *   **Manual Selection:** Auditors/L3 will manually select samples from Odoo or external sources and record transaction IDs/references in the system.
+    *   Sample Size calculator/guidance based on frequency (Tabel 22).
+    *   Pass/Fail status per sample.
+15. **Deficiency Classification:** Logic to classify failures as Control Deficiency, Significant Deficiency, or Material Weakness (as per Lampiran 10).
 
-6. Sistem harus menyediakan modul untuk manajemen temuan dan action plan dari pengujian kontrol
+### 4.6. Phase 5: Remediation
+16. **Issue Tracking:** Registry of all "Ineffective" controls.
+17. **Action Plans:** Fields for "Root Cause," "Corrective Action," "Target Date," and "Person in Charge."
+18. **Remediation Status:** Workflow to track status (Open -> In Progress -> Ready for Retest -> Closed).
 
-7. Sistem harus menyediakan dashboard untuk memonitor status dan efektivitas kontrol secara real-time
-
-8. Sistem harus mendukung proses sertifikasi internal yang menyediakan bukti dokumentasi untuk audit eksternal
-
-9. Sistem harus mendukung import dan export data dengan modul akuntansi dan sistem lainnya, khususnya data balance sheet dan data kontrol terkait
-
-10. Sistem harus menyediakan fitur manajemen peran dan otorisasi pengguna sesuai dengan prinsip pemisahan tugas (segregation of duties)
-
-11. Sistem harus menyediakan fitur notifikasi dan pengingat untuk aktivitas kontrol yang jatuh tempo
-
-12. Sistem harus menyimpan histori perubahan dan audit trail untuk semua aktivitas penting
-
-13. Sistem harus menyediakan fitur manajemen workflow untuk proses approval pada aktivitas kontrol dan sertifikasi
-
-14. Sistem harus menyediakan fitur manajemen kalender untuk perencanaan dan penjadwalan pengujian kontrol
+### 4.7. Phase 6: Reporting
+19. **Management Assessment Report:** Auto-generate the text for the CEO/CFO Statement (Lampiran 11) based on system data.
+20. **Digital Signature Integration:** The final assessment report must integrate with a digital signature provider (e.g., Odoo Sign, Privy, or similar) for formal CEO/CFO sign-off.
+21. **Deficiency Matrix:** Generate the "Degree of Deficiency" matrix.
+22. **Dashboard:** Visual charts for:
+    *   % Controls Tested.
+    *   % Effective vs. Ineffective.
+    *   Open Remediation Items.
 
 ## 5. Non-Goals (Out of Scope)
+*   **Automated Transaction Selection:** The system will **not** automatically pull transaction records from other Odoo modules for sampling. Auditors will input sample references manually.
+*   **Active Transaction Blocking:** The system will **not** block Odoo native transactions (e.g., confirming a Sale Order) based on ICOFR status. It is a documentation layer only.
+*   **Pre-loaded Content:** The system will not come populated with specific industry risks or controls. The user must populate the RCM.
+*   **AI Risk Detection:** No automated AI analysis of ledger data to find anomalies.
 
-1. Sistem tidak akan menggantikan modul akuntansi Odoo utama, hanya akan terintegrasi via import/export
-2. Sistem tidak akan menyediakan fungsi akunting transaksional (jurnal, buku besar, laporan keuangan dasar)
-3. Sistem tidak akan menyediakan modul untuk pengelolaan aset tetap atau inventaris
-4. Sistem tidak akan menangani proses bisnis operasional di luar kontrol internal keuangan
-5. Sistem tidak akan menyediakan fungsi manajemen proyek atau task management umum
+## 6. Success Metrics
+*   **Completion Rate:** 100% of defined Significant Controls have a recorded CSA status by the quarter end.
+*   **Audit Efficiency:** Reduction in time spent aggregating data for external auditors by 30%.
+*   **Data Integrity:** Zero discrepancies between the RCM document and the actual testing sheets.
 
-## 6. Design Considerations (Optional)
+## 7. Technical Considerations
+*   **Platform:** Odoo 19.0 (Enterprise or Community).
+*   **Module Structure:**
+    *   `icofr`: Core logic and master data.
+    *   `icofr_report`: QWeb templates for regulatory outputs.
+*   **Integration:** Must support API or module-level integration with digital signature providers.
+*   **Access Control:** Strict ACLs are required. L1 cannot edit RCM definitions; L3 cannot edit L1's evidence after submission.
+*   **Attachments:** Must support heavy document uploads (PDF, Excel) for evidence.
 
-1. UI/UX harus intuitif dan mudah digunakan oleh berbagai level pengguna (CFO, Controller, auditor)
-2. Harus menyediakan dashboard yang menampilkan key metrics dan status kontrol
-3. Laporan harus dapat diexport dalam format PDF dan Excel
-4. Harus mendukung attachment dan upload dokumen sebagai bukti kontrol
-5. Interface harus responsif dan dapat diakses melalui berbagai perangkat
-6. Antarmuka sistem harus dalam Bahasa Indonesia sesuai kebutuhan lokal
-
-## 7. Technical Considerations (Optional)
-
-1. Harus terintegrasi dengan sistem autentikasi dan otorisasi Odoo
-2. Harus kompatibel dengan Odoo Community Edition 19
-3. Harus mendukung import/export data dalam format CSV dan Excel, dengan sinkronisasi periodik (bukan real-time)
-4. Harus dapat menyimpan file bukti dalam format digital
-5. Harus mengikuti best practices pengembangan modul Odoo
-6. Harus mendukung multi-company jika diperlukan
-
-## 8. Success Metrics
-
-1. Peningkatan efisiensi proses pelaporan kepatuhan ICORF hingga 50%
-2. Peningkatan akurasi dokumentasi kontrol internal sebesar 80%
-3. Pengurangan waktu yang dibutuhkan untuk sertifikasi CEO/CFO hingga 30%
-4. Peningkatan visibilitas atas efektivitas kontrol internal
-5. Memenuhi persyaratan audit eksternal terkait ICORF
-6. Adopsi sistem oleh seluruh stakeholder yang terlibat dalam ICORF
-
-## 9. Open Questions
-
-(Terjawab)
-1. Ya, diperlukan fitur manajemen workflow khusus untuk proses approval.
-2. Integrasi akan melibatkan import/export data balance sheet dan data kontrol terkait lainnya.
-3. Ya, diperlukan fitur manajemen kalender untuk perencanaan pengujian kontrol.
-4. Sistem hanya perlu mendukung bahasa Indonesia.
-5. Sinkronisasi cukup dilakukan secara periodik, bukan real-time.
+## 8. Open Questions
+*   *(All initial open questions have been resolved)*

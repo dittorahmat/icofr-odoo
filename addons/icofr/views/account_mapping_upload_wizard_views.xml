@@ -8,7 +8,8 @@
             <form string="Upload Excel Pemetaan Akun ke FSLI">
                 <group>
                     <group>
-                        <field name="materiality_id" invisible="context.get('active_model') == 'icofr.materiality'"/>
+                        <field name="import_type"/>
+                        <field name="materiality_id" invisible="context.get('active_model') == 'icofr.materiality' or import_type == 'financial_data'"/>
                         <field name="file_name" invisible="1"/>
                     </group>
                     <group>

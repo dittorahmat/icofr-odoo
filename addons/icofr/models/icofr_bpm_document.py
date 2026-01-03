@@ -9,6 +9,7 @@ class IcofrBpmDocument(models.Model):
     name = fields.Char(string='Nama Dokumen', required=True)
     document_type = fields.Selection([
         ('bpm_flowchart', 'Flowchart BPM'),
+        ('business_process_flow', 'Business Process Flow'),
         ('sop', 'SOP (Standard Operating Procedure)'),
         ('policy', 'Kebijakan'),
         ('other', 'Lainnya')

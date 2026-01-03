@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Views untuk Icofr CSA Campaign -->
+
+    <!-- Form View -->
+    <record id="view_icofr_csa_campaign_form" model="ir.ui.view">
+        <field name="name">icofr.csa.campaign.form</field>
+        <field name="model">icofr.csa.campaign</field>
+        <field name="arch" type="xml">
+            <form string="Kampanye CSA (Control Self-Assessment)">
+                <header>
+                    <button name="action_start_campaign" type="object" string="Mulai Kampanye" invisible="status != 'draft'" class="oe_highlight"/>
+                    <button name="action_complete_campaign" type="object" string="Selesaikan Kampanye" invisible="status != 'ongoing'" class="btn-success"/>
+                    <button name="action_cancel_campaign" type="object" string="Batalkan Kampanye" invisible="status in ('completed', 'cancelled')" class="btn-danger"/>
+                    <button name="action_reset_to_draft" type="object" string="Reset ke Draft" invisible="status != 'cancelled'" class="btn-secondary"/>
+                    <button name="action_send_notifications" type="object" string="Kirim Notifikasi" invisible="status != 'ongoing'" class="btn-info"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,ongoing,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_csas" type="object" class="oe_stat_button" icon="fa-list">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value"><field name="total_csa_count"/></span>
+                                <span class="o_stat_text">Total CSA</span>
+                            </div>
+                        </button>
+                        <button name="action_view_csas" type="object" class="oe_stat_button" icon="fa-check-circle">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value"><field name="completed_csa_count"/></span>
+                                <span class="o_stat_text">Selesai</span>
+                            </div>
+                        </button>
+                        <button name="action_view_csas" type="object" class="oe_stat_button" icon="fa-clock-o">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value"><field name="pending_csa_count"/></span>
+                                <span class="o_stat_text">Menunggu</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="campaign_code"/>
+                            <field name="fiscal_year"/>
+                            <field name="creator_id"/>
+                        </group>
+                        <group>
+                            <field name="period_start_date"/>
+                            <field name="period_end_date"/>
+                            <field name="completion_percentage" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Deskripsi">
+                            <field name="description"/>
+                        </page>
+                        <page string="Proses &amp; Kontrol">
+                            <group>
+                                <group string="Proses Bisnis">
+                                    <field name="process_ids" widget="many2many_tags" options="{'no_create_edit': True}">
+                                        <tree>
+                                            <field name="name"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                <group string="Kontrol untuk Dinilai">
+                                    <field name="control_ids" widget="many2many_tags" options="{'no_create_edit': True}">
+                                        <tree>
+                                            <field name="name"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="CSA yang Dihasilkan">
+                            <group>
+                                <field name="csa_ids">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="control_id"/>
+                                        <field name="control_owner_id"/>
+                                        <field name="status"/>
+                                        <field name="assessment_date"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter"/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree/List View -->
+    <record id="view_icofr_csa_campaign_list" model="ir.ui.view">
+        <field name="name">icofr.csa.campaign.list</field>
+        <field name="model">icofr.csa.campaign</field>
+        <field name="arch" type="xml">
+            <list string="Kampanye CSA">
+                <field name="name"/>
+                <field name="campaign_code"/>
+                <field name="fiscal_year"/>
+                <field name="period_start_date"/>
+                <field name="period_end_date"/>
+                <field name="status"/>
+                <field name="total_csa_count"/>
+                <field name="completion_percentage" widget="progressbar"/>
+                <field name="creator_id"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

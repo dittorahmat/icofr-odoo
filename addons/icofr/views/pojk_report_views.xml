@@ -24,84 +24,97 @@
                 <header>
                     <button name="action_submit_report" type="object" string="Submit Laporan" invisible="status != 'draft'"/>
                     <button name="action_approve_report" type="object" string="Setujui Laporan" invisible="status != 'submitted'"/>
-                    <field name="status" widget="statusbar"/>
+                    <button name="action_generate_ceo_statement" type="object" string="Generate Pernyataan CEO" invisible="status not in ('draft', 'review', 'submitted') or is_signed" class="btn-secondary"/>
+                    <button name="action_sign_report" type="object" string="Tanda Tangani Laporan" invisible="status != 'approved' or is_signed" class="oe_highlight" groups="icofr.group_icofr_manager"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,submitted,approved,published"/>
                 </header>
                 <sheet>
+                    <div class="alert alert-success" role="alert" invisible="not is_signed">
+                        <i class="fa fa-check-circle"/> Laporan ini telah ditandatangani secara digital dan dikunci.
+                    </div>
                     <div class="oe_button_box" name="button_box">
                         <button name="print_report" type="object" string="Cetak Laporan" class="oe_stat_button" icon="fa-print"/>
                     </div>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name"/>
+                            <field name="name" readonly="is_signed"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="reporting_period"/>
-                            <field name="fiscal_year"/>
-                            <field name="report_date"/>
-                            <field name="company_id"/>
-                            <field name="is_consolidated"/>
+                            <field name="reporting_period" readonly="is_signed"/>
+                            <field name="fiscal_year" readonly="is_signed"/>
+                            <field name="report_date" readonly="is_signed"/>
+                            <field name="company_id" readonly="is_signed"/>
+                            <field name="is_consolidated" readonly="is_signed"/>
                         </group>
 
                         <group>
-                            <field name="prepared_by_id"/>
-                            <field name="reviewed_by_id"/>
-                            <field name="approved_by_id"/>
-                            <field name="status"/>
+                            <field name="prepared_by_id" readonly="is_signed"/>
+                            <field name="reviewed_by_id" readonly="is_signed"/>
+                            <field name="approved_by_id" readonly="is_signed"/>
+                            <field name="is_signed" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Metrik Utama">
                             <group>
                                 <group string="Kontrol Internal">
-                                    <field name="total_controls"/>
-                                    <field name="effective_controls"/>
-                                    <field name="effectiveness_percentage" widget="percentage"/>
+                                    <field name="total_controls" readonly="is_signed"/>
+                                    <field name="effective_controls" readonly="is_signed"/>
+                                    <field name="effectiveness_percentage" widget="percentage" readonly="is_signed"/>
                                 </group>
                                 <group string="Risiko">
-                                    <field name="total_risks"/>
-                                    <field name="high_risks"/>
+                                    <field name="total_risks" readonly="is_signed"/>
+                                    <field name="high_risks" readonly="is_signed"/>
                                 </group>
                                 <group string="Temuan">
-                                    <field name="total_findings"/>
-                                    <field name="closed_findings"/>
-                                    <field name="pending_findings"/>
+                                    <field name="total_findings" readonly="is_signed"/>
+                                    <field name="closed_findings" readonly="is_signed"/>
+                                    <field name="pending_findings" readonly="is_signed"/>
                                 </group>
                             </group>
                         </page>
                         <page string="Penilaian Kerangka Kerja">
-                            <field name="framework_description"/>
+                            <field name="framework_description" readonly="is_signed"/>
                             <group>
-                                <field name="control_environment_assessment"/>
-                                <field name="risk_assessment_practices"/>
-                                <field name="control_activity_effectiveness"/>
-                                <field name="information_communication_quality"/>
-                                <field name="monitoring_activity_results"/>
+                                <field name="control_environment_assessment" readonly="is_signed"/>
+                                <field name="risk_assessment_practices" readonly="is_signed"/>
+                                <field name="control_activity_effectiveness" readonly="is_signed"/>
+                                <field name="information_communication_quality" readonly="is_signed"/>
+                                <field name="monitoring_activity_results" readonly="is_signed"/>
                             </group>
                         </page>
                         <page string="Temuan dan Respon">
                             <group>
-                                <field name="significant_deficiencies_detail"/>
-                                <field name="material_weaknesses_detail"/>
-                                <field name="management_response_detail"/>
+                                <field name="significant_deficiencies_detail" readonly="is_signed"/>
+                                <field name="material_weaknesses_detail" readonly="is_signed"/>
+                                <field name="management_response_detail" readonly="is_signed"/>
                             </group>
                         </page>
                         <page string="Tindakan Perbaikan">
-                            <field name="improvement_actions"/>
+                            <field name="improvement_actions" readonly="is_signed"/>
                         </page>
                         <page string="Kepatuhan dan Catatan">
                             <group>
-                                <field name="compliance_status"/>
-                                <field name="compliance_notes"/>
+                                <field name="compliance_status" readonly="is_signed"/>
+                                <field name="compliance_notes" readonly="is_signed"/>
                             </group>
                         </page>
                         <page string="Lampiran">
-                            <field name="attachment_ids" widget="many2many_binary"/>
+                            <field name="attachment_ids" widget="many2many_binary" readonly="is_signed"/>
+                        </page>
+                        <page string="Tanda Tangan Digital" invisible="not is_signed">
+                            <group>
+                                <field name="signed_by"/>
+                                <field name="signed_date"/>
+                                <field name="signature_hash"/>
+                                <field name="signature_image" widget="image" invisible="not signature_image"/>
+                            </group>
                         </page>
                         <page string="Catatan Tambahan">
-                            <field name="notes"/>
+                            <field name="notes" readonly="is_signed"/>
                         </page>
                     </notebook>
                 </sheet>

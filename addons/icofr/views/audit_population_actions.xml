@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action untuk Population Upload Wizard -->
+    <record id="action_icofr_population_upload_wizard" model="ir.actions.act_window">
+        <field name="name">Upload Data Populasi untuk Audit Sampling</field>
+        <field name="res_model">icofr.population.upload.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Upload data populasi transaksi untuk keperluan audit sampling!
+            </p>
+            <p>
+                Gunakan wizard ini untuk mengupload data populasi transaksi dari Excel.
+                Data ini akan digunakan oleh Lini 3 (Internal Audit) untuk keperluan sampling.
+            </p>
+        </field>
+    </record>
+
+    <!-- Action untuk Populasi Data -->
+    <record id="action_icofr_audit_population" model="ir.actions.act_window">
+        <field name="name">Populasi Data Audit</field>
+        <field name="res_model">icofr.audit.population</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Populasi data untuk audit sampling!
+            </p>
+            <p>
+                Daftar transaksi yang diupload oleh Lini 1 dan dapat dipilih oleh Lini 3 untuk sampling.
+            </p>
+        </field>
+    </record>
+</odoo>

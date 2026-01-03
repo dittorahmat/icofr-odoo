@@ -73,11 +73,13 @@ class IcofrFinding(models.Model):
     )
     
     status = fields.Selection([
+        ('draft', 'Draf'),
+        ('planned', 'Dijadwalkan'),
         ('open', 'Terbuka'),
         ('in_progress', 'Dalam Proses'),
         ('closed', 'Ditutup'),
         ('wont_fix', 'Tidak Akan Diperbaiki')
-    ], string='Status', default='open',
+    ], string='Status', default='draft',
        help='Status penanganan temuan saat ini')
     
     owner_id = fields.Many2one(
@@ -114,6 +116,11 @@ class IcofrFinding(models.Model):
         string='Rekomendasi',
         help='Rekomendasi untuk mengatasi temuan'
     )
+
+    recommended_action = fields.Text(
+        string='Tindakan yang Direkomendasikan',
+        help='Tindakan spesifik yang direkomendasikan untuk mengatasi temuan'
+    )
     
     created_by_id = fields.Many2one(
         'res.users',
@@ -122,7 +129,13 @@ class IcofrFinding(models.Model):
         help='Pengguna yang membuat temuan'
     )
     
-    # Add reference to CSA that generated this finding
+    # Add reference to testing that generated this finding
+    test_id = fields.Many2one(
+        'icofr.testing',
+        string='Pengujian Terkait',
+        help='Pengujian yang menemukan temuan ini'
+    )
+
     csa_id = fields.Many2one(
         'icofr.csa',
         string='CSA Terkait',
@@ -139,7 +152,9 @@ class IcofrFinding(models.Model):
     # Deficiency Classification Enhancement
     deficiency_category = fields.Selection([
         ('control_deficiency', 'Kekurangan Kontrol'),
+        ('process_deficiency', 'Kekurangan Proses'),
         ('process_inefficiency', 'Ketidakefisienan Proses'),
+        ('timing_deficiency', 'Kekurangan Waktu Pelaksanaan'),
         ('compliance_violation', 'Pelanggaran Kepatuhan'),
         ('risk_exposure', 'Eksposur Risiko'),
         ('material_weakness', 'Kelemahan Material'),
@@ -173,6 +188,21 @@ class IcofrFinding(models.Model):
        store=True,
        help='Klasifikasi otomatis temuan berdasarkan kriteria kuantitatif dan kualitatif')
 
+    classification_method = fields.Selection([
+        ('automatic', 'Otomatis'),
+        ('manual', 'Manual'),
+        ('hybrid', 'Gabungan (Otomatis + Justifikasi Manual)')
+    ], string='Metode Klasifikasi',
+       default='automatic',
+       help='Metode yang digunakan untuk mengklasifikasikan kekurangan')
+
+    deficiency_classification_reason = fields.Text(
+        string='Alasan Klasifikasi Defisiensi',
+        compute='_compute_classification_reason',
+        store=True,
+        help='Alasan untuk klasifikasi defisiensi'
+    )
+
     classification_reason = fields.Text(
         string='Alasan Klasifikasi',
         compute='_compute_classification_reason',
@@ -199,43 +229,145 @@ class IcofrFinding(models.Model):
         help='Perusahaan yang memiliki temuan ini'
     )
 
+    # Manual input fields for Lini 3/Management to specify monetary impact
+    manual_monetary_impact_amount = fields.Float(
+        string='Dampak Moneter Manual',
+        help='Nilai dampak moneter yang dimasukkan secara manual oleh Lini 3'
+    )
+
+    manual_impact_currency_id = fields.Many2one(
+        'res.currency',
+        string='Mata Uang Dampak Manual',
+        default=lambda self: self.env.company.currency_id,
+        help='Mata uang untuk nilai dampak moneter manual'
+    )
+
+    manual_qualitative_impact_score = fields.Float(
+        string='Skor Dampak Kualitatif Manual',
+        help='Skor kualitatif untuk dampak temuan yang diinput manual oleh Lini 3'
+    )
+
+    # Field to allow Lini 2/management to override system classification
+    override_deficiency_classification = fields.Selection([
+        ('control_deficiency', 'Kekurangan Kontrol'),
+        ('significant_deficiency', 'Kekurangan Signifikan'),
+        ('material_weakness', 'Kelemahan Material')
+    ], string='Klasifikasi Defisiensi Manual',
+       help='Klasifikasi defisiensi yang ditentukan secara manual oleh Lini 2/manajemen')
+
+    override_reason = fields.Text(
+        string='Alasan Override',
+        help='Alasan manajemen untuk mengoverride klasifikasi defisiensi sistem'
+    )
+
+    overridden_by_id = fields.Many2one(
+        'res.users',
+        string='Dioverride Oleh',
+        help='Pengguna yang melakukan override terhadap klasifikasi defisiensi'
+    )
+
+    override_date = fields.Datetime(
+        string='Tanggal Override',
+        help='Tanggal klasifikasi defisiensi dilakukan override'
+    )
+
+    # Enhanced impact assessment fields
+    impact_assessment_method = fields.Selection([
+        ('automatic', 'Otomatis (berdasarkan kuantitatif dan kualitatif)'),
+        ('manual', 'Manual'),
+        ('hybrid', 'Gabungan (Otomatis + Justifikasi Manual)')
+    ], string='Metode Penilaian Dampak', default='automatic',
+       help='Metode yang digunakan untuk menilai dampak temuan')
+
     notes = fields.Text(
         string='Catatan',
         help='Catatan tambahan terkait temuan'
     )
 
-    @api.depends('severity_level', 'quantitative_impact_amount', 'qualitative_impact_score')
+    @api.depends('severity_level', 'quantitative_impact_amount', 'qualitative_impact_score',
+                 'manual_monetary_impact_amount', 'manual_qualitative_impact_score',
+                 'override_deficiency_classification')
     def _compute_deficiency_classification(self):
-        """Automatic classification of deficiency based on quantitative and qualitative factors"""
+        """Classification of deficiency based on quantitative and qualitative factors, with manual override capability"""
         for record in self:
-            if record.severity_level == 'critical' or record.quantitative_impact_amount > 1000000000 or record.qualitative_impact_score >= 4.5:
+            # Check if there is a manual override
+            if record.override_deficiency_classification:
+                record.deficiency_classified = record.override_deficiency_classification
+                continue
+
+            # Use manual inputs if provided and method is manual or hybrid
+            if record.impact_assessment_method == 'manual':
+                monetary_impact = record.manual_monetary_impact_amount
+                qualitative_score = record.manual_qualitative_impact_score
+            elif record.impact_assessment_method == 'hybrid':
+                # Use the higher of automatic or manual values for more conservative approach
+                monetary_impact = max(record.quantitative_impact_amount or 0, record.manual_monetary_impact_amount or 0)
+                qualitative_score = max(record.qualitative_impact_score or 0, record.manual_qualitative_impact_score or 0)
+            else:  # automatic
+                monetary_impact = record.quantitative_impact_amount
+                qualitative_score = record.qualitative_impact_score
+
+            # Apply classification rules based on values
+            if record.severity_level == 'critical' or monetary_impact > 1000000000 or qualitative_score >= 4.5:
                 record.deficiency_classified = 'material_weakness'
-            elif record.severity_level == 'high' or record.quantitative_impact_amount > 100000000 or record.qualitative_impact_score >= 3.5:
+            elif record.severity_level == 'high' or monetary_impact > 100000000 or qualitative_score >= 3.5:
                 record.deficiency_classified = 'significant_deficiency'
             else:
                 record.deficiency_classified = 'control_deficiency'
 
-    @api.depends('deficiency_classified', 'quantitative_impact_amount', 'qualitative_impact_score', 'severity_level')
+    @api.depends('deficiency_classified', 'quantitative_impact_amount', 'qualitative_impact_score',
+                 'manual_monetary_impact_amount', 'manual_qualitative_impact_score', 'severity_level',
+                 'override_deficiency_classification', 'override_reason')
     def _compute_classification_reason(self):
-        """Computes the reason for the automatic classification"""
+        """Computes the reason for the (auto or manual) classification"""
         for record in self:
             reasons = []
-            if record.severity_level == 'critical':
-                reasons.append('Tingkat keparahan kritis')
-            elif record.severity_level == 'high':
-                reasons.append('Tingkat keparahan tinggi')
 
-            if record.quantitative_impact_amount and record.quantitative_impact_amount > 1000000000:
-                reasons.append(f'Dampak kuantitatif tinggi: Rp. {record.quantitative_impact_amount:,.0f}')
-            elif record.quantitative_impact_amount and record.quantitative_impact_amount > 100000000:
-                reasons.append(f'Dampak kuantitatif menengah: Rp. {record.quantitative_impact_amount:,.0f}')
+            # Check if there's a manual override
+            if record.override_deficiency_classification:
+                reasons.append(f"Dioverride manual ke {dict(record._fields['override_deficiency_classification'].selection).get(record.override_deficiency_classification)}")
+                if record.override_reason:
+                    reasons.append(f"Alasan override: {record.override_reason}")
+            else:
+                # Automatic classification reasons
+                if record.severity_level == 'critical':
+                    reasons.append('Tingkat keparahan kritis')
+                elif record.severity_level == 'high':
+                    reasons.append('Tingkat keparahan tinggi')
 
-            if record.qualitative_impact_score and record.qualitative_impact_score >= 4.5:
-                reasons.append(f'Skor dampak kualitatif sangat tinggi: {record.qualitative_impact_score}')
-            elif record.qualitative_impact_score and record.qualitative_impact_score >= 3.5:
-                reasons.append(f'Skor dampak kualitatif tinggi: {record.qualitative_impact_score}')
+                # Check monetary impact (using appropriate value based on method)
+                monetary_impact = record.manual_monetary_impact_amount if record.impact_assessment_method in ['manual', 'hybrid'] else (record.quantitative_impact_amount or 0)
+                if monetary_impact and monetary_impact > 1000000000:
+                    reasons.append(f'Dampak kuantitatif sangat tinggi: Rp. {monetary_impact:,.0f}')
+                elif monetary_impact and monetary_impact > 100000000:
+                    reasons.append(f'Dampak kuantitatif menengah: Rp. {monetary_impact:,.0f}')
+
+                # Check qualitative score
+                qualitative_score = record.manual_qualitative_impact_score if record.impact_assessment_method in ['manual', 'hybrid'] else (record.qualitative_impact_score or 0)
+                if qualitative_score and qualitative_score >= 4.5:
+                    reasons.append(f'Skor dampak kualitatif sangat tinggi: {qualitative_score}')
+                elif qualitative_score and qualitative_score >= 3.5:
+                    reasons.append(f'Skor dampak kualitatif tinggi: {qualitative_score}')
 
             record.classification_reason = ', '.join(reasons) if reasons else 'Tidak ada kriteria klasifikasi yang terpenuhi'
+
+    # Method to apply manual override
+    def action_apply_override(self):
+        """Method to apply manual override to deficiency classification"""
+        for record in self:
+            if record.override_deficiency_classification:
+                record.deficiency_classified = record.override_deficiency_classification
+                record.overridden_by_id = self.env.user
+                record.override_date = fields.Datetime.now()
+
+                # Log the change
+                record.message_post(
+                    body=f"Klasifikasi defisiensi diubah menjadi '{dict(record._fields['override_deficiency_classification'].selection).get(record.override_deficiency_classification)}' secara manual. "
+                         f"Alasan: {record.override_reason or 'Tidak ada alasan diberikan.'}",
+                    subtype_xmlid='mail.mt_note',
+                    author_id=self.env.user.partner_id.id
+                )
+        return True
     
     def action_close_finding(self):
         """Method untuk menutup temuan"""

@@ -165,9 +165,25 @@ class IcofrCsa(models.Model):
         help='Temuan-temuan yang dihasilkan dari CSA ini'
     )
 
+    # Relasi ke kampanye CSA
+    campaign_id = fields.Many2one(
+        'icofr.csa.campaign',
+        string='Kampanye CSA',
+        help='Kampanye CSA yang menjadi asal dari CSA ini'
+    )
+
     notes = fields.Text(
         string='Catatan Tambahan',
         help='Catatan tambahan terkait CSA'
+    )
+
+    # Add company_id field for multi-company support
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        required=True,
+        default=lambda self: self.env.company,
+        help='Perusahaan yang terkait dengan CSA ini'
     )
 
     @api.model

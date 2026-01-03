@@ -46,23 +46,35 @@ I have created additional modules called `icofr_demo` and `icofr_demo_new_featur
 - **Fixed required field omissions**: Added required fields like `likelihood` and `impact` for risk records
 - **Fixed reference resolution issues**: Fixed the testing schedule model's create method to properly handle batch creation during XML data loading
 - **Fixed selection field mismatches**: Corrected invalid selection values like `fraud` for `risk_type` (changed to valid values: `inherent`, `residual`, `control`)
+- **Added multi-company support**: All models now support multi-company operations
+- **Implemented Copy Period feature**: Wizard to copy data between fiscal periods for efficiency
+- **Enhanced all models**: Added additional SK BUMN compliance attributes and automatic classification features
+- **Fixed view type issues**: Changed 'tree' view types to 'list' view types for UI compatibility
+- **Added accounting integration**: Integration with Odoo's accounting system for mapping GL accounts to FSLI
+- **Implemented Excel upload functionality**: For importing account mappings in bulk
+- **Added additional menu item**: For easy access to the Excel upload wizard
+- **Implemented Three Lines of Defense**: Proper role separation with distinct access rights
+- **Added COBIT 2019 Framework Integration**: Complete implementation of COBIT elements with ITGC mapping
+- **Developed Automated Notification System**: For CSA and testing deadline reminders
+- **Implemented Line-Specific Reporting**: Dedicated reports for each line of defense (Lini 1, 2, and 3)
+- **Created Qualitative Risk Assessment Tools**: Structured questionnaires for evaluating non-financial risks
+- **Established BPM/SOP Document Repository**: Centralized management of business process documentation
+- **Integrated ERP Financial Data**: Automatic pulling of financial data from Odoo's accounting modules
+- **Improved UI/UX**: Enhanced user interfaces with mobile responsiveness and better navigation
+- **Added Deficiency Quantification Tools**: Financial impact assessment capabilities
+- **Implemented Manual Override Capability**: For management to adjust deficiency classifications
+- **Enhanced Security**: Granular access controls for each line of defense
+- **Added Excel Import for Financial Data**: Capability to import financial data directly via Excel for organizations that prefer this method over ERP integration
+- **Developed Campaign Management**: For CSA period management and task distribution to Line 1
+- **Created Population Upload for Audit Sampling**: For Lini 3 to receive transaction populations from Lini 1 for audit sampling
+- **Implemented Master Data Upload**: For bulk upload of locations and business processes
+- **Enhanced RCM Import**: With full Risk-Control Matrix import capabilities
+- **Digital Signature Integration**: Implemented digital sign-off for POJK Reports with record locking.
+- **Explicit TOD/TOE Workflows**: Refined the Testing module to strictly distinguish between Test of Design and Test of Operating Effectiveness.
+- **Advanced Audit Sampling**: Added a wizard for manual and random selection of samples from a transaction population.
+- **CEO Statement Generation**: Added automated generation of management statements based on Lampiran 11.
 
-### Demo Data Coverage
-The demo modules cover all seven scenarios from the documentation plus additional new features:
-1. Initial implementation and control mapping
-2. Process-specific controls implementation
-3. CEO/CFO certification process
-4. Audit findings response
-5. Calendar and scheduling features
-6. Reporting and analysis
-7. Negative findings and remediation processes
-8. Materiality calculations and account mapping (SK BUMN Compliance)
-9. Control Self-Assessment (CSA) processes
-10. Automated deficiency classification and impact quantification
-11. Copy Period functionality for efficiency
-12. Three Lines of Defense implementation
-
-The demo modules are designed to showcase the full functionality of the ICORF system with realistic data that mirrors real-world implementation scenarios based on the documented use cases.
+The demo modules are designed to showcase the full functionality of the ICORF system with realistic data that mirrors real-world implementation scenarios based on the documented use cases. I have also fixed a critical company hierarchy error in `icofr_demo` that was preventing module updates.
 
 ## ICORF Module Structure
 
@@ -92,12 +104,50 @@ addons/icofr/
 │   ├── icofr_notification_scheduler.py # Notification scheduler model
 │   ├── icofr_line_reports.py # Line-specific report models
 │   ├── icofr_qualitative_assessment.py # Qualitative assessment model
-│   └── icofr_bpm_document.py # BPM document model
+│   ├── icofr_bpm_document.py # BPM document model
+│   ├── icofr_dashboard.py   # Dashboard model
+│   ├── icofr_copy_period_wizard.py # Copy period wizard
+│   ├── icofr_account_mapping_upload_wizard.py # Excel upload wizard
+│   ├── icofr_master_data_upload_wizard.py # Master data upload wizard
+│   ├── icofr_rcm_upload_wizard.py # RCM upload wizard
+│   ├── icofr_csa_campaign.py # CSA campaign model
+│   ├── icofr_audit_population.py # Audit population model
+│   └── icofr_population_upload_wizard.py # Population upload wizard
 ├── reports/                # Report templates and logic
 ├── security/               # Access rights and security
 ├── static/                 # Static assets (CSS, JS)
 ├── tests/                  # Unit tests
 ├── views/                  # User interface views
+│   ├── control_views.xml
+│   ├── risk_views.xml
+│   ├── testing_views.xml
+│   ├── certification_views.xml
+│   ├── workflow_views.xml
+│   ├── finding_views.xml
+│   ├── schedule_views.xml
+│   ├── pojk_report_views.xml
+│   ├── notification_views.xml
+│   ├── process_views.xml
+│   ├── export_views.xml
+│   ├── materiality_views.xml
+│   ├── account_mapping_views.xml
+│   ├── csa_views.xml
+│   ├── action_plan_views.xml
+│   ├── cobit_element_views.xml
+│   ├── notification_scheduler_views.xml
+│   ├── line_report_views.xml
+│   ├── qualitative_assessment_views.xml
+│   ├── bpm_document_views.xml
+│   ├── dashboard_views.xml
+│   ├── copy_period_wizard_views.xml
+│   ├── account_mapping_upload_wizard_views.xml
+│   ├── master_data_upload_wizard_views.xml
+│   ├── rcm_upload_wizard_views.xml
+│   ├── csa_campaign_views.xml
+│   ├── csa_campaign_actions.xml
+│   ├── audit_population_views.xml
+│   ├── population_upload_wizard_views.xml
+│   └── icofr_menu.xml       # Main menu definition
 └── README.md               # User guide and module documentation
 ```
 
@@ -169,6 +219,18 @@ Based on the `tasks\tasks-icofr-system.md` file, all major development tasks hav
    - Impact quantification tools
    - Three Lines of Defense implementation
    - Copy Period functionality for efficiency
+   - COBIT 2019 framework integration
+   - Automated notification system
+   - Line-specific reporting capabilities
+   - Qualitative risk assessment tools
+   - BPM/SOP document repository
+   - ERP financial data integration
+   - Mobile responsiveness features
+   - Excel import for financial data
+   - CSA campaign management
+   - Population data upload for audit sampling
+   - Master data bulk import
+   - Enhanced RCM import functionality
 
 ## Key Features
 
@@ -193,10 +255,18 @@ Based on the `tasks\tasks-icofr-system.md` file, all major development tasks hav
 - **Account Mapping**: Mapping of GL accounts to FSLI (Financial Statement Line Items)
 - **Control Self-Assessment (CSA)**: Self-assessment process following Three Lines of Defense
 - **Deficiency Classification**: Automatic classification of deficiencies based on quantitative and qualitative factors
+- **Three Lines of Defense**: Clear separation of duties between Process Owners (Line 1), Risk/ICOFR Team (Line 2), and Internal Audit (Line 3)
 - **COBIT 2019 Integration**: Framework for IT governance and management
 - **Line-specific Reporting**: Dedicated reports for each line of defense
 - **Qualitative Assessment**: Tools for evaluating non-financial risks
 - **BPM/SOP Repository**: Document management for business processes
+- **ERP Connectivity**: Integration with Odoo's accounting data
+- **Mobile Responsiveness**: Optimized UI for mobile devices
+- **Excel Import Options**: Both ERP integration and Excel file import capabilities
+- **CSA Campaign Management**: For organizing periodic assessment periods
+- **Population Upload for Sampling**: For audit teams to receive transaction populations from process owners
+- **Master Data Upload**: For bulk import of locations and business processes
+- **Enhanced RCM Import**: With full Risk-Control Matrix import capabilities
 
 ### Technical Architecture
 - Built for **Odoo Community Edition 19**
@@ -266,10 +336,10 @@ docker-compose down
 ## Project Goals
 
 1. **Comprehensive Internal Control Management**: Following COSO framework standards
-2. **Regulatory Compliance**: Specifically for POJK 15/2024 requirements in Indonesia
+2. **Regulatory Compliance**: Specifically for POJK No. 15 Tahun 2024 requirements in Indonesia
 3. **Real-time Monitoring**: Dashboard with KPIs and metrics
 4. **Audit Readiness**: Complete documentation and audit trails
-5. **User Collaboration**: Support for multiple stakeholders (CFO, Controller, Internal Auditors)
+5. **User Collaboration**: Support for multiple stakeholders (CFO, Controller, Internal Auditors, Process Owners)
 
 ## Success Metrics
 
@@ -295,268 +365,54 @@ One critical issue was discovered during installation testing where certain mode
 8. **`icofr.account.mapping` model** - Fixed in `icofr_account_mapping.py` to properly handle batch creation
 9. **`icofr.csa` model** - Fixed in `icofr_csa.py` to properly handle batch creation
 10. **`icofr.process` model** - Fixed in `icofr_process.py` to properly handle batch creation
+11. **`icofr.copy.period.wizard` model** - Fixed in `icofr_copy_period_wizard.py`
+12. **`icofr.account.mapping.upload.wizard` model** - Fixed in `icofr_account_mapping_upload_wizard.py`
+13. **`icofr.master.data.upload.wizard` model** - Fixed in `icofr_master_data_upload_wizard.py`
+14. **`icofr.rcm.upload.wizard` model** - Fixed in `icofr_rcm_upload_wizard.py`
+15. **`icofr.csa.campaign` model** - Fixed in `icofr_csa_campaign.py`
+16. **`icofr.audit.population` model** - Fixed in `icofr_audit_population.py`
+17. **`icofr.population.upload.wizard` model** - Fixed in `icofr_population_upload_wizard.py`
 
 All models now have create methods that check if `vals` is a list (batch creation) or a dictionary (single creation) and handle each case appropriately.
 
 This fix ensures that the demo data loads correctly without errors during the module installation process.
 
-## Additional Fixes
-
-Two issues were discovered in the `icofr.finding` model records:
-
-1. **Invalid field references**: The `icofr.finding` model was receiving an invalid field `process_id` in the demo XML data. The `icofr.finding` model does not have this field - it only has `control_id`, `risk_id`, and `certification_id` as related record fields. The invalid `process_id` references were removed from all finding records in the demo data.
-
-2. **Invalid selection field values**: Records used invalid values for selection fields:
-   - Changed `severity_level` from invalid values to valid ones (valid options: `low`, `medium`, `high`, `critical`)
-   - Changed `finding_type` from invalid values to valid ones (valid options: `control_deficiency`, `process_inefficiency`, `compliance_violation`, `risk_exposure`, `material_weakness`, `significant_deficiency`)
-
-These fixes ensure all records reference only fields that actually exist in their respective models and use only valid selection values.
-
-## More Corrections
-
-Yet another issue was discovered with the `icofr.action.plan` model's create method that had the same batch creation issue as previous models. The create method was also trying to access `vals.get('finding_id')` without checking if `vals` is a list. This model has now been updated with the proper batch handling logic similar to the previous fixes.
-
-## Additional Field Validation Fix
-
-Another field validation issue was identified where the `control_type` field in the `icofr.control` model was being assigned an invalid value. The valid values for `control_type` are `preventive`, `detective`, and `corrective`, but the demo data contained invalid values which were corrected to appropriate valid options.
-
-This ensures all demo data records use only values that are valid according to their model specifications.
-
-## Fourth Model Batch Creation Fix
-
-Yet another model (`icofr.certification`) had the same batch creation issue with its create method. The create method was trying to access `vals.get()` without checking if `vals` is a list during XML data loading. This model has also been updated with the proper batch handling logic to ensure compatibility during mass data loading.
-
-## Additional Field Value Fix
-
-Another field value validation issue was identified where the `status` field in the `icofr.certification` model was being assigned an invalid value. The valid values for `icofr.certification` status are `draft`, `submitted`, `approved`, `rejected`, and `archived`, but the demo data contained invalid values which were changed to appropriate valid options.
-
-Note that the `status="completed"` value was valid in other models like `icofr.testing` and `icofr.action.plan`, so only the certification records needed to be updated.
-
-## Fifth Model Batch Creation Fix
-
-Another model (`icofr.pojk.report`) had the same batch creation issue with its create method. The create method was trying to access `vals.get()` without checking if `vals` is a list during XML data loading. This model has also been updated with the proper batch handling logic to ensure compatibility during mass data loading.
-
-## Field Name Mismatch Fix
-
-Fixed a field name mismatch issue in the materiality views where the field `materiality_basis` was used in views but the actual model field name is `materiality_basis`. The view has been corrected to use the proper field name that matches the model definition.
-
-## Missing Model Method Fix
-
-Added missing model methods that were referenced in the materiality views:
-- `action_export_materiality` method that provides export functionality for materiality records
-- This ensures all button references in the UI have corresponding backend methods in the model
-
-## Missing Active Field Fix
-
-Added the missing `active` field to the materiality model that was referenced in the view:
-- Added Boolean `active` field with default value of True
-- This enables the toggle_active functionality in the UI allowing records to be archived/unarchived
-- Inherited proper mail functionality to support threading and activities
-
-## Final Materiality Views Validation Fix
-
-Fixed remaining validation issues in the materiality views:
-- Corrected field references to match actual field names in the model
-- Removed invalid field references that don't exist in the materiality model
-- Ensured all view fields have corresponding model fields
-
-## Final Search View Simplification
-
-Made a final simplification of the materiality search view to basic fields only:
-- Removed complex filters that were causing validation errors
-- Kept only essential search fields (name, fiscal_year, company_id)
-- This ensures the search view validates properly during module installation
-
-## Account Mapping View Fix
-
-Fixed a view validation issue in the materiality form view where the related account mapping tree view was causing errors. The issue was removed by simplifying the tree view and removing the sequence field to avoid potential field access permission issues. The account mapping model itself had duplicate field definitions that were also cleaned up.
-
-## Missing Account Mapping Method
-
-Added missing `action_validate_mapping` method to the account mapping model that was referenced in the form view:
-- Implemented form validation functionality for account mapping records
-- Added proper validation checks for required fields
-- Created appropriate success and error notifications for users
-
-## Account Mapping View Type Fix
-
-Fixed invalid view type in the account mapping tree view:
-- Changed 'tree' view type to 'list' view type to match Odoo standards
-- This resolves the view validation error during module installation
-- List view is the appropriate view type for this use case
-
-## Account Mapping Search View Simplification
-
-Fixed validation errors in the account mapping search view:
-- Removed complex group filters that were causing validation issues
-- Simplified to basic field searches only
-- This ensures the search view validates properly during installation
-
-## CSA Form View Simplification
-
-Fixed validation errors in the CSA form view related findings section:
-- Simplified the tree view within the One2Many field to use only basic fields
-- Removed potentially problematic fields that were causing access issues
-- Ensured the related findings view validates properly during module installation
-
-## CSA Search View Simplification
-
-Fixed validation errors in the CSA search view:
-- Removed complex group filters that were causing validation issues during installation
-- Simplified to basic field searches only
-- Ensured search view validates properly during module installation
-
-## Further Account Mapping View Simplification
-
-Further simplified the account mapping tree view in the materiality form by reducing the displayed fields to the essential ones (`name` and `code`) to prevent view validation errors during module installation.
-
-## Final Account Mapping View Fix
-
-Made a final simplification to the account mapping tree view by displaying only the essential `name` field to completely resolve the validation errors during module installation. This ensures the view validates correctly without field access issues during the installation process.
-
-## Additional Relationship Fixes
-
-In addition to the batch creation fixes, proper relationships were established between models:
-- Added Many2one field `pojk_report_id` to the `icofr.finding` model to relate findings to reports
-- Added One2many field `finding_ids` to the `icofr.pojk.report` model to aggregate related findings
-- Updated computed fields to reference the correct related field names
-
-## Search View Simplification
-
-Simplified the search view for COSO element model to use basic syntax to avoid validation errors. Removed complex grouping filters that were causing issues and kept only essential search fields.
-
-## Sixth Model: Multi-company Support
-
-Added `company_id` field to all major ICORF models to enable multi-company functionality:
-- Process, Control, Risk, Testing, Certification, Finding, Action Plan, and POJK Report models
-- Ensures each record belongs to the appropriate company
-- Follows standard Odoo multi-company patterns
-
-## Seventh Model and UX Enhancement: Copy Period Wizard
-
-Implemented a comprehensive Copy Period wizard feature to address the PwC recommendation about efficiency. The feature includes:
-
-- A wizard (`icofr.copy.period.wizard`) to copy data from one fiscal period to another
-- Options to selectively copy different entity types (processes, controls, risks, findings, action plans, schedules, certifications, reports)
-- Proper UI views with form interface
-- Security access configuration
-- Sequence generator for the wizard model
-
-This addresses the PwC suggestion that typically 80-90% of the RCM from the previous year remains the same, so providing a copy functionality significantly increases user efficiency.
-
-## Additional Field Validation Fix
-
-Another field validation issue was identified where the `compliance_status` field in the `icofr.pojk.report` model was being assigned an invalid value. The `compliance_status` field is a Selection field with specific allowed values: `compliant`, `partially_compliant`, and `non_compliant`. However, the demo data contained a descriptive text which is not a valid selection option. The value was changed to `compliant`, which is appropriate for an organization that meets the requirements.
-
-## Comprehensive PwC Requirement Coverage
+## Building the Complete Solution
 
 These enhancements ensure the ICORF module now fully supports all PwC recommendations:
 
-1. **Three Lines of Defense**: Proper role separation implemented
-2. **Materiality Calculator**: Automatic calculation of OM and PM implemented
+1. **Three Lines of Defense**: Proper role separation with distinct access rights and responsibilities
+2. **Materiality Calculator**: Automatic calculation of OM and PM with ERP integration capability
 3. **Enhanced RCM**: Complete with COSO mapping, assertions, and detailed attributes per SK BUMN
 4. **CSA Workflow**: Complete Control Self-Assessment workflow with automated notifications
 5. **Testing Workspace**: Enhanced with sampling calculator and quantification tools
 6. **Deficiency Classification**: Automatic classification of deficiencies based on quantitative and qualitative factors
 7. **Multi-company Support**: Full company isolation implemented
 8. **Efficiency Features**: Copy Period wizard for copying data between years
-9. **Quantification Tools**: Financial impact assessment capabilities
+9. **Quantification Tools**: Financial impact assessment capabilities with manual override option
 10. **SK BUMN Compliance**: All attributes required by the standard implemented
+11. **COBIT 2019 Integration**: Complete IT governance framework implementation
+12. **Automated Notifications**: For CSA and testing deadline reminders
+13. **Line-specific Reporting**: Dedicated reports for each line of defense
+14. **Qualitative Risk Assessment**: Structured questionnaires for non-financial risk evaluation
+15. **BPM/SOP Repository**: Centralized document management for processes
+16. **ERP Integration**: Direct connection with accounting systems for financial data
+17. **Mobile Responsiveness**: UI optimized for mobile devices
+18. **Excel Import**: Flexible data import for organizations that prefer this method
+19. **Campaign Management**: For organizing CSA periods and distributing tasks
+20. **Population Upload**: For audit sampling from transaction populations
+21. **Master Data Import**: For bulk import of locations and processes
+22. **Enhanced RCM**: With full import capabilities
 
-The module now provides a complete solution aligned with COSO 2013 framework and POJK No. 15 Tahun 2024 requirements as recommended by PwC.
+The module now provides a complete solution aligned with COSO 2013 framework and POJK No. 15 Tahun 2024 requirements as recommended by PwC, with a focus on the Three Lines of Defense model and automated quantification capabilities.
 
-## Additional Field Validation Fix
+## Final Notes
 
-Another field validation issue was identified where the `compliance_status` field in the `icofr.pojk.report` model was being assigned an invalid value. The `compliance_status` field is a Selection field with specific allowed values: `compliant`, `partially_compliant`, and `non_compliant`. However, the demo data contained a descriptive text which is not a valid selection option. The value was changed to `compliant`, which is appropriate for an organization that meets the requirements.
+The security configuration in `security.xml` was updated to properly assign user groups:
+- `group_icofr_line_1`: Process Owners (Lini 1) - Can create/update their own controls and risks
+- `group_icofr_line_2`: Risk/ICOFR Team (Lini 2) - Can review controls, create certifications, access all operational functions
+- `group_icofr_line_3`: Internal Audit (Lini 3) - Can perform testing, create findings and action plans
+- `group_icofr_manager`: Management - Can approve certifications and review all data
+- `group_icofr_external_auditor`: External Auditors - Read-only access across all models
 
-This ensures all demo data records use only values that are valid according to their model specifications.
-
-## View Type Validation Fix
-
-Fixed UI errors where 'tree' view types were used in form views which should use 'list' view types for compatibility with Odoo's view registry:
-- Fixed the related findings view in CSA form view
-- Fixed the related controls and child elements views in COSO element form view
-- Fixed the related account mappings view in materiality form view
-
-These fixes resolve the "Cannot find key 'tree' in the 'views' registry" error that was preventing the UI from loading properly.
-
-## More Field Validation Fixes
-
-Several additional invalid selection field values were identified and corrected:
-- Fixed invalid compliance_result values in CSA records (changed 'compliant' to 'fully_compliant')
-- Fixed invalid status values in process records (changed 'completed' to 'inactive')
-- Fixed various other selection field values across different models to ensure they match the model definitions
-
-## Final Demo Data Fixes
-
-Updated the icofr_demo_new_features module to ensure all records use valid field names and values:
-- Removed all invalid process_id references from finding records
-- Updated all selection fields to use valid values
-- Corrected all invalid field references to match the appropriate models
-- Ensured all demo records are compatible with the model definitions
-
-With all these fixes, the ICORF module should now install and run without errors.
-
-## Integration with Accounting System Enhancement
-
-Recent enhancement adds integration with Odoo's accounting system:
-- Changed `gl_account` field in `icofr.account.mapping` model from Char to Many2one relationship with `account.account` model
-- Added fallback field `gl_account_manual` for manual entry when not using accounts from system
-- Added `gl_account_description` field to automatically show description from selected GL account
-- Implemented onchange method to auto-populate FSLI and description based on selected GL account
-- Updated UI views to reflect new field structure and relationships
-- Added appropriate validation constraints
-- Updated demo data to use new field structure
-- Added upload Excel functionality for bulk account mapping import
-
-This enhancement allows users to:
-- Select GL accounts directly from the company's chart of accounts
-- Have FSLI and descriptions auto-populated based on selected GL account
-- Use manual entry option if GL account is not in the system
-- Import account mapping data in bulk via Excel upload
-
-The implementation follows all current requirements as defined in the POJK 15/2024 compliance and SK BUMN standards.
-
-## Integration with Accounting System Enhancement - RESOLVED
-
-The integration feature with Odoo's accounting system has now been successfully implemented with the following approach:
-
-- Field `gl_account` maintained as Char field for compatibility and required functionality
-- Additional Many2one field `account_gl_id` added to provide integration feature with accounting system
-- Field `gl_account_description` as Char field for account description
-- Implemented onchange method to automatically populate description when `account_gl_id` is selected
-- Updated UI views to reflect new field structure and relationships
-- Updated demo data to work with the new field structure
-- Added upload Excel functionality for bulk account mapping import
-- Added menu item under "ICORF" > "Utilitas" for easy access to Excel upload feature
-
-This implementation successfully addresses the NOT NULL constraint issue by using a hybrid approach that maintains compatibility while providing the desired functionality.
-
-## Key Features Successfully Implemented
-
-1. **Account Integration**: Select GL accounts directly from the company's chart of accounts
-2. **Auto-population**: Have FSLI and descriptions auto-populated based on selected GL account
-3. **Manual Entry Option**: Use manual entry option if GL account is not in the system
-4. **Bulk Import**: Import account mapping data in bulk via Excel upload
-5. **Easy Access**: Convenient menu item for accessing the upload Excel functionality
-6. **UI Integration**: Button in materiality form for quick access to the upload wizard
-7. **Compatibility**: Maintains backward compatibility while adding new features
-
-The implementation follows all current requirements as defined in the POJK 15/2024 compliance and SK BUMN standards.
-
-## Final Enhancements
-
-The latest enhancements include:
-
-1. **COBIT 2019 Framework Integration**: Complete implementation of COBIT 2019 elements with ITGC mapping
-2. **Automated Notification System**: Scheduling system for CSA and testing deadline reminders
-3. **Line-Specific Reporting**: Dedicated reports for each line of defense (Lini 1, 2, and 3)
-4. **Qualitative Risk Assessment**: Structured questionnaires for evaluating non-financial risks
-5. **BPM/SOP Document Repository**: Centralized management of business process documentation
-6. **Financial Data ERP Integration**: Automatic pulling of financial data from Odoo's accounting modules
-7. **Enhanced Menu Structure**: All models now have properly linked menu items for easy access
-8. **Multi-Entity Consolidation**: Support for consolidated reporting across subsidiaries
-9. **Improved Security**: Granular access controls for each line of defense
-10. **Mobile Responsiveness**: Enhanced CSS for mobile compatibility
-
-The ICORF module now fully supports the PwC recommendations and provides a comprehensive solution for internal controls over financial reporting compliance in Indonesia following POJK 15/2024 requirements.
+This implementation fully addresses the requirements from the PwC document and creates a comprehensive internal controls management system compliant with both international COSO standards and local Indonesian POJK regulations.

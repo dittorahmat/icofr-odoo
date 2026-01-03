@@ -1,0 +1,34 @@
+Format Template Excel untuk Upload Data Master (Lokasi dan Proses Bisnis):
+
+A. Sheet Lokasi - Kolom yang harus ada di file Excel:
+1. Kode Lokasi (wajib) - Kode unik untuk identifikasi lokasi
+2. Nama Lokasi (wajib) - Nama lengkap dari lokasi
+3. Alamat (opsional) - Alamat lengkap lokasi
+4. Kota (opsional) - Nama kota lokasi
+5. Provinsi (opsional) - Nama provinsi lokasi
+
+Contoh isi sheet Lokasi:
+
+| Kode Lokasi | Nama Lokasi    | Alamat                 | Kota        | Provinsi     |
+|-------------|----------------|------------------------|-------------|--------------|
+| LOCI001     | Kantor Pusat   | Jl. Merdeka No. 1      | Jakarta     | DKI Jakarta  |
+| LOCBDO002   | Cabang Bandung | Jl. Asia Afrika No. 2  | Bandung     | Jawa Barat   |
+
+B. Sheet Proses Bisnis - Kolom yang harus ada di file Excel:
+1. Kode Proses (wajib) - Kode unik untuk identifikasi proses bisnis
+2. Nama Proses (wajib) - Nama lengkap dari proses bisnis
+3. Deskripsi Proses (opsional) - Penjelasan rinci tentang proses bisnis
+4. Pemilik Proses (opsional) - Nama pengguna yang menjadi pemilik proses
+
+Contoh isi sheet Proses Bisnis:
+
+| Kode Proses | Nama Proses           | Deskripsi Proses                              | Pemilik Proses  |
+|-------------|-----------------------|-----------------------------------------------|-----------------|
+| PROCCASHIN  | Penerimaan Kas        | Proses penerimaan kas dari berbagai sumber    | Budi Santoso    |
+| PROCPRCH    | Pembelian Barang      | Proses pengadaan barang dan jasa              | Siti Aminah     |
+
+Catatan:
+- Untuk sheet Lokasi dan Proses Bisnis, kolom wajib harus diisi
+- File Excel bisa berisi satu atau kedua sheet sesuai kebutuhan
+- File Excel harus berformat .xls atau .xlsx
+- Nama sheet harus mengandung kata 'lokasi' atau 'proses' agar sistem bisa mendeteksi jenis datanya

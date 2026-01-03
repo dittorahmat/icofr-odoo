@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_icofr_sample_selection_wizard_form" model="ir.ui.view">
+        <field name="name">icofr.sample.selection.wizard.form</field>
+        <field name="model">icofr.sample.selection.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Pilih Sampel untuk Audit">
+                <group>
+                    <group>
+                        <field name="testing_id"/>
+                        <field name="selection_mode" widget="radio"/>
+                    </group>
+                    <group>
+                        <field name="random_sample_count" invisible="selection_mode != 'random'"/>
+                    </group>
+                </group>
+                <separator string="Item Populasi Terpilih" invisible="selection_mode == 'random'"/>
+                <field name="population_ids" invisible="selection_mode == 'random'">
+                    <list>
+                        <field name="transaction_no"/>
+                        <field name="transaction_date"/>
+                        <field name="amount"/>
+                        <field name="description"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_confirm_selection" string="Hubungkan ke Pengujian" type="object" class="btn-primary"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_icofr_sample_selection_wizard" model="ir.actions.act_window">
+        <field name="name">Pilih Sampel Audit</field>
+        <field name="res_model">icofr.sample.selection.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

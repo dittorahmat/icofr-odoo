@@ -93,4 +93,12 @@
         <field name="padding">4</field>
         <field name="company_id" eval="False"/>
     </record>
+
+    <record id="seq_type_icofr_csa_campaign" model="ir.sequence">
+        <field name="name">Icofr CSA Campaign</field>
+        <field name="code">icofr.csa.campaign</field>
+        <field name="prefix">CSA-CMPG/%(year)s/</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False"/>
+    </record>
 </odoo>

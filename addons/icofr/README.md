@@ -132,7 +132,14 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 - Tersedia di menu "ICORF" > "Utilitas" > "Salin Periode"
 - Opsi untuk memilih entitas yang akan disalin (proses, kontrol, risiko, temuan, rencana aksi, dll.)
 
-### 24. Kepatuhan SK BUMN
+### 24. Input Manual Dampak dan Penyesuaian Defisiensi
+- Kemampuan untuk memasukkan dampak moneter secara manual oleh Lini 3
+- Skor dampak kualitatif yang dapat diinput manual
+- Fungsi override untuk manajemen/Lini 2 untuk menyesuaikan klasifikasi defisiensi
+- Alasan override yang harus diberikan saat penyesuaian klasifikasi
+- Opsi metode penilaian dampak: otomatis, manual, atau gabungan
+
+### 25. Kepatuhan SK BUMN
 - Implementasi lengkap atribut dan proses sesuai Surat Keputusan BUMN
 - Cocok dengan persyaratan POJK 15/2024
 - Melengkapi framework COSO 2013 dengan elemen khusus Indonesia

@@ -99,6 +99,12 @@ class IcofrAccountMapping(models.Model):
         help='Perhitungan materialitas yang terkait dengan pemetaan ini'
     )
 
+    process_id = fields.Many2one(
+        'icofr.process',
+        string='Proses Bisnis Terkait',
+        help='Proses bisnis utama yang terkait dengan akun ini'
+    )
+
     process_ids = fields.Many2many(
         'icofr.process',
         'icofr_account_mapping_process_rel',
@@ -130,6 +136,14 @@ class IcofrAccountMapping(models.Model):
         ('mapped', 'Telah Dipetakan')
     ], string='Status', default='active',
        help='Status dari proses pemetaan')
+
+    company_id = fields.Many2one(
+        'res.company',
+        string='Perusahaan',
+        required=True,
+        default=lambda self: self.env.company,
+        help='Perusahaan yang memiliki pemetaan akun ini'
+    )
 
     notes = fields.Text(
         string='Catatan',
