@@ -129,6 +129,38 @@ class IcofrRisk(models.Model):
     ], string='Tingkat Risiko Residu',
        help='Tingkat risiko setelah kontrol diterapkan')
     
+    # Qualitative Factors (Table 11 SK BUMN)
+    qualitative_risk_level = fields.Selection([
+        ('low', 'Rendah'),
+        ('medium', 'Sedang'),
+        ('high', 'Tinggi')
+    ], string='Rating Risiko Kualitatif', compute='_compute_qualitative_risk_level', store=True,
+       help='Penilaian risiko berdasarkan faktor kualitatif (Tabel 11)')
+
+    factor_inherent_risk = fields.Selection([
+        ('low', 'Rendah'), ('medium', 'Sedang'), ('high', 'Tinggi')
+    ], string='Faktor: Risiko Bawaan', default='low', help='Risiko bawaan yang berhubungan dengan akun dan asersi')
+
+    factor_volume_changes = fields.Selection([
+        ('low', 'Rendah'), ('medium', 'Sedang'), ('high', 'Tinggi')
+    ], string='Faktor: Perubahan Volume/Sifat', default='low', help='Terjadi perubahan volume/sifat transaksi')
+
+    factor_history_errors = fields.Selection([
+        ('low', 'Rendah'), ('medium', 'Sedang'), ('high', 'Tinggi')
+    ], string='Faktor: Riwayat Error', default='low', help='Riwayat kesalahan/error sebelumnya')
+
+    factor_elc_effectiveness = fields.Selection([
+        ('low', 'Rendah'), ('medium', 'Sedang'), ('high', 'Tinggi')
+    ], string='Faktor: Efektivitas ELC', default='low', help='Efektivitas Entity Level Control')
+
+    factor_control_characteristics = fields.Selection([
+        ('low', 'Rendah'), ('medium', 'Sedang'), ('high', 'Tinggi')
+    ], string='Faktor: Karakteristik Kontrol', default='low', help='Kompleksitas dan frekuensi kontrol')
+
+    factor_competence = fields.Selection([
+        ('low', 'Rendah'), ('medium', 'Sedang'), ('high', 'Tinggi')
+    ], string='Faktor: Kompetensi Personel', default='low', help='Kompetensi personel pelaksana')
+
     # Add SK BUMN attributes
     risk_category_detailed = fields.Selection([
         ('operational', 'Operasional'),
@@ -180,9 +212,54 @@ class IcofrRisk(models.Model):
         help='Catatan tambahan terkait risiko'
     )
     
-    @api.depends('likelihood', 'impact')
+    @api.depends(
+        'factor_inherent_risk', 'factor_volume_changes', 'factor_history_errors',
+        'factor_elc_effectiveness', 'factor_control_characteristics', 'factor_competence'
+    )
+    def _compute_qualitative_risk_level(self):
+        """
+        Menghitung Rating Risiko Kualitatif (Tabel 11).
+        Logic: Jika ADA SATU SAJA faktor 'High', maka High.
+        Jika tidak ada High tapi ada 'Medium', maka Medium.
+        Sisanya Low.
+        """
+        factors = [
+            'factor_inherent_risk', 'factor_volume_changes', 'factor_history_errors',
+            'factor_elc_effectiveness', 'factor_control_characteristics', 'factor_competence'
+        ]
+        priority_map = {'high': 3, 'medium': 2, 'low': 1}
+        
+        for record in self:
+            max_score = 1
+            for f in factors:
+                val = getattr(record, f)
+                if val:
+                    max_score = max(max_score, priority_map.get(val, 1))
+            
+            if max_score == 3:
+                record.qualitative_risk_level = 'high'
+            elif max_score == 2:
+                record.qualitative_risk_level = 'medium'
+            else:
+                record.qualitative_risk_level = 'low'
+
+    @api.depends('likelihood', 'impact', 'qualitative_risk_level')
     def _compute_risk_level(self):
-        """Menghitung tingkat risiko berdasarkan kemungkinan dan dampak"""
+        """
+        Menghitung tingkat risiko Kombinasi (Tabel 12 SK BUMN).
+        Menggabungkan Faktor Kuantitatif (Likelihood x Impact) dengan Faktor Kualitatif.
+        Prinsip Tabel 12: Jika SALAH SATU (Kuantitatif atau Kualitatif) adalah TINGGI, maka Total Risiko = TINGGI.
+        """
+        # Matrix Kuantitatif (Likelihood x Impact)
+        # Mapping outcome matrix ke High/Medium/Low standard
+        quant_map = {
+            'very_low': 'low',
+            'low': 'low',
+            'medium': 'medium',
+            'high': 'high',
+            'very_high': 'high'
+        }
+
         risk_matrix = {
             ('very_low', 'very_low'): 'very_low',
             ('very_low', 'low'): 'very_low',
@@ -215,11 +292,35 @@ class IcofrRisk(models.Model):
             ('very_high', 'very_high'): 'very_high',
         }
         
+        priority_map = {'high': 3, 'medium': 2, 'low': 1} # For final comparison
+
         for record in self:
+            # 1. Hitung Kuantitatif (Existing Logic)
+            quant_result_raw = 'medium'
             if record.likelihood and record.impact:
-                record.risk_level = risk_matrix.get((record.likelihood, record.impact), 'medium')
-            else:
+                quant_result_raw = risk_matrix.get((record.likelihood, record.impact), 'medium')
+            
+            # Map raw quantitative result (very_low..very_high) to simple Low/Medium/High for comparison
+            quant_simple = quant_map.get(quant_result_raw, 'medium')
+            
+            # 2. Ambil Kualitatif
+            qual_simple = record.qualitative_risk_level or 'low'
+
+            # 3. Kombinasi (Table 12 Logic - Max Concept)
+            score_quant = priority_map.get(quant_simple, 2)
+            score_qual = priority_map.get(qual_simple, 1)
+            
+            final_score = max(score_quant, score_qual)
+            
+            # Kembalikan ke format field risk_level (yang punya very_low..very_high)
+            # Kita mapping High -> High, Medium -> Medium, Low -> Low
+            # (Note: risk_level field uses 5 scales, Table 12 uses 3. We map conservatively)
+            if final_score == 3: # High
+                record.risk_level = 'high' 
+            elif final_score == 2: # Medium
                 record.risk_level = 'medium'
+            else: # Low
+                record.risk_level = 'low'
     
     @api.constrains('code')
     def _check_unique_code(self):

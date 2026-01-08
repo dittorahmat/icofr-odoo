@@ -53,10 +53,31 @@ class IcofrMateriality(models.Model):
         help='Persentase Overall Materiality (contoh: 5% dari Laba Sebelum Pajak)'
     )
 
+    # Haircut / Risk Factors (Table 4 SK BUMN)
+    history_audit_adjustment = fields.Boolean(
+        string='Riwayat Audit Adjustment Signifikan',
+        help='Apakah terdapat riwayat audit adjustment yang sering atau material?'
+    )
+
+    history_deficiencies = fields.Boolean(
+        string='Riwayat Defisiensi (MW/SD)',
+        help='Apakah terdapat riwayat Material Weakness atau Significant Deficiency?'
+    )
+
+    high_misstatement_risk = fields.Boolean(
+        string='Risiko Salah Saji Tinggi',
+        help='Potensi kesalahan penyajian > OM atau risiko fraud tinggi'
+    )
+
+    restatement_history = fields.Boolean(
+        string='Riwayat Restatement',
+        help='Apakah pernah terjadi penyajian kembali laporan keuangan (Restatement)?'
+    )
+
     risk_factor_level = fields.Selection([
         ('low', 'Risiko Rendah (Haircut 20%)'),
         ('high', 'Risiko Tinggi (Haircut >55%)')
-    ], string='Faktor Risiko (Haircut)', default='high',
+    ], string='Faktor Risiko (Kesimpulan)', compute='_compute_risk_factor_level', store=True, readonly=False,
        help='Tingkat risiko untuk menentukan haircut Performance Materiality (Tabel 4 Juknis)')
 
     performance_materiality_percent = fields.Float(
@@ -65,12 +86,39 @@ class IcofrMateriality(models.Model):
         help='Persentase PM dari OM (100% - Haircut). Risiko Rendah ~80%, Risiko Tinggi <45%'
     )
 
+    @api.depends('history_audit_adjustment', 'history_deficiencies', 'high_misstatement_risk', 'restatement_history')
+    def _compute_risk_factor_level(self):
+        for record in self:
+            # Logic: If ANY high risk factor is present -> High Risk
+            if any([record.history_audit_adjustment, record.history_deficiencies, 
+                    record.high_misstatement_risk, record.restatement_history]):
+                record.risk_factor_level = 'high'
+            else:
+                record.risk_factor_level = 'low'
+
     @api.onchange('risk_factor_level')
     def _onchange_risk_factor(self):
         if self.risk_factor_level == 'low':
             self.performance_materiality_percent = 80.0  # 100% - 20% haircut
         elif self.risk_factor_level == 'high':
             self.performance_materiality_percent = 45.0  # 100% - 55% haircut (conservative)
+
+    @api.onchange('materiality_basis')
+    def _onchange_materiality_basis(self):
+        """
+        Set default percentage based on SK BUMN Table 3 guidelines:
+        - Laba/Rugi sebelum Pajak: 5%
+        - Pendapatan: 0.5% - 1% (Defaults to 1%)
+        - Total Aset: 0.5% - 1% (Defaults to 1%)
+        - Ekuitas: 1% (If applicable)
+        """
+        if self.materiality_basis == 'revenue':
+            self.overall_materiality_percent = 1.0
+        elif self.materiality_basis == 'total_assets':
+            self.overall_materiality_percent = 1.0
+        elif self.materiality_basis == 'net_income':
+            self.overall_materiality_percent = 5.0
+        # Hybrid or others keep existing or user input
 
     overall_materiality_amount = fields.Float(
         string='Jumlah Overall Materiality',

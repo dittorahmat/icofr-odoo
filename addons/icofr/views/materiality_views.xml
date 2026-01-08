@@ -42,7 +42,7 @@
                         </group>
                     </group>
                     
-                    <group string="Parameter Materialitas">
+                    <group name="materiality_parameters" string="Parameter Materialitas">
                         <group>
                             <field name="overall_materiality_percent"/>
                             <field name="overall_materiality_amount" widget="monetary"/>

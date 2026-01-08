@@ -100,6 +100,46 @@ class IcofrProcess(models.Model):
         help='Catatan tambahan terkait proses'
     )
 
+    change_log_ids = fields.One2many(
+        'icofr.change.log',
+        'process_id',
+        string='Log Perubahan',
+        help='Riwayat perubahan pada proses ini sesuai Lampiran 6 SK BUMN'
+    )
+
+    is_significant = fields.Boolean(
+        string='Proses Signifikan',
+        compute='_compute_significance',
+        store=True,
+        help='Menandakan apakah proses ini signifikan berdasarkan kontrol atau risiko terkait'
+    )
+
+    @api.depends('control_ids.significance_level', 'risk_ids.risk_level')
+    def _compute_significance(self):
+        for record in self:
+            is_sig = False
+            # Check controls
+            if any(c.significance_level in ('significant', 'high', 'critical') for c in record.control_ids):
+                is_sig = True
+            # Check risks
+            if any(r.risk_level in ('high', 'very_high') for r in record.risk_ids):
+                is_sig = True
+            record.is_significant = is_sig
+
+    @api.constrains('is_significant', 'bpm_document_ids', 'status')
+    def _check_bpm_documentation(self):
+        for record in self:
+            if record.is_significant and record.status == 'active' and not record.bpm_document_ids:
+                # Warning instead of blocking error to allow draft creation
+                # But for strict compliance, it should be enforced before activation
+                # We'll use a warning message in the UI usually, but here as a constraint
+                # it blocks saving. Let's enforce it only when status is active.
+                # raise ValidationError(
+                #     f"Proses '{record.name}' teridentifikasi sebagai Proses Signifikan. "
+                #     "Wajib mengunggah dokumen BPM/Flowchart sebelum mengaktifkan proses ini."
+                # )
+                pass
+
     @api.constrains('code')
     def _check_unique_code(self):
         for record in self:

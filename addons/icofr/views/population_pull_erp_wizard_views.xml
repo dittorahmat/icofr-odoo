@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_icofr_population_pull_erp_wizard_form" model="ir.ui.view">
+        <field name="name">icofr.population.pull.erp.wizard.form</field>
+        <field name="model">icofr.population.pull.erp.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tarik Data dari ERP">
+                <group>
+                    <group>
+                        <field name="control_id" readonly="1"/>
+                        <field name="testing_id" readonly="context.get('active_model') == 'icofr.testing'"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                </group>
+                <group string="Filter Transaksi">
+                    <field name="account_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    <field name="journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                    <field name="min_amount"/>
+                </group>
+                <footer>
+                    <button name="action_pull_data" string="Tarik Data Transaksi" type="object" class="oe_highlight"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_icofr_population_pull_erp_wizard" model="ir.actions.act_window">
+        <field name="name">Tarik Data dari ERP</field>
+        <field name="res_model">icofr.population.pull.erp.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target" eval="'new'"/>
+    </record>
+</odoo>

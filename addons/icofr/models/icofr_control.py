@@ -8,24 +8,27 @@ class IcofrControl(models.Model):
     _name = 'icofr.control'
     _description = 'Master Data Kontrol Internal'
     _order = 'name'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(
         string='Nama Kontrol',
         required=True,
         translate=True,
+        tracking=True,
         help='Nama unik dari kontrol internal'
     )
     code = fields.Char(
         string='Kode Kontrol',
         required=True,
         copy=False,
+        tracking=True,
         help='Kode unik untuk identifikasi kontrol'
     )
     control_type = fields.Selection([
         ('preventive', 'Preventif'),
         ('detective', 'Detektif'),
         ('corrective', 'Korektif')
-    ], string='Jenis Kontrol', required=True,
+    ], string='Jenis Kontrol', required=True, tracking=True,
        help='Jenis dari kontrol internal')
     
     frequency = fields.Selection([
@@ -37,7 +40,7 @@ class IcofrControl(models.Model):
         ('every_change', 'Setiap Perubahan'),
         ('event_driven', 'Berdasarkan Kejadian'),
         ('per_transaction', 'Per Transaksi')
-    ], string='Frekuensi', required=True,
+    ], string='Frekuensi', required=True, tracking=True,
        help='Frekuensi pelaksanaan kontrol')
     
     # Three Lines of Defense
@@ -45,13 +48,14 @@ class IcofrControl(models.Model):
         ('line_1', 'Lini 1 (Lini Bisnis)'),
         ('line_2', 'Lini 2 (Risk/ICOFR Team)'),
         ('line_3', 'Lini 3 (Internal Audit)')
-    ], string='Lini Pemilik Kontrol', default='line_1',
+    ], string='Lini Pemilik Kontrol', default='line_1', tracking=True,
        help='Lini pertahanan yang memiliki kontrol ini')
 
     owner_id = fields.Many2one(
         'res.users',
         string='Pemilik Kontrol',
         required=True,
+        tracking=True,
         help='Pengguna yang bertanggung jawab atas kontrol ini'
     )
 
@@ -195,6 +199,7 @@ class IcofrControl(models.Model):
         'icofr_control_risk_rel',
         'control_id', 'risk_id',
         string='Risiko Terkait',
+        tracking=True,
         help='Risiko-risiko yang ditangani oleh kontrol ini'
     )
 
@@ -216,6 +221,7 @@ class IcofrControl(models.Model):
 
     testing_procedures = fields.Text(
         string='Prosedur Pengujian',
+        tracking=True,
         help='Prosedur yang digunakan untuk menguji kontrol ini'
     )
 
@@ -231,6 +237,34 @@ class IcofrControl(models.Model):
     ], string='Status', default='active',
        help='Status dari kontrol internal')
     
+    design_validation_ids = fields.One2many(
+        'icofr.testing',
+        'control_id',
+        domain=[('test_type', '=', 'design_validation')],
+        string='Validasi Rancangan',
+        help='Riwayat validasi rancangan (Test of One) oleh Lini 2'
+    )
+
+    design_effective = fields.Boolean(
+        string='Rancangan Efektif',
+        compute='_compute_design_effective',
+        store=True,
+        help='Status efektivitas rancangan berdasarkan validasi terakhir'
+    )
+
+    @api.depends('design_validation_ids.design_validation_conclusion')
+    def _compute_design_effective(self):
+        for record in self:
+            last_validation = self.env['icofr.testing'].search([
+                ('control_id', '=', record.id),
+                ('test_type', '=', 'design_validation')
+            ], order='test_date desc', limit=1)
+            
+            if last_validation and last_validation.design_validation_conclusion == 'effective':
+                record.design_effective = True
+            else:
+                record.design_effective = False
+
     last_tested_date = fields.Date(
         string='Tanggal Terakhir Diuji',
         help='Tanggal terakhir kontrol ini diuji'
@@ -269,6 +303,13 @@ class IcofrControl(models.Model):
     notes = fields.Text(
         string='Catatan Tambahan',
         help='Catatan tambahan terkait kontrol'
+    )
+
+    change_log_ids = fields.One2many(
+        'icofr.change.log',
+        'control_id',
+        string='Log Perubahan',
+        help='Riwayat perubahan pada kontrol ini sesuai Lampiran 6 SK BUMN'
     )
     
     @api.constrains('code')

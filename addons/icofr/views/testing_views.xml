@@ -45,6 +45,12 @@
                         </group>
                     </group>
                     <notebook>
+                        <page string="Validasi Rancangan (Test of One)" invisible="test_type != 'design_validation'">
+                            <group>
+                                <field name="design_validation_conclusion" widget="radio" options="{'horizontal': true}"/>
+                                <field name="sample_size_calculated" readonly="1" string="Jumlah Sampel (Wajib 1)"/>
+                            </group>
+                        </page>
                         <page string="Test of Design (TOD)" invisible="test_type != 'tod'">
                             <group>
                                 <field name="design_description" placeholder="Evaluasi rancangan pengendalian..."/>
@@ -63,10 +69,16 @@
                                     <field name="exceptions_noted"/>
                                 </group>
                             </group>
-                            <button name="%(icofr.action_icofr_sample_selection_wizard)d" 
-                                    type="action" string="Pilih Sampel dari Populasi" 
-                                    class="btn-secondary" icon="fa-plus-circle"
-                                    context="{'default_testing_id': id}"/>
+                            <div class="mb-2">
+                                <button name="%(icofr.action_icofr_sample_selection_wizard)d" 
+                                        type="action" string="Pilih Sampel dari Populasi" 
+                                        class="btn-secondary mr-2" icon="fa-plus-circle"
+                                        context="{'default_testing_id': id}"/>
+                                <button name="%(icofr.action_icofr_population_pull_erp_wizard)d" 
+                                        type="action" string="Tarik Data dari ERP" 
+                                        class="btn-primary" icon="fa-database"
+                                        context="{'default_testing_id': id, 'default_control_id': control_id}"/>
+                            </div>
                         </page>
                         <page string="Sampel Terpilih (Testing Log)" invisible="test_type != 'toe'">
                             <field name="sample_ids">

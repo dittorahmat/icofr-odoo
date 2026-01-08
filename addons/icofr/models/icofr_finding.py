@@ -229,6 +229,18 @@ class IcofrFinding(models.Model):
         help='Perusahaan yang memiliki temuan ini'
     )
 
+    # Compensating Control Logic
+    compensating_control_id = fields.Many2one(
+        'icofr.control',
+        string='Kontrol Pengganti (Compensating Control)',
+        help='Kontrol yang dapat memitigasi risiko jika kontrol utama gagal. Keberadaannya dapat menurunkan klasifikasi defisiensi.'
+    )
+
+    is_compensating_control_effective = fields.Boolean(
+        string='Kontrol Pengganti Efektif?',
+        help='Apakah kontrol pengganti telah diuji dan terbukti efektif?'
+    )
+
     # Manual input fields for Lini 3/Management to specify monetary impact
     manual_monetary_impact_amount = fields.Float(
         string='Dampak Moneter Manual',
@@ -286,7 +298,7 @@ class IcofrFinding(models.Model):
 
     @api.depends('severity_level', 'quantitative_impact_amount', 'qualitative_impact_score',
                  'manual_monetary_impact_amount', 'manual_qualitative_impact_score',
-                 'override_deficiency_classification')
+                 'override_deficiency_classification', 'compensating_control_id', 'is_compensating_control_effective', 'company_id')
     def _compute_deficiency_classification(self):
         """Classification of deficiency based on quantitative and qualitative factors, with manual override capability"""
         for record in self:
@@ -295,29 +307,63 @@ class IcofrFinding(models.Model):
                 record.deficiency_classified = record.override_deficiency_classification
                 continue
 
-            # Use manual inputs if provided and method is manual or hybrid
+            # Determine Monetary Impact
             if record.impact_assessment_method == 'manual':
                 monetary_impact = record.manual_monetary_impact_amount
                 qualitative_score = record.manual_qualitative_impact_score
             elif record.impact_assessment_method == 'hybrid':
-                # Use the higher of automatic or manual values for more conservative approach
                 monetary_impact = max(record.quantitative_impact_amount or 0, record.manual_monetary_impact_amount or 0)
                 qualitative_score = max(record.qualitative_impact_score or 0, record.manual_qualitative_impact_score or 0)
             else:  # automatic
                 monetary_impact = record.quantitative_impact_amount
                 qualitative_score = record.qualitative_impact_score
 
-            # Apply classification rules based on values
-            if record.severity_level == 'critical' or monetary_impact > 1000000000 or qualitative_score >= 4.5:
-                record.deficiency_classified = 'material_weakness'
-            elif record.severity_level == 'high' or monetary_impact > 100000000 or qualitative_score >= 3.5:
-                record.deficiency_classified = 'significant_deficiency'
-            else:
-                record.deficiency_classified = 'control_deficiency'
+            # Fetch Active Materiality Thresholds for the Company and Year
+            # Assumes Fiscal Year is current year or year of creation.
+            # Ideally, finding should have fiscal_year field. Using current year for simplicity or matching record date.
+            fiscal_year = str(record.create_date.year) if record.create_date else str(fields.Date.today().year)
+            materiality = self.env['icofr.materiality'].search([
+                ('company_id', '=', record.company_id.id),
+                ('fiscal_year', '=', fiscal_year),
+                ('active', '=', True)
+            ], limit=1)
+
+            om_threshold = materiality.overall_materiality_amount if materiality else 1000000000.0 # Fallback default
+            pm_threshold = materiality.performance_materiality_amount if materiality else 500000000.0 # Fallback default
+
+            # Initial Classification
+            classification = 'control_deficiency'
+            
+            # Quantitative Logic
+            if monetary_impact > om_threshold:
+                classification = 'material_weakness'
+            elif monetary_impact > pm_threshold:
+                classification = 'significant_deficiency'
+            
+            # Qualitative Logic (Enhancement)
+            if qualitative_score and qualitative_score >= 4.5:
+                classification = 'material_weakness'
+            elif qualitative_score and qualitative_score >= 3.5 and classification != 'material_weakness':
+                classification = 'significant_deficiency'
+            
+            # Criticality Logic override
+            if record.severity_level == 'critical':
+                classification = 'material_weakness'
+            elif record.severity_level == 'high' and classification != 'material_weakness':
+                classification = 'significant_deficiency'
+
+            # Compensating Control Logic (Downgrade)
+            if record.compensating_control_id and record.is_compensating_control_effective:
+                if classification == 'material_weakness':
+                    classification = 'significant_deficiency' # Downgrade MW to SD
+                elif classification == 'significant_deficiency':
+                    classification = 'control_deficiency' # Downgrade SD to CD
+
+            record.deficiency_classified = classification
 
     @api.depends('deficiency_classified', 'quantitative_impact_amount', 'qualitative_impact_score',
                  'manual_monetary_impact_amount', 'manual_qualitative_impact_score', 'severity_level',
-                 'override_deficiency_classification', 'override_reason')
+                 'override_deficiency_classification', 'override_reason', 'compensating_control_id', 'is_compensating_control_effective')
     def _compute_classification_reason(self):
         """Computes the reason for the (auto or manual) classification"""
         for record in self:
@@ -329,18 +375,35 @@ class IcofrFinding(models.Model):
                 if record.override_reason:
                     reasons.append(f"Alasan override: {record.override_reason}")
             else:
+                # Materiality Context
+                fiscal_year = str(record.create_date.year) if record.create_date else str(fields.Date.today().year)
+                materiality = self.env['icofr.materiality'].search([
+                    ('company_id', '=', record.company_id.id),
+                    ('fiscal_year', '=', fiscal_year),
+                    ('active', '=', True)
+                ], limit=1)
+                
+                om_threshold = materiality.overall_materiality_amount if materiality else 0
+                pm_threshold = materiality.performance_materiality_amount if materiality else 0
+
                 # Automatic classification reasons
                 if record.severity_level == 'critical':
                     reasons.append('Tingkat keparahan kritis')
                 elif record.severity_level == 'high':
                     reasons.append('Tingkat keparahan tinggi')
 
-                # Check monetary impact (using appropriate value based on method)
+                # Check monetary impact
                 monetary_impact = record.manual_monetary_impact_amount if record.impact_assessment_method in ['manual', 'hybrid'] else (record.quantitative_impact_amount or 0)
-                if monetary_impact and monetary_impact > 1000000000:
-                    reasons.append(f'Dampak kuantitatif sangat tinggi: Rp. {monetary_impact:,.0f}')
-                elif monetary_impact and monetary_impact > 100000000:
-                    reasons.append(f'Dampak kuantitatif menengah: Rp. {monetary_impact:,.0f}')
+                
+                if materiality:
+                    if monetary_impact > om_threshold:
+                        reasons.append(f'Dampak (Rp {monetary_impact:,.0f}) melebihi Overall Materiality (Rp {om_threshold:,.0f})')
+                    elif monetary_impact > pm_threshold:
+                        reasons.append(f'Dampak (Rp {monetary_impact:,.0f}) melebihi Performance Materiality (Rp {pm_threshold:,.0f})')
+                else:
+                    # Fallback reason if no materiality record found
+                    if monetary_impact > 1000000000:
+                        reasons.append(f'Dampak kuantitatif sangat tinggi (Fallback Threshold): Rp. {monetary_impact:,.0f}')
 
                 # Check qualitative score
                 qualitative_score = record.manual_qualitative_impact_score if record.impact_assessment_method in ['manual', 'hybrid'] else (record.qualitative_impact_score or 0)
@@ -348,6 +411,10 @@ class IcofrFinding(models.Model):
                     reasons.append(f'Skor dampak kualitatif sangat tinggi: {qualitative_score}')
                 elif qualitative_score and qualitative_score >= 3.5:
                     reasons.append(f'Skor dampak kualitatif tinggi: {qualitative_score}')
+
+                # Compensating Control Note
+                if record.compensating_control_id and record.is_compensating_control_effective:
+                    reasons.append(f"Klasifikasi diturunkan karena adanya Kontrol Pengganti Efektif: {record.compensating_control_id.name}")
 
             record.classification_reason = ', '.join(reasons) if reasons else 'Tidak ada kriteria klasifikasi yang terpenuhi'
 

@@ -46,9 +46,12 @@ The ICORF module implements the COSO 2013 Internal Control framework and complie
 - **Export Functionality**: Export data in CSV, Excel, and PDF formats
 - **Calendar Integration**: Interactive calendar for planning and scheduling activities
 - **Automated Notifications**: Reminders and alerts for upcoming activities and deadlines
-- **Materiality Calculator**: Automatic calculation of Overall Materiality and Performance Materiality following POJK No. 15 Tahun 2024 requirements
-- **Three Lines of Defense**: Complete role separation for Lini 1 (Process Owners), Lini 2 (Risk/ICOFR Team), and Lini 3 (Internal Auditors) with appropriate access controls
-- **Control Self-Assessment (CSA)**: Complete workflow for Control Self-Assessment process with evaluation results and effectiveness measurement
+- **Materiality Calculator**: Automatic calculation of Overall Materiality and Performance Materiality following POJK No. 15 Tahun 2024 requirements, including **Tabel 4 Haircut Logic**.
+- **Three Lines of Defense**: Complete role separation for Lini 1 (Process Owners), Lini 2 (Risk/ICOFR Team), and Lini 3 (Internal Auditors) with appropriate access controls.
+- **Qualitative Risk Assessment**: Advanced risk rating combining traditional matrix with **Tabel 11 qualitative factors** (competence, history of errors, etc.).
+- **DoD Wizard**: Interactive wizard for **Degree of Deficiency** classification following AS 2201 standards.
+- **Change Management Log**: Automated logging of process and control changes as required by **Appendix 6** of the regulation.
+- **Control Self-Assessment (CSA)**: Complete workflow for Control Self-Assessment process with evaluation results and effectiveness measurement.
 - **Deficiency Classification**: Automated classification of control deficiencies based on quantitative and qualitative factors
 - **Account Mapping**: Mapping of GL accounts to Financial Statement Line Items (FSLI) for comprehensive materiality assessment
 - **Multi-company Support**: Complete company isolation for organizations with multiple entities

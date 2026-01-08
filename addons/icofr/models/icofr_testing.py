@@ -31,14 +31,15 @@ class IcofrTesting(models.Model):
     )
     
     test_type = fields.Selection([
+        ('design_validation', 'Validasi Rancangan (Test of One)'),
         ('tod', 'Test of Design (TOD)'),
         ('toe', 'Test of Operating Effectiveness (TOE)'),
         ('walkthrough', 'Walkthrough'),
         ('compliance', 'Kepatuhan (General)'),
         ('substantive', 'Substantif')
     ], string='Jenis Pengujian', required=True,
-       default='toe',
-       help='Jenis dari pengujian kontrol (TOD atau TOE sesuai Juknis)')
+       default='design_validation',
+       help='Jenis dari pengujian kontrol (Validasi Rancangan oleh Lini 2, TOD/TOE oleh Lini 3)')
     
     # TOD Specific Fields
     design_description = fields.Text(
@@ -51,6 +52,14 @@ class IcofrTesting(models.Model):
         ('ineffective', 'Desain Tidak Efektif')
     ], string='Kesimpulan Desain',
        help='Kesimpulan atas efektivitas rancangan pengendalian (TOD)')
+
+    # Design Validation Specific Fields (Line 2)
+    design_validation_conclusion = fields.Selection([
+        ('effective', 'Rancangan Efektif'),
+        ('ineffective', 'Rancangan Tidak Efektif'),
+        ('no_transaction', 'Tidak Ada Transaksi')
+    ], string='Kesimpulan Validasi Rancangan',
+       help='Kesimpulan atas validasi rancangan (Test of One) oleh Lini 2')
 
     # TOE Specific Fields
     population_reference = fields.Char(
@@ -186,6 +195,11 @@ class IcofrTesting(models.Model):
         Table 22: Ilustrasi - Penentuan Jumlah Sampel (Juknis ICOFR BUMN)
         """
         for record in self:
+            # Design Validation (Test of One) always needs 1 sample
+            if record.test_type == 'design_validation':
+                record.sample_size_calculated = 1
+                continue
+
             # Default to 0 if not TOE
             if record.test_type != 'toe':
                 record.sample_size_calculated = 0

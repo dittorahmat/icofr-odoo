@@ -60,6 +60,19 @@
                                 <field name="impact_assessment"/>
                                 <field name="root_cause"/>
                             </group>
+                            <group name="deficiency_classification_group" string="Klasifikasi Defisiensi">
+                                <group>
+                                    <field name="impact_assessment_method"/>
+                                    <field name="quantitative_impact_amount" invisible="impact_assessment_method == 'manual'"/>
+                                    <field name="manual_monetary_impact_amount" invisible="impact_assessment_method == 'automatic'"/>
+                                    <field name="deficiency_classified"/>
+                                </group>
+                                <group>
+                                    <field name="compensating_control_id"/>
+                                    <field name="is_compensating_control_effective" invisible="not compensating_control_id"/>
+                                    <field name="classification_reason"/>
+                                </group>
+                            </group>
                         </page>
                         <page string="Rencana Tindakan">
                             <field name="action_plan_ids"/>

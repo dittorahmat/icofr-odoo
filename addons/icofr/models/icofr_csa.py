@@ -270,6 +270,34 @@ class IcofrCsa(models.Model):
         })
         return True
 
+    def action_create_design_validation(self):
+        """Method for Line 2 to create a Design Validation (Test of One) from CSA review"""
+        self.ensure_one()
+        
+        # Create testing record for design validation
+        testing = self.env['icofr.testing'].create({
+            'name': f'Validasi Rancangan: {self.control_id.name} - {fields.Date.today()}',
+            'control_id': self.control_id.id,
+            'test_type': 'design_validation',
+            'test_date': fields.Date.today(),
+            'tester_id': self.env.user.id,
+            'sample_size': 1,
+            'company_id': self.company_id.id,
+            'notes': f'Dibuat dari review CSA: {self.name}'
+        })
+        
+        # Calculate sample size (should be 1)
+        testing._compute_sample_size()
+        
+        return {
+            'name': 'Validasi Rancangan (Test of One)',
+            'type': 'ir.actions.act_window',
+            'res_model': 'icofr.testing',
+            'res_id': testing.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
     def action_create_workflow(self):
         """Method to create approval workflow for CSA"""
         self.ensure_one()

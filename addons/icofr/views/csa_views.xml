@@ -11,6 +11,7 @@
                 <header>
                     <button name="action_submit_csa" type="object" string="Kirim untuk Review" invisible="status not in ['planned', 'in_progress']"/>
                     <button name="action_approve_csa" type="object" string="Setujui CSA" invisible="status != 'reviewed'"/>
+                    <button name="action_create_design_validation" type="object" string="Validasi Rancangan (Test of One)" class="btn-primary" invisible="status != 'reviewed'"/>
                     <button name="action_create_workflow" type="object" string="Buat Workflow Persetujuan" invisible="workflow_id != False"/>
                     <field name="status" widget="statusbar"/>
                 </header>

@@ -24,9 +24,12 @@ from . import icofr_dashboard
 from . import icofr_bpm_document
 from . import icofr_cobit_element
 from . import icofr_notification_scheduler
+from . import icofr_finding_group
+
 from . import icofr_line_reports
 from . import icofr_master_data_upload_wizard
 from . import icofr_rcm_upload_wizard
 from . import icofr_csa_campaign
 from . import icofr_audit_population
 from . import icofr_finding_extension
+from . import icofr_change_log
