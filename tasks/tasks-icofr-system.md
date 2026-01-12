@@ -24,8 +24,8 @@ Update the file after completing each sub-task, not just after completing an ent
 
 ## Tasks
 
-- [x] 0.0 Create feature branch
-  - [x] 0.1 Create and checkout a new branch `feature/icofr-refinement`
+- [x] 0.0 Commit changes to master
+  - [x] 0.1 Stage and commit all refinements to `master` branch (Bypassed feature branch per user request)
 
 - [x] 1.0 Implement Digital Signature Integration for POJK Reports
   - [x] 1.1 Modify `icofr.pojk.report` model to add signature fields (`signed_by`, `signed_date`, `signature_hash`, `signature_image`).

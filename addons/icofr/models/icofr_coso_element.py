@@ -63,9 +63,10 @@ class IcofrCosoElement(models.Model):
         for record in self:
             record.is_sub_element = bool(record.parent_id)
 
-    @api.model
-    def create(self, vals):
-        # Generate code if not provided
-        if 'code' not in vals or not vals.get('code'):
-            vals['code'] = self.env['ir.sequence'].next_by_code('icofr.coso.element') or '/'
-        return super(IcofrCosoElement, self).create(vals)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Generate code if not provided
+            if 'code' not in vals or not vals.get('code'):
+                vals['code'] = self.env['ir.sequence'].next_by_code('icofr.coso.element') or '/'
+        return super(IcofrCosoElement, self).create(vals_list)

@@ -31,6 +31,7 @@ providing a realistic demonstration of the system for training and evaluation pu
     ],
     'demo': [
         'icofr_demo_data.xml',
+        'data/icofr_coso_demo_mapping.xml',
     ],
     'installable': True,
     'auto_install': False,

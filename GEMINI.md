@@ -91,6 +91,8 @@ The system implements the **Three Lines of Defense** model:
 
 *   **ERP Data Pull for Sampling:** The system supports pulling transaction data directly from Odoo's `account.move.line` into the `icofr.audit.population` model via the `icofr.population.pull.erp.wizard`. This ensures testing is based on actual financial data.
 
+*   **COSO 2013 Master Data:** The 5 Components and 17 Principles of the COSO Framework are implemented as **System Data** (not Demo Data) in `icofr/data/icofr_coso_data.xml`. This ensures the compliance framework is automatically populated upon module installation.
+
 
 
 ### Known Issues / Gotchas

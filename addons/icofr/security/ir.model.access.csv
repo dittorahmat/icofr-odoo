@@ -1,6 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_icofr_control,icofr.control,model_icofr_control,group_icofr_line_2,1,1,1,1
-access_icofr_control_l1,icofr.control,model_icofr_control,group_icofr_line_1,1,0,0,0
+access_icofr_control_l1,icofr.control,model_icofr_control,group_icofr_line_1,1,1,1,0
 access_icofr_control_l3,icofr.control,model_icofr_control,group_icofr_line_3,1,0,0,0
 access_icofr_risk,icofr.risk,model_icofr_risk,group_icofr_line_2,1,1,1,1
 access_icofr_risk_l1,icofr.risk,model_icofr_risk,group_icofr_line_1,1,0,0,0

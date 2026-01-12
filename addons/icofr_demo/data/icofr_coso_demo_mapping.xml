@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Mapping Demo Controls to COSO Principles -->
+        
+        <!-- Control Activities (Principle 10, 11, 12) -->
+        <record id="demo_ctrl_withdraw_001" model="icofr.control">
+            <field name="coso_element_id" ref="icofr.coso_principle_10"/>
+        </record>
+
+        <record id="demo_ctrl_cash_001" model="icofr.control">
+            <field name="coso_element_id" ref="icofr.coso_principle_10"/>
+        </record>
+
+        <record id="demo_ctrl_recon_001" model="icofr.control">
+            <field name="coso_element_id" ref="icofr.coso_principle_10"/>
+        </record>
+
+        <record id="demo_ctrl_ar_001" model="icofr.control">
+            <field name="coso_element_id" ref="icofr.coso_principle_10"/>
+        </record>
+
+        <record id="demo_ctrl_payroll_001" model="icofr.control">
+            <field name="coso_element_id" ref="icofr.coso_principle_10"/>
+        </record>
+        
+        <record id="demo_ctrl_withdraw_002" model="icofr.control">
+            <field name="coso_element_id" ref="icofr.coso_principle_10"/>
+        </record>
+
+        <record id="demo_ctrl_subsidiary" model="icofr.control">
+            <field name="coso_element_id" ref="icofr.coso_principle_10"/>
+        </record>
+
+        <!-- IT General Controls (Principle 11) -->
+        <record id="demo_it_control_change_mgt" model="icofr.control">
+            <field name="coso_element_id" ref="icofr.coso_principle_11"/>
+        </record>
+
+        <record id="demo_it_control_access_mgt" model="icofr.control">
+            <field name="coso_element_id" ref="icofr.coso_principle_11"/>
+        </record>
+
+        <record id="demo_it_control_data_mgt" model="icofr.control">
+            <field name="coso_element_id" ref="icofr.coso_principle_11"/>
+        </record>
+
+        <!-- Policies & Procedures (Principle 12) -->
+        <!-- Note: If specific controls for policy enforcement exist, map here. 
+             Currently mapping mainly transaction controls. -->
+
+        <!-- Information & Communication (Principle 13, 14, 15) -->
+        <record id="demo_ctrl_policy_001" model="icofr.control">
+            <field name="coso_element_id" ref="icofr.coso_principle_14"/>
+        </record>
+
+    </data>
+</odoo>

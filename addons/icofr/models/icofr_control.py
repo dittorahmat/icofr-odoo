@@ -319,6 +319,31 @@ class IcofrControl(models.Model):
             if len(controls) > 1:
                 raise ValidationError("Kode kontrol harus unik!")
     
+    def action_submit(self):
+        """Method to submit control for review by Line 2"""
+        self.ensure_one()
+        self.write({
+            'status': 'under_review'
+        })
+        # Send notification
+        self.message_post(
+            body=f"Kontrol telah disubmit untuk review oleh {self.env.user.name}",
+            subtype_xmlid='mail.mt_comment'
+        )
+        return True
+
+    def action_validate(self):
+        """Method for Line 2 to validate control design"""
+        self.ensure_one()
+        self.write({
+            'status': 'active'
+        })
+        self.message_post(
+            body=f"Desain kontrol telah divalidasi oleh {self.env.user.name}",
+            subtype_xmlid='mail.mt_comment'
+        )
+        return True
+
     # Dashboard-related methods and fields
     def action_export_controls(self):
         """Method untuk membuka wizard ekspor kontrol"""

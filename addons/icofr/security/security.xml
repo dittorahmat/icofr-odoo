@@ -35,7 +35,7 @@
     <!-- Administrator -->
     <record id="group_icofr_admin" model="res.groups">
         <field name="name">Administrator</field>
-        <field name="implied_ids" eval="[(4, ref('group_icofr_line_3'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_icofr_line_3')), (4, ref('group_icofr_line_2'))]"/>
         <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
     </record>
 

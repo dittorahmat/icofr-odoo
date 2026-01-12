@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- COSO Components -->
+        <record id="coso_comp_env" model="icofr.coso.element">
+            <field name="name">Lingkungan Pengendalian (Control Environment)</field>
+            <field name="code">CE</field>
+            <field name="description">Serangkaian standar, proses, dan struktur sebagai dasar pelaksanaan pengendalian internal di perusahaan.</field>
+        </record>
+
+        <record id="coso_risk_assess" model="icofr.coso.element">
+            <field name="name">Penilaian Risiko (Risk Assessment)</field>
+            <field name="code">RA</field>
+            <field name="description">Proses yang dinamis dan berulang dalam mengidentifikasi dan menganalisis risiko relevan dalam mencapai tujuan perusahaan.</field>
+        </record>
+
+        <record id="coso_ctrl_acts" model="icofr.coso.element">
+            <field name="name">Aktivitas Pengendalian (Control Activities)</field>
+            <field name="code">CA</field>
+            <field name="description">Tindakan yang ditetapkan melalui kebijakan dan prosedur untuk memastikan arahan dalam memitigasi risiko dilaksanakan.</field>
+        </record>
+
+        <record id="coso_info_comm" model="icofr.coso.element">
+            <field name="name">Informasi dan Komunikasi (Information and Communication)</field>
+            <field name="code">IC</field>
+            <field name="description">Informasi yang diperlukan bagi perusahaan dalam melaksanakan sistem pengendalian internal untuk mendukung pencapaian tujuan.</field>
+        </record>
+
+        <record id="coso_monitor" model="icofr.coso.element">
+            <field name="name">Pemantauan (Monitoring)</field>
+            <field name="code">MO</field>
+            <field name="description">Proses berkelanjutan untuk mengevaluasi dan memelihara kualitas sistem pengendalian internal.</field>
+        </record>
+
+        <!-- COSO Principles -->
+        <!-- Control Environment -->
+        <record id="coso_principle_1" model="icofr.coso.element">
+            <field name="name">Prinsip 1: Integritas dan Etika</field>
+            <field name="code">CE.1</field>
+            <field name="description">Tanggung jawab terhadap integritas dan nilai-nilai etika.</field>
+            <field name="parent_id" ref="coso_comp_env"/>
+        </record>
+
+        <record id="coso_principle_2" model="icofr.coso.element">
+            <field name="name">Prinsip 2: Pengawasan Independen</field>
+            <field name="code">CE.2</field>
+            <field name="description">Tanggung jawab dalam mengawasi sistem pengendalian internal.</field>
+            <field name="parent_id" ref="coso_comp_env"/>
+        </record>
+
+        <record id="coso_principle_3" model="icofr.coso.element">
+            <field name="name">Prinsip 3: Struktur dan Wewenang</field>
+            <field name="code">CE.3</field>
+            <field name="description">Menetapkan struktur, kewenangan dan tanggung jawab dalam perusahaan.</field>
+            <field name="parent_id" ref="coso_comp_env"/>
+        </record>
+
+        <record id="coso_principle_4" model="icofr.coso.element">
+            <field name="name">Prinsip 4: Kompetensi</field>
+            <field name="code">CE.4</field>
+            <field name="description">Komitmen terhadap kompetensi personel.</field>
+            <field name="parent_id" ref="coso_comp_env"/>
+        </record>
+
+        <record id="coso_principle_5" model="icofr.coso.element">
+            <field name="name">Prinsip 5: Akuntabilitas</field>
+            <field name="code">CE.5</field>
+            <field name="description">Menugaskan personel yang bertanggung jawab mencapai tujuan sistem pengendalian internal.</field>
+            <field name="parent_id" ref="coso_comp_env"/>
+        </record>
+
+        <!-- Risk Assessment -->
+        <record id="coso_principle_6" model="icofr.coso.element">
+            <field name="name">Prinsip 6: Tujuan Spesifik</field>
+            <field name="code">RA.6</field>
+            <field name="description">Menetapkan tujuan sistem pengendalian internal.</field>
+            <field name="parent_id" ref="coso_risk_assess"/>
+        </record>
+
+        <record id="coso_principle_7" model="icofr.coso.element">
+            <field name="name">Prinsip 7: Identifikasi dan Analisis Risiko</field>
+            <field name="code">RA.7</field>
+            <field name="description">Mengidentifikasi dan menganalisis risiko.</field>
+            <field name="parent_id" ref="coso_risk_assess"/>
+        </record>
+
+        <record id="coso_principle_8" model="icofr.coso.element">
+            <field name="name">Prinsip 8: Penilaian Risiko Kecurangan</field>
+            <field name="code">RA.8</field>
+            <field name="description">Melakukan penilaian atas risiko kecurangan.</field>
+            <field name="parent_id" ref="coso_risk_assess"/>
+        </record>
+
+        <record id="coso_principle_9" model="icofr.coso.element">
+            <field name="name">Prinsip 9: Analisis Perubahan Signifikan</field>
+            <field name="code">RA.9</field>
+            <field name="description">Mengidentifikasi dan menganalisis perubahan-perubahan yang signifikan.</field>
+            <field name="parent_id" ref="coso_risk_assess"/>
+        </record>
+
+        <!-- Control Activities -->
+        <record id="coso_principle_10" model="icofr.coso.element">
+            <field name="name">Prinsip 10: Pemilihan dan Pengembangan Kontrol</field>
+            <field name="code">CA.10</field>
+            <field name="description">Menentukan dan merancang aktivitas pengendalian internal untuk memitigasi risiko.</field>
+            <field name="parent_id" ref="coso_ctrl_acts"/>
+        </record>
+
+        <record id="coso_principle_11" model="icofr.coso.element">
+            <field name="name">Prinsip 11: Kontrol Umum Teknologi</field>
+            <field name="code">CA.11</field>
+            <field name="description">Menentukan dan merancang aktivitas pengendalian internal terkait teknologi.</field>
+            <field name="parent_id" ref="coso_ctrl_acts"/>
+        </record>
+
+        <record id="coso_principle_12" model="icofr.coso.element">
+            <field name="name">Prinsip 12: Kebijakan dan Prosedur</field>
+            <field name="code">CA.12</field>
+            <field name="description">Merancang aktivitas pengendalian internal melalui penyusunan kebijakan dan prosedur.</field>
+            <field name="parent_id" ref="coso_ctrl_acts"/>
+        </record>
+
+        <!-- Information and Communication -->
+        <record id="coso_principle_13" model="icofr.coso.element">
+            <field name="name">Prinsip 13: Informasi Relevan</field>
+            <field name="code">IC.13</field>
+            <field name="description">Mengidentifikasi, memperoleh, menggunakan, dan menyampaikan informasi yang relevan dengan sistem pengendalian internal.</field>
+            <field name="parent_id" ref="coso_info_comm"/>
+        </record>
+
+        <record id="coso_principle_14" model="icofr.coso.element">
+            <field name="name">Prinsip 14: Komunikasi Internal</field>
+            <field name="code">IC.14</field>
+            <field name="description">Komunikasi yang efektif di internal perusahaan.</field>
+            <field name="parent_id" ref="coso_info_comm"/>
+        </record>
+
+        <record id="coso_principle_15" model="icofr.coso.element">
+            <field name="name">Prinsip 15: Komunikasi Eksternal</field>
+            <field name="code">IC.15</field>
+            <field name="description">Komunikasi yang efektif dengan pihak-pihak eksternal perusahaan.</field>
+            <field name="parent_id" ref="coso_info_comm"/>
+        </record>
+
+        <!-- Monitoring -->
+        <record id="coso_principle_16" model="icofr.coso.element">
+            <field name="name">Prinsip 16: Evaluasi Berkelanjutan dan Terpisah</field>
+            <field name="code">MO.16</field>
+            <field name="description">Menentukan dan merancang aktivitas pemantauan pelaksanaan sistem pengendalian internal.</field>
+            <field name="parent_id" ref="coso_monitor"/>
+        </record>
+
+        <record id="coso_principle_17" model="icofr.coso.element">
+            <field name="name">Prinsip 17: Evaluasi dan Komunikasi Defisiensi</field>
+            <field name="code">MO.17</field>
+            <field name="description">Mengevaluasi dan mengomunikasikan defisiensi pengendalian internal dengan tepat waktu dan menentukan langkah remediasi yang diperlukan.</field>
+            <field name="parent_id" ref="coso_monitor"/>
+        </record>
+    </data>
+</odoo>

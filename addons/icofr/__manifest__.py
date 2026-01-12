@@ -20,6 +20,7 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
     "data": [
         # Data
         "data/icofr_data.xml",
+        "data/icofr_coso_data.xml",
 
         # Security
         "security/security.xml",

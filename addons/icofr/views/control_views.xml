@@ -21,6 +21,8 @@
         <field name="arch" type="xml">
             <form string="Kontrol Internal">
                 <header>
+                    <button name="action_submit" type="object" string="Submit for Review" class="btn-primary" invisible="status != 'inactive'" groups="icofr.group_icofr_line_1,icofr.group_icofr_line_2"/>
+                    <button name="action_validate" type="object" string="Validate Design" class="btn-success" invisible="status != 'under_review'" groups="icofr.group_icofr_line_2"/>
                     <field name="status" widget="statusbar"/>
                 </header>
                 <sheet>
