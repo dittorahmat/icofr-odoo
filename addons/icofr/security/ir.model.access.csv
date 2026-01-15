@@ -105,3 +105,7 @@ access_icofr_change_log_l2,icofr.change.log,model_icofr_change_log,group_icofr_l
 access_icofr_change_log_l3,icofr.change.log,model_icofr_change_log,group_icofr_line_3,1,0,0,0
 access_icofr_change_log_ext,icofr.change.log,model_icofr_change_log,group_icofr_external_auditor,1,0,0,0
 access_icofr_dod_wizard,icofr.dod.wizard,model_icofr_dod_wizard,base.group_user,1,1,1,1
+access_icofr_wbs_entry,icofr.wbs.entry,model_icofr_wbs_entry,group_icofr_line_2,1,1,1,1
+access_icofr_wbs_entry_mgr,icofr.wbs.entry,model_icofr_wbs_entry,group_icofr_manager,1,1,1,1
+access_icofr_wbs_entry_ext,icofr.wbs.entry,model_icofr_wbs_entry,group_icofr_external_auditor,1,0,0,0
+access_icofr_financial_data_import_wizard,icofr.financial.data.import.wizard,model_icofr_financial_data_import_wizard,base.group_user,1,1,1,1

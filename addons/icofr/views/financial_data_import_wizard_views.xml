@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_icofr_financial_data_import_wizard" model="ir.ui.view">
+        <field name="name">icofr.financial.data.import.wizard.form</field>
+        <field name="model">icofr.financial.data.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Import Data Keuangan (Excel)">
+                <group>
+                    <field name="materiality_id" invisible="1"/>
+                    <field name="file_name" invisible="1"/>
+                    <field name="excel_file" filename="file_name" widget="binary"/>
+                </group>
+                <footer>
+                    <button name="action_import_excel" type="object" string="Import" class="btn-primary"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_icofr_financial_data_import_wizard" model="ir.actions.act_window">
+        <field name="name">Import Data Keuangan (Excel)</field>
+        <field name="res_model">icofr.financial.data.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

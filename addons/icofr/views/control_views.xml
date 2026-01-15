@@ -21,9 +21,22 @@
         <field name="arch" type="xml">
             <form string="Kontrol Internal">
                 <header>
-                    <button name="action_submit" type="object" string="Submit for Review" class="btn-primary" invisible="status != 'inactive'" groups="icofr.group_icofr_line_1,icofr.group_icofr_line_2"/>
-                    <button name="action_validate" type="object" string="Validate Design" class="btn-success" invisible="status != 'under_review'" groups="icofr.group_icofr_line_2"/>
-                    <field name="status" widget="statusbar"/>
+                    <!-- Staff Lini 1: Submit ke Manager -->
+                    <button name="action_submit_l1" type="object" string="Submit to Manager" class="btn-primary" invisible="status != 'draft'"/>
+                    
+                    <!-- Manager Lini 1: Approve ke Lini 2 -->
+                    <button name="action_approve_l1" type="object" string="Approve (L1)" class="btn-primary" invisible="status != 'waiting_l1_approval'" groups="icofr.group_icofr_line_1_manager"/>
+                    
+                    <!-- Staff Lini 2: Verify Design -->
+                    <button name="action_verify_l2" type="object" string="Verify Design" class="btn-primary" invisible="status != 'under_review'" groups="icofr.group_icofr_line_2"/>
+                    
+                    <!-- Manager Lini 2: Final Approve -->
+                    <button name="action_approve_l2" type="object" string="Final Approve" class="btn-success" invisible="status != 'waiting_l2_approval'" groups="icofr.group_icofr_line_2_manager"/>
+                    
+                    <!-- Reject / Reset -->
+                    <button name="action_draft" type="object" string="Return to Draft" invisible="status not in ('waiting_l1_approval', 'under_review', 'waiting_l2_approval')"/>
+                    
+                    <field name="status" widget="statusbar" statusbar_visible="draft,waiting_l1_approval,under_review,waiting_l2_approval,active"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -47,12 +60,45 @@
                             <field name="frequency"/>
                             <field name="owner_id"/>
                         </group>
-                        <group>
+                        <group string="Atribut Teknis (Juknis BUMN)">
+                            <field name="itgc_control" widget="boolean_toggle"/>
+                            <field name="itgc_area" invisible="not itgc_control"/>
+                            
+                            <field name="control_type_detailed"/>
+                            <field name="automated_control_type" invisible="control_type_detailed != 'automated'"/>
+
+                            <field name="euc_complexity" invisible="control_specific_type != 'euc'"/>
+                            <group colspan="2" invisible="control_specific_type != 'euc'">
+                                <field name="euc_has_version_ctrl"/>
+                                <field name="euc_has_access_ctrl"/>
+                                <field name="euc_has_change_ctrl"/>
+                                <field name="euc_has_integrity_ctrl"/>
+                            </group>
+
+                            <field name="ipe_type" invisible="control_specific_type != 'ipe'"/>
+                            <field name="mrc_precision_threshold" invisible="control_specific_type != 'mrc'"/>
                             <field name="status"/>
                             <field name="design_effective" widget="boolean_toggle"/>
                         </group>
                     </group>
                     <notebook>
+                        <page string="Asersi &amp; IPO">
+                            <group>
+                                <group string="Asersi Laporan Keuangan">
+                                    <field name="assertion_existence"/>
+                                    <field name="assertion_completeness"/>
+                                    <field name="assertion_accuracy"/>
+                                    <field name="assertion_authorization"/>
+                                    <field name="assertion_valuation"/>
+                                </group>
+                                <group string="IPO (Information Processing Objective)">
+                                    <field name="ipo_completeness"/>
+                                    <field name="ipo_accuracy"/>
+                                    <field name="ipo_validity"/>
+                                    <field name="ipo_restricted_access"/>
+                                </group>
+                            </group>
+                        </page>
                         <page string="Deskripsi">
                             <field name="description"/>
                             <field name="objective"/>

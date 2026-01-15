@@ -3,23 +3,48 @@
     <!-- Demo data for ICORF Demo Scenarios -->
 
     <!-- Skenario 1: Implementasi Awal dan Pemetaan Kontrol Eksisting -->
-    <!-- Create demo users first -->
-    <record id="demo_user_finance_manager" model="res.users">
-        <field name="name">Finance Manager</field>
-        <field name="login">finance_manager</field>
-        <field name="password">FinanceManager123</field>
-        <field name="email">finance@demo.com</field>
+    <!-- Create demo users with Hierarchical Roles -->
+    
+    <!-- Lini 1: Finance Department -->
+    <record id="demo_user_finance_staff" model="res.users">
+        <field name="name">Finance Staff (Budi)</field>
+        <field name="login">finance_staff</field>
+        <field name="password">FinanceStaff123</field>
+        <field name="email">budi@demo.com</field>
     </record>
 
+    <record id="demo_user_finance_manager" model="res.users">
+        <field name="name">Finance Manager (Siti)</field>
+        <field name="login">finance_manager</field>
+        <field name="password">FinanceManager123</field>
+        <field name="email">siti@demo.com</field>
+    </record>
+
+    <!-- Lini 2: Risk Management Department -->
+    <record id="demo_user_risk_staff" model="res.users">
+        <field name="name">Risk Officer (Andi)</field>
+        <field name="login">risk_staff</field>
+        <field name="password">RiskStaff123</field>
+        <field name="email">andi@demo.com</field>
+    </record>
+
+    <record id="demo_user_risk_manager" model="res.users">
+        <field name="name">Risk Manager (Dewi)</field>
+        <field name="login">risk_manager</field>
+        <field name="password">RiskManager123</field>
+        <field name="email">dewi@demo.com</field>
+    </record>
+
+    <!-- Legacy / Other Users -->
     <record id="demo_user_john_doe" model="res.users">
-        <field name="name">John Doe</field>
+        <field name="name">John Doe (Teller)</field>
         <field name="login">john_doe</field>
         <field name="password">JohnDoe123</field>
         <field name="email">john@demo.com</field>
     </record>
 
     <record id="demo_user_jane_smith" model="res.users">
-        <field name="name">Jane Smith</field>
+        <field name="name">Jane Smith (Internal Audit)</field>
         <field name="login">jane_smith</field>
         <field name="password">JaneSmith123</field>
         <field name="email">jane@demo.com</field>
@@ -30,6 +55,32 @@
         <field name="login">hr_manager</field>
         <field name="password">HRManager123</field>
         <field name="email">hr@demo.com</field>
+    </record>
+
+    <!-- Assign Groups to Users -->
+    <!-- Finance Staff -> Line 1 Staff -->
+    <record id="icofr.group_icofr_line_1" model="res.groups">
+        <field name="user_ids" eval="[(4, ref('demo_user_finance_staff')), (4, ref('demo_user_john_doe'))]"/>
+    </record>
+
+    <!-- Finance Manager -> Line 1 Manager -->
+    <record id="icofr.group_icofr_line_1_manager" model="res.groups">
+        <field name="user_ids" eval="[(4, ref('demo_user_finance_manager')), (4, ref('demo_user_hr_manager'))]"/>
+    </record>
+
+    <!-- Risk Staff -> Line 2 Staff -->
+    <record id="icofr.group_icofr_line_2" model="res.groups">
+        <field name="user_ids" eval="[(4, ref('demo_user_risk_staff'))]"/>
+    </record>
+
+    <!-- Risk Manager -> Line 2 Manager -->
+    <record id="icofr.group_icofr_line_2_manager" model="res.groups">
+        <field name="user_ids" eval="[(4, ref('demo_user_risk_manager'))]"/>
+    </record>
+
+    <!-- Jane Smith -> Line 3 (Internal Audit) -->
+    <record id="icofr.group_icofr_line_3" model="res.groups">
+        <field name="user_ids" eval="[(4, ref('demo_user_jane_smith'))]"/>
     </record>
 
     <record id="demo_user_it_manager" model="res.users">

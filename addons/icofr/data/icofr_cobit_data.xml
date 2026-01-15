@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 
+            COBIT 2019 Core Model: 40 Governance and Management Objectives
+            Dikelompokkan ke dalam 5 Domain.
+        -->
+
+        <!-- ======================================================== -->
+        <!-- DOMAIN: EVALUATE, DIRECT AND MONITOR (EDM) - 5 Objectives -->
+        <!-- ======================================================== -->
+        
+        <record id="cobit_edm01" model="icofr.cobit.element">
+            <field name="code">EDM01</field>
+            <field name="name">Ensured Governance Framework Setting and Maintenance</field>
+            <field name="domain">EDM</field>
+            <field name="process_group">Evaluate, Direct and Monitor</field>
+            <field name="description">Menyediakan pendekatan yang konsisten terintegrasi dan selaras dengan pendekatan tata kelola perusahaan.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_edm02" model="icofr.cobit.element">
+            <field name="code">EDM02</field>
+            <field name="name">Ensured Benefits Delivery</field>
+            <field name="domain">EDM</field>
+            <field name="process_group">Evaluate, Direct and Monitor</field>
+            <field name="description">Mengamankan nilai optimal dari inisiatif, layanan, dan aset TI; pengiriman solusi yang hemat biaya dan layanan yang andal.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_edm03" model="icofr.cobit.element">
+            <field name="code">EDM03</field>
+            <field name="name">Ensured Risk Optimization</field>
+            <field name="domain">EDM</field>
+            <field name="process_group">Evaluate, Direct and Monitor</field>
+            <field name="description">Memastikan bahwa risiko terkait TI perusahaan tidak melebihi selera risiko dan toleransi risiko yang ditentukan.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_edm04" model="icofr.cobit.element">
+            <field name="code">EDM04</field>
+            <field name="name">Ensured Resource Optimization</field>
+            <field name="domain">EDM</field>
+            <field name="process_group">Evaluate, Direct and Monitor</field>
+            <field name="description">Memastikan bahwa kebutuhan sumber daya perusahaan terpenuhi secara optimal, biaya TI dioptimalkan, dan kemungkinan realisasi manfaat meningkat.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_edm05" model="icofr.cobit.element">
+            <field name="code">EDM05</field>
+            <field name="name">Ensured Stakeholder Engagement</field>
+            <field name="domain">EDM</field>
+            <field name="process_group">Evaluate, Direct and Monitor</field>
+            <field name="description">Memastikan pemangku kepentingan mendukung strategi dan peta jalan I&amp;T, komunikasi kepada pemangku kepentingan efektif dan tepat waktu.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <!-- ======================================================== -->
+        <!-- DOMAIN: ALIGN, PLAN AND ORGANIZE (APO) - 14 Objectives -->
+        <!-- ======================================================== -->
+
+        <record id="cobit_apo01" model="icofr.cobit.element">
+            <field name="code">APO01</field>
+            <field name="name">Managed I&amp;T Management Framework</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Merancang kerangka kerja manajemen dan proses pendukung untuk I&amp;T perusahaan.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo02" model="icofr.cobit.element">
+            <field name="code">APO02</field>
+            <field name="name">Managed Strategy</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Menyediakan visi holistik lingkungan bisnis dan TI saat ini, arah masa depan, dan inisiatif yang diperlukan untuk migrasi.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo03" model="icofr.cobit.element">
+            <field name="code">APO03</field>
+            <field name="name">Managed Enterprise Architecture</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Membangun arsitektur yang terdiri dari proses bisnis, informasi, data, aplikasi, dan lapisan arsitektur teknologi.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo04" model="icofr.cobit.element">
+            <field name="code">APO04</field>
+            <field name="name">Managed Innovation</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Menjaga kesadaran akan TI dan tren layanan terkait, mengidentifikasi peluang inovasi, dan merencanakan manfaat dari inovasi.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo05" model="icofr.cobit.element">
+            <field name="code">APO05</field>
+            <field name="name">Managed Portfolio</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Mengoptimalkan kinerja portofolio program secara keseluruhan sebagai respons terhadap kinerja program, layanan, dan aset individu.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo06" model="icofr.cobit.element">
+            <field name="code">APO06</field>
+            <field name="name">Managed Budget and Costs</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Mengelola aktivitas keuangan terkait TI dalam fungsi bisnis dan TI.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo07" model="icofr.cobit.element">
+            <field name="code">APO07</field>
+            <field name="name">Managed Human Resources</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Menyediakan pendekatan terstruktur untuk memastikan penataan, penempatan, hak pengambilan keputusan, dan keterampilan sumber daya manusia yang optimal.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo08" model="icofr.cobit.element">
+            <field name="code">APO08</field>
+            <field name="name">Managed Relationships</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Mengelola hubungan antara bisnis dan TI secara formal dan transparan.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo09" model="icofr.cobit.element">
+            <field name="code">APO09</field>
+            <field name="name">Managed Service Agreements</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Menyelaraskan layanan TI dan tingkat layanan dengan kebutuhan dan harapan perusahaan.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo10" model="icofr.cobit.element">
+            <field name="code">APO10</field>
+            <field name="name">Managed Vendors</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Mengelola layanan terkait TI yang disediakan oleh semua jenis pemasok untuk memenuhi persyaratan perusahaan.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo11" model="icofr.cobit.element">
+            <field name="code">APO11</field>
+            <field name="name">Managed Quality</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Menentukan dan mengomunikasikan persyaratan kualitas dalam semua proses, prosedur, dan hasil layanan terkait.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo12" model="icofr.cobit.element">
+            <field name="code">APO12</field>
+            <field name="name">Managed Risk</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Terus mengidentifikasi, menilai, dan mengurangi risiko terkait TI dalam tingkat toleransi yang ditetapkan oleh manajemen eksekutif.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_apo13" model="icofr.cobit.element">
+            <field name="code">APO13</field>
+            <field name="name">Managed Security</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Mendefinisikan, mengoperasikan, dan memantau sistem manajemen keamanan informasi.</field>
+            <field name="is_itgc">True</field>
+            <field name="it_risk_area">security_management</field>
+        </record>
+
+        <record id="cobit_apo14" model="icofr.cobit.element">
+            <field name="code">APO14</field>
+            <field name="name">Managed Data</field>
+            <field name="domain">APO</field>
+            <field name="process_group">Align, Plan and Organize</field>
+            <field name="description">Mencapai dan mempertahankan penggunaan data yang efektif sebagai aset penting untuk memaksimalkan nilai bagi perusahaan.</field>
+            <field name="is_itgc">True</field>
+            <field name="it_risk_area">data_governance</field>
+        </record>
+
+        <!-- ======================================================== -->
+        <!-- DOMAIN: BUILD, ACQUIRE AND IMPLEMENT (BAI) - 11 Objectives -->
+        <!-- ======================================================== -->
+
+        <record id="cobit_bai01" model="icofr.cobit.element">
+            <field name="code">BAI01</field>
+            <field name="name">Managed Programs</field>
+            <field name="domain">BAI</field>
+            <field name="process_group">Build, Acquire and Implement</field>
+            <field name="description">Mengelola semua program dari portofolio investasi sesuai dengan strategi perusahaan.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_bai02" model="icofr.cobit.element">
+            <field name="code">BAI02</field>
+            <field name="name">Managed Requirements Definition</field>
+            <field name="domain">BAI</field>
+            <field name="process_group">Build, Acquire and Implement</field>
+            <field name="description">Mengidentifikasi solusi dan menganalisis persyaratan sebelum akuisisi atau pembuatan.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_bai03" model="icofr.cobit.element">
+            <field name="code">BAI03</field>
+            <field name="name">Managed Solutions Identification and Build</field>
+            <field name="domain">BAI</field>
+            <field name="process_group">Build, Acquire and Implement</field>
+            <field name="description">Membangun dan mengembangkan solusi yang gesil dan dapat dioperasikan sesuai dengan persyaratan.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_bai04" model="icofr.cobit.element">
+            <field name="code">BAI04</field>
+            <field name="name">Managed Availability and Capacity</field>
+            <field name="domain">BAI</field>
+            <field name="process_group">Build, Acquire and Implement</field>
+            <field name="description">Menyeimbangkan kebutuhan ketersediaan, kinerja, dan kapasitas saat ini dan masa depan.</field>
+            <field name="is_itgc">True</field>
+            <field name="it_risk_area">capacity_management</field>
+        </record>
+
+        <record id="cobit_bai05" model="icofr.cobit.element">
+            <field name="code">BAI05</field>
+            <field name="name">Managed Organizational Change</field>
+            <field name="domain">BAI</field>
+            <field name="process_group">Build, Acquire and Implement</field>
+            <field name="description">Memaksimalkan kemungkinan keberhasilan implementasi perubahan organisasi yang berkelanjutan.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_bai06" model="icofr.cobit.element">
+            <field name="code">BAI06</field>
+            <field name="name">Managed IT Changes</field>
+            <field name="domain">BAI</field>
+            <field name="process_group">Build, Acquire and Implement</field>
+            <field name="description">Mengelola semua perubahan secara terkendali, termasuk perubahan darurat dan patch.</field>
+            <field name="is_itgc">True</field>
+            <field name="it_risk_area">change_management</field>
+        </record>
+
+        <record id="cobit_bai07" model="icofr.cobit.element">
+            <field name="code">BAI07</field>
+            <field name="name">Managed IT Change Acceptance and Transitioning</field>
+            <field name="domain">BAI</field>
+            <field name="process_group">Build, Acquire and Implement</field>
+            <field name="description">Menerima dan mentransisikan solusi baru secara formal ke lingkungan operasional dan bisnis.</field>
+            <field name="is_itgc">True</field>
+            <field name="it_risk_area">change_management</field>
+        </record>
+
+        <record id="cobit_bai08" model="icofr.cobit.element">
+            <field name="code">BAI08</field>
+            <field name="name">Managed Knowledge</field>
+            <field name="domain">BAI</field>
+            <field name="process_group">Build, Acquire and Implement</field>
+            <field name="description">Mempertahankan ketersediaan pengetahuan yang relevan, terkini, tervalidasi, dan andal.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_bai09" model="icofr.cobit.element">
+            <field name="code">BAI09</field>
+            <field name="name">Managed Assets</field>
+            <field name="domain">BAI</field>
+            <field name="process_group">Build, Acquire and Implement</field>
+            <field name="description">Mengelola aset TI melalui siklus hidupnya untuk memastikan nilainya optimal.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_bai10" model="icofr.cobit.element">
+            <field name="code">BAI10</field>
+            <field name="name">Managed Configuration</field>
+            <field name="domain">BAI</field>
+            <field name="process_group">Build, Acquire and Implement</field>
+            <field name="description">Menentukan dan memelihara deskripsi dan hubungan antar sumber daya dan kemampuan utama.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_bai11" model="icofr.cobit.element">
+            <field name="code">BAI11</field>
+            <field name="name">Managed Projects</field>
+            <field name="domain">BAI</field>
+            <field name="process_group">Build, Acquire and Implement</field>
+            <field name="description">Mengelola semua proyek yang dimulai dalam program sesuai strategi perusahaan.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <!-- ======================================================== -->
+        <!-- DOMAIN: DELIVER, SERVICE AND SUPPORT (DSS) - 6 Objectives -->
+        <!-- ======================================================== -->
+
+        <record id="cobit_dss01" model="icofr.cobit.element">
+            <field name="code">DSS01</field>
+            <field name="name">Managed Operations</field>
+            <field name="domain">DSS</field>
+            <field name="process_group">Deliver, Service and Support</field>
+            <field name="description">Mengoordinasikan dan melaksanakan kegiatan dan prosedur operasional untuk layanan TI internal dan outsourcing.</field>
+            <field name="is_itgc">True</field>
+            <field name="it_risk_area">it_operations</field>
+        </record>
+
+        <record id="cobit_dss02" model="icofr.cobit.element">
+            <field name="code">DSS02</field>
+            <field name="name">Managed Service Requests and Incidents</field>
+            <field name="domain">DSS</field>
+            <field name="process_group">Deliver, Service and Support</field>
+            <field name="description">Memberikan tanggapan yang tepat waktu dan efektif terhadap permintaan pengguna dan penyelesaian insiden.</field>
+            <field name="is_itgc">True</field>
+            <field name="it_risk_area">incident_management</field>
+        </record>
+
+        <record id="cobit_dss03" model="icofr.cobit.element">
+            <field name="code">DSS03</field>
+            <field name="name">Managed Problems</field>
+            <field name="domain">DSS</field>
+            <field name="process_group">Deliver, Service and Support</field>
+            <field name="description">Mengidentifikasi dan mengklasifikasikan masalah serta akar penyebabnya untuk memberikan penyelesaian yang tepat waktu.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_dss04" model="icofr.cobit.element">
+            <field name="code">DSS04</field>
+            <field name="name">Managed Continuity</field>
+            <field name="domain">DSS</field>
+            <field name="process_group">Deliver, Service and Support</field>
+            <field name="description">Membangun dan memelihara rencana untuk memungkinkan bisnis dan TI merespons insiden dan gangguan.</field>
+            <field name="is_itgc">True</field>
+            <field name="it_risk_area">continuity_management</field>
+        </record>
+
+        <record id="cobit_dss05" model="icofr.cobit.element">
+            <field name="code">DSS05</field>
+            <field name="name">Managed Security Services</field>
+            <field name="domain">DSS</field>
+            <field name="process_group">Deliver, Service and Support</field>
+            <field name="description">Melindungi informasi perusahaan untuk mempertahankan tingkat risiko keamanan informasi yang dapat diterima.</field>
+            <field name="is_itgc">True</field>
+            <field name="it_risk_area">security_management</field>
+        </record>
+
+        <record id="cobit_dss06" model="icofr.cobit.element">
+            <field name="code">DSS06</field>
+            <field name="name">Managed Business Process Controls</field>
+            <field name="domain">DSS</field>
+            <field name="process_group">Deliver, Service and Support</field>
+            <field name="description">Menentukan dan memelihara kontrol proses bisnis yang sesuai untuk memastikan informasi yang akurat.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <!-- ======================================================== -->
+        <!-- DOMAIN: MONITOR, EVALUATE AND ASSESS (MEA) - 4 Objectives -->
+        <!-- ======================================================== -->
+
+        <record id="cobit_mea01" model="icofr.cobit.element">
+            <field name="code">MEA01</field>
+            <field name="name">Managed Performance and Conformance Monitoring</field>
+            <field name="domain">MEA</field>
+            <field name="process_group">Monitor, Evaluate and Assess</field>
+            <field name="description">Mengumpulkan, memvalidasi, dan mengevaluasi metrik tujuan dan proses.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_mea02" model="icofr.cobit.element">
+            <field name="code">MEA02</field>
+            <field name="name">Managed System of Internal Control</field>
+            <field name="domain">MEA</field>
+            <field name="process_group">Monitor, Evaluate and Assess</field>
+            <field name="description">Memantau dan mengevaluasi sistem pengendalian internal secara terus menerus.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_mea03" model="icofr.cobit.element">
+            <field name="code">MEA03</field>
+            <field name="name">Managed Compliance with External Requirements</field>
+            <field name="domain">MEA</field>
+            <field name="process_group">Monitor, Evaluate and Assess</field>
+            <field name="description">Mengevaluasi kepatuhan proses TI dengan hukum, peraturan, dan persyaratan kontrak eksternal.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+        <record id="cobit_mea04" model="icofr.cobit.element">
+            <field name="code">MEA04</field>
+            <field name="name">Managed Assurance</field>
+            <field name="domain">MEA</field>
+            <field name="process_group">Monitor, Evaluate and Assess</field>
+            <field name="description">Merencanakan, mengelola, dan melaksanakan inisiatif jaminan yang independen.</field>
+            <field name="is_itgc">True</field>
+        </record>
+
+    </data>
+</odoo>

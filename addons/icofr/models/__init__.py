@@ -33,3 +33,4 @@ from . import icofr_csa_campaign
 from . import icofr_audit_population
 from . import icofr_finding_extension
 from . import icofr_change_log
+from . import icofr_wbs

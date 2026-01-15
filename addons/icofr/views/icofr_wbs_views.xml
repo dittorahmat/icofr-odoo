@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View WBS -->
+    <record id="view_icofr_wbs_entry_list" model="ir.ui.view">
+        <field name="name">icofr.wbs.entry.list</field>
+        <field name="model">icofr.wbs.entry</field>
+        <field name="arch" type="xml">
+            <list decoration-info="status == 'received'" decoration-warning="status == 'investigating'" decoration-success="status == 'closed'">
+                <field name="code"/>
+                <field name="report_date"/>
+                <field name="name"/>
+                <field name="category"/>
+                <field name="reporter_type"/>
+                <field name="impact_financial"/>
+                <field name="status" widget="badge" decoration-info="status == 'received'" decoration-warning="status == 'investigating'" decoration-success="status == 'closed'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View WBS -->
+    <record id="view_icofr_wbs_entry_form" model="ir.ui.view">
+        <field name="name">icofr.wbs.entry.form</field>
+        <field name="model">icofr.wbs.entry</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="status" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="code" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="name" placeholder="Subjek Aduan (misal: Indikasi Fraud di Vendor A)"/>
+                        </h2>
+                    </div>
+                    <group>
+                        <group string="Informasi Laporan">
+                            <field name="report_date"/>
+                            <field name="reporter_type"/>
+                            <field name="category"/>
+                        </group>
+                        <group string="Dampak &amp; Relasi">
+                            <field name="impact_financial"/>
+                            <field name="estimated_impact_amount" invisible="not impact_financial"/>
+                            <field name="related_process_id"/>
+                            <field name="related_control_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Uraian Aduan">
+                            <field name="description" placeholder="Ceritakan kronologi kejadian..."/>
+                        </page>
+                        <page string="Investigasi &amp; Resolusi">
+                            <group>
+                                <field name="investigation_notes"/>
+                                <field name="resolution"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action WBS -->
+    <record id="action_icofr_wbs_entry" model="ir.actions.act_window">
+        <field name="name">Whistleblowing System</field>
+        <field name="res_model">icofr.wbs.entry</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada laporan aduan.
+            </p>
+            <p>
+                Gunakan menu ini untuk mencatat masukan dari Whistleblowing System (WBS) 
+                guna pemenuhan Prinsip COSO 14 (Komunikasi Internal).
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu WBS di bawah Operasional -->
+    <menuitem id="menu_icofr_wbs"
+              name="Whistleblowing (WBS)"
+              parent="menu_icofr_operational"
+              action="action_icofr_wbs_entry"
+              sequence="80"/>
+</odoo>

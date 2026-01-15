@@ -101,4 +101,12 @@
         <field name="padding">4</field>
         <field name="company_id" eval="False"/>
     </record>
+
+    <record id="seq_type_icofr_wbs_entry" model="ir.sequence">
+        <field name="name">Icofr WBS Entry</field>
+        <field name="code">icofr.wbs.entry</field>
+        <field name="prefix">WBS/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False"/>
+    </record>
 </odoo>

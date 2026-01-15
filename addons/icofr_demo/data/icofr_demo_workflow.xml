@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- DATA DEMO KHUSUS WORKFLOW HIERARKIS -->
+    
+    <!-- 1. Kontrol Status DRAFT (Staff L1 baru buat) -->
+    <record id="demo_ctrl_wf_draft" model="icofr.control">
+        <field name="name">Rekonsiliasi Kas Kecil (Draft)</field>
+        <field name="code">CTRL-WF-001</field>
+        <field name="control_type">detective</field>
+        <field name="description">Kontrol rekonsiliasi kas kecil harian. Masih draft.</field>
+        <field name="process_id" ref="icofr_demo.demo_proc_cashin_001"/>
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="icofr_demo.demo_user_finance_staff"/>
+        <field name="status">draft</field>
+        <field name="control_owner_line">line_1</field>
+    </record>
+
+    <!-- 2. Kontrol Status WAITING L1 APPROVAL (Staff submit ke Manager) -->
+    <record id="demo_ctrl_wf_waiting_l1" model="icofr.control">
+        <field name="name">Cek Fisik Kas (Waiting L1)</field>
+        <field name="code">CTRL-WF-002</field>
+        <field name="control_type">detective</field>
+        <field name="description">Pengecekan fisik uang kas mingguan. Menunggu approval Manajer Keuangan.</field>
+        <field name="process_id" ref="icofr_demo.demo_proc_cashin_001"/>
+        <field name="frequency">weekly</field>
+        <field name="owner_id" ref="icofr_demo.demo_user_finance_staff"/>
+        <field name="status">waiting_l1_approval</field>
+        <field name="control_owner_line">line_1</field>
+    </record>
+
+    <!-- 3. Kontrol Status UNDER REVIEW (Manager L1 approve, masuk ke Risk Staff) -->
+    <record id="demo_ctrl_wf_under_review" model="icofr.control">
+        <field name="name">Validasi Voucher (Review L2)</field>
+        <field name="code">CTRL-WF-003</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Validasi kelengkapan voucher. Sedang direview oleh Staff Risk (Lini 2).</field>
+        <field name="process_id" ref="icofr_demo.demo_proc_cashout_001"/>
+        <field name="frequency">per_transaction</field>
+        <field name="owner_id" ref="icofr_demo.demo_user_finance_manager"/>
+        <field name="status">under_review</field>
+        <field name="control_owner_line">line_1</field>
+    </record>
+
+    <!-- 4. Kontrol Status WAITING L2 APPROVAL (Risk Staff verify, masuk ke Risk Manager) -->
+    <record id="demo_ctrl_wf_waiting_l2" model="icofr.control">
+        <field name="name">Otorisasi Capex (Final Approval)</field>
+        <field name="code">CTRL-WF-004</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Otorisasi pengeluaran modal (Capex). Menunggu approval final Manajer Risk.</field>
+        <field name="process_id" ref="icofr_demo.demo_proc_cashout_001"/>
+        <field name="frequency">event_driven</field>
+        <field name="owner_id" ref="icofr_demo.demo_user_finance_manager"/>
+        <field name="status">waiting_l2_approval</field>
+        <field name="control_owner_line">line_1</field>
+    </record>
+
+</odoo>

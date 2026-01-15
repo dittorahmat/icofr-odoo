@@ -42,6 +42,49 @@ class IcofrMateriality(models.Model):
         help='Jumlah total aset perusahaan (dalam satuan mata uang lokal)'
     )
 
+    # Group Materiality Multiplier (Table 25 SK BUMN)
+    is_group_consolidation = fields.Boolean('Entitas Grup/Konsolidasian?')
+    number_of_significant_locations = fields.Integer(
+        string='Jumlah Lokasi/Entitas Signifikan',
+        default=1,
+        help='Jumlah entitas signifikan untuk penentuan Multiplier (Tabel 25)'
+    )
+
+    group_multiplier = fields.Float(
+        string='Multiplier Grup',
+        compute='_compute_group_multiplier',
+        help='Tingkat perkalian berdasarkan jumlah lokasi (Tabel 25)'
+    )
+
+    @api.depends('is_group_consolidation', 'number_of_significant_locations')
+    def _compute_group_multiplier(self):
+        """
+        Logic Table 25: Penentuan Tingkat Perkalian (Multiplier)
+        """
+        for record in self:
+            if not record.is_group_consolidation:
+                record.group_multiplier = 1.0
+                continue
+            
+            n = record.number_of_significant_locations
+            if n <= 1: record.group_multiplier = 1.0
+            elif n == 2: record.group_multiplier = 1.5
+            elif 3 <= n <= 4: record.group_multiplier = 2.0
+            elif 5 <= n <= 6: record.group_multiplier = 2.5
+            elif 7 <= n <= 9: record.group_multiplier = 3.0
+            elif 10 <= n <= 14: record.group_multiplier = 3.5
+            elif 15 <= n <= 19: record.group_multiplier = 4.0
+            elif 20 <= n <= 25: record.group_multiplier = 4.5
+            elif 26 <= n <= 30: record.group_multiplier = 5.0
+            elif 31 <= n <= 40: record.group_multiplier = 5.5
+            elif 41 <= n <= 50: record.group_multiplier = 6.0
+            elif 51 <= n <= 64: record.group_multiplier = 6.5
+            elif 65 <= n <= 80: record.group_multiplier = 7.0
+            elif 81 <= n <= 94: record.group_multiplier = 7.5
+            elif 95 <= n <= 110: record.group_multiplier = 8.0
+            elif 111 <= n <= 130: record.group_multiplier = 8.5
+            else: record.group_multiplier = 9.0
+
     net_income_amount = fields.Float(
         string='Jumlah Laba Bersih',
         help='Jumlah laba bersih perusahaan (dalam satuan mata uang lokal)'
@@ -133,6 +176,50 @@ class IcofrMateriality(models.Model):
         store=True,
         help='Jumlah Performance Materiality dalam satuan mata uang lokal'
     )
+
+    # Scoping Coverage Analysis (2/3 Rule - Table 6 Juknis)
+    coverage_revenue_percent = fields.Float(
+        string='Cakupan Pendapatan (%)',
+        compute='_compute_coverage_ratios',
+        help='Persentase cakupan akun pendapatan signifikan terhadap total pendapatan'
+    )
+
+    coverage_assets_percent = fields.Float(
+        string='Cakupan Aset (%)',
+        compute='_compute_coverage_ratios',
+        help='Persentase cakupan akun aset signifikan terhadap total aset'
+    )
+
+    coverage_status = fields.Selection([
+        ('pass', 'LULUS (>= 66.7%)'),
+        ('fail', 'GAGAL (< 66.7%)')
+    ], string='Status Cakupan (Aturan 2/3)', compute='_compute_coverage_ratios',
+       help='Status pemenuhan kriteria kecukupan ruang lingkup sesuai Bab III Pasal 1.3 Juknis')
+
+    @api.depends('account_mapping_ids.is_significant_account', 'account_mapping_ids.account_balance', 
+                 'revenue_amount', 'total_assets_amount')
+    def _compute_coverage_ratios(self):
+        for record in self:
+            # Filter significant accounts
+            sig_accounts = record.account_mapping_ids.filtered(lambda x: x.is_significant_account)
+            
+            # Group by FSLI type or similar? 
+            # Simple approach: sum balances of sig accounts vs total amounts
+            # Revenue Coverage
+            # Assuming we can identify revenue accounts in mapping (e.g. via code or FSLI name)
+            rev_mapped = sum(sig_accounts.filtered(lambda x: 'Revenue' in x.fsl_item or 'Pendapatan' in x.fsl_item).mapped('account_balance'))
+            record.coverage_revenue_percent = (rev_mapped / record.revenue_amount * 100) if record.revenue_amount > 0 else 0
+            
+            # Asset Coverage
+            asset_mapped = sum(sig_accounts.filtered(lambda x: 'Asset' in x.fsl_item or 'Aset' in x.fsl_item or 'Aktiva' in x.fsl_item).mapped('account_balance'))
+            record.coverage_assets_percent = (asset_mapped / record.total_assets_amount * 100) if record.total_assets_amount > 0 else 0
+            
+            # Overall Status (Must meet 2/3 for both if data available)
+            threshold = 66.67
+            if record.coverage_revenue_percent >= threshold and record.coverage_assets_percent >= threshold:
+                record.coverage_status = 'pass'
+            else:
+                record.coverage_status = 'fail'
 
     materiality_basis = fields.Selection([
         ('revenue', 'Pendapatan'),

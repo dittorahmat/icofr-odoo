@@ -54,8 +54,8 @@ class IcofrAccountMapping(models.Model):
 
     # Fallback field untuk deskripsi akun GL jika tidak menggunakan akun dari sistem
     gl_account_description = fields.Char(
-        string='Deskripsi Akun GL',
-        help='Deskripsi akun GL yang digunakan'
+        string='Deskripsi Akun (Manual/Import)',
+        help='Deskripsi akun GL jika diinput manual atau dari file eksternal'
     )
 
     fsl_description = fields.Text(

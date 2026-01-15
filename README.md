@@ -47,7 +47,14 @@ The ICORF module implements the COSO 2013 Internal Control framework and complie
 - **Calendar Integration**: Interactive calendar for planning and scheduling activities
 - **Automated Notifications**: Reminders and alerts for upcoming activities and deadlines
 - **Materiality Calculator**: Automatic calculation of Overall Materiality and Performance Materiality following POJK No. 15 Tahun 2024 requirements, including **Tabel 4 Haircut Logic**.
+- **Scoping Coverage Analysis**: Automated verification of the **2/3 Rule** (66.7% coverage) for significant accounts in scope.
+- **Audit Sampling Engine**: Precision calculator implementing **Tabel 22** (TOE) and **Tabel 23** (Remediation) based on frequency and risk.
+- **Whistleblowing System (WBS)**: Fraud and integrity reporting module for COSO Principle 14 compliance.
+- **Technical Attribute Matrix**: Specialized fields for **ITGC Areas**, **EUC Complexity**, **IPE Types**, and **MRC Precision**.
+- **Interactive DoD Working Paper**: Digital version of **Lampiran 10** for transparent severity assessment.
 - **Three Lines of Defense**: Complete role separation for Lini 1 (Process Owners), Lini 2 (Risk/ICOFR Team), and Lini 3 (Internal Auditors) with appropriate access controls.
+- **Control Workflow**: Robust hierarchical approval workflow (`Staff` -> `Manager`) for both Lini 1 and Lini 2, enforcing the "4-Eyes Principle" and Segregation of Duties.
+- **Master Data Integration**: Built-in **COSO 2013** (Principles & Attributes) and **COBIT 2019** (Objectives) frameworks as System Data, ensuring standardized compliance from day one.
 - **Qualitative Risk Assessment**: Advanced risk rating combining traditional matrix with **Tabel 11 qualitative factors** (competence, history of errors, etc.).
 - **DoD Wizard**: Interactive wizard for **Degree of Deficiency** classification following AS 2201 standards.
 - **Change Management Log**: Automated logging of process and control changes as required by **Appendix 6** of the regulation.
@@ -58,6 +65,10 @@ The ICORF module implements the COSO 2013 Internal Control framework and complie
 - **Copy Period Functionality**: Wizard to copy data from one fiscal period to another for increased efficiency (addressing PwC recommendation that 80-90% of RCM remains same year-over-year)
 - **SK BUMN Compliance**: Complete compliance with Surat Keputusan BUMN requirements and attributes as specified in POJK 15/2024
 - **Comprehensive Demo Modules**: Separate modules for basic functionality (`icofr_demo`) and advanced features (`icofr_demo_new_features`) providing complete demonstration datasets for all scenarios
+- **Excel-First Strategy**: 
+  - **Financial Data Import**: Upload financial statements via Excel for materiality calculation without live ERP integration.
+  - **RCM Bulk Upload**: Migrate existing Risk Control Matrices (Excel) into the system instantly via the Utilitas menu.
+  - **Account Mapping Import**: Bulk upload General Ledger accounts and FSLI mappings.
 
 ## Prerequisites
 
@@ -177,6 +188,7 @@ addons/icofr/
 │   ├── icofr_pojk_report.py # POJK 15/2024 report
 │   ├── icofr_notification.py # Notification system
 │   ├── icofr_process.py     # Business process management
+│   ├── icofr_wbs.py         # Whistleblowing System
 │   └── icofr_export.py      # Export functionality
 ├── reports/                # Report templates and logic
 ├── security/               # Access rights and security

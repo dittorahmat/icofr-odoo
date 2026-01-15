@@ -221,6 +221,15 @@ class IcofrFinding(models.Model):
         help='Menandakan apakah diperlukan tindakan korektif untuk mengatasi temuan'
     )
 
+    # Lampiran 10: Kertas Kerja DoD (Kotak 1 - 7)
+    box_1_direct_relation = fields.Boolean('Kotak 1: Berhubungan langsung dengan asersi?')
+    box_2_likelihood = fields.Boolean('Kotak 2: Terdapat kemungkinan (likelihood) salah saji?')
+    box_3_magnitude = fields.Boolean('Kotak 3: Besaran dampak (magnitude) berpotensi material?')
+    box_4_important = fields.Boolean('Kotak 4: Cukup penting untuk perhatian pengawas?')
+    box_5_compensating = fields.Boolean('Kotak 5: Terdapat compensating control efektif?')
+    box_6_prudent_official = fields.Boolean('Kotak 6: Auditor menyimpulkan sebagai Kelemahan Material?')
+    box_7_aggregate = fields.Boolean('Kotak 7: Terdapat defisiensi lain yang memengaruhi akun yang sama?')
+
     company_id = fields.Many2one(
         'res.company',
         string='Perusahaan',

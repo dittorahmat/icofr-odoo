@@ -280,7 +280,13 @@ class IcofrAuditPopulation(models.Model):
         ('fail', 'Gagal'),
         ('not_applicable', 'Tidak Berlaku')
     ], string='Hasil Pengujian', 
-       help='Hasil dari pengujian terhadap transaksi ini')
+       help='Hasil akhir dari pengujian terhadap transaksi ini')
+
+    # Lampiran 7 Detail Attributes
+    result_attr_a = fields.Selection([('pass', 'Lulus'), ('fail', 'Gagal'), ('na', 'N/A')], string='Atribut A', default='na')
+    result_attr_b = fields.Selection([('pass', 'Lulus'), ('fail', 'Gagal'), ('na', 'N/A')], string='Atribut B', default='na')
+    result_attr_c = fields.Selection([('pass', 'Lulus'), ('fail', 'Gagal'), ('na', 'N/A')], string='Atribut C', default='na')
+    result_attr_d = fields.Selection([('pass', 'Lulus'), ('fail', 'Gagal'), ('na', 'N/A')], string='Atribut D', default='na')
 
     testing_notes = fields.Text(
         string='Catatan Pengujian',

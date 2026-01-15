@@ -58,6 +58,16 @@
                             </group>
                         </page>
                         <page string="Test of Operating Effectiveness (TOE)" invisible="test_type != 'toe'">
+                            <group string="Deskripsi Atribut Pengujian (Lampiran 7 Juknis)">
+                                <group>
+                                    <field name="attr_a_desc" placeholder="Atribut A (misal: Transaksi terotorisasi)"/>
+                                    <field name="attr_b_desc" placeholder="Atribut B (misal: Nilai sesuai invoice)"/>
+                                </group>
+                                <group>
+                                    <field name="attr_c_desc" placeholder="Atribut C (misal: Periode pencatatan benar)"/>
+                                    <field name="attr_d_desc" placeholder="Atribut D (misal: Klasifikasi akun tepat)"/>
+                                </group>
+                            </group>
                             <group>
                                 <group string="Sampling &amp; Populasi">
                                     <field name="population_reference"/>
@@ -86,8 +96,11 @@
                                     <field name="transaction_no" readonly="1"/>
                                     <field name="transaction_date" readonly="1"/>
                                     <field name="amount" readonly="1"/>
-                                    <field name="description" readonly="1"/>
-                                    <field name="testing_result"/>
+                                    <field name="result_attr_a" string="Attr A" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="result_attr_b" string="Attr B" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="result_attr_c" string="Attr C" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="result_attr_d" string="Attr D" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="testing_result" string="Hasil"/>
                                     <field name="testing_notes"/>
                                 </list>
                             </field>
@@ -96,16 +109,19 @@
                             <field name="testing_procedures"/>
                             <field name="test_results"/>
                         </page>
-                        <page string="Kalkulator Sampling (Tabel 22 Juknis)" invisible="test_type != 'toe'">
+                        <page string="Kalkulator Sampling (Tabel 22 &amp; 23 Juknis)" invisible="test_type != 'toe'">
                             <group>
-                                <group>
+                                <group string="Parameter">
+                                    <field name="is_remediation_test"/>
                                     <field name="control_frequency"/>
                                     <field name="population_size"/>
-                                    <field name="confidence_level"/>
                                 </group>
-                                <group>
-                                    <field name="sample_size_calculated"/>
-                                    <field name="sampling_method"/>
+                                <group string="Hasil Kalkulator">
+                                    <field name="sample_size_recommended" readonly="1" class="oe_inline"/>
+                                    <field name="sample_size_calculated" string="Target Sampel Minimal" class="oe_highlight"/>
+                                    <p class="text-muted" colspan="2">
+                                        * Berdasarkan Tabel 22 (TOE standar) atau Tabel 23 (Remediasi) Juknis BUMN.
+                                    </p>
                                 </group>
                             </group>
                         </page>

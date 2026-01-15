@@ -258,38 +258,52 @@
                             </div>
                         </div>
                         
-                        <!-- Lingkup dan Pernyataan Efektivitas -->
-                        <div style="margin-bottom: 20px;">
-                            <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Lingkup dan Pernyataan</h4>
-                            <div style="margin-bottom: 10px;">
-                                <strong>Lingkup Sertifikasi:</strong>
-                                <p t-esc="doc.scope" style="white-space: pre-line;"/>
-                            </div>
-                            <div style="margin-bottom: 10px;">
-                                <strong>Deskripsi Lingkup:</strong>
-                                <p t-esc="doc.scope_description" style="white-space: pre-line;"/>
-                            </div>
-                            <div style="margin-bottom: 10px;">
-                                <strong>Pernyataan Efektivitas:</strong>
-                                <p t-esc="doc.effectiveness_statement" style="white-space: pre-line;"/>
+                        <!-- Lingkup dan Pernyataan Efektivitas (Wording Juknis BUMN Lampiran 11) -->
+                        <div style="margin-bottom: 20px; text-align: justify;">
+                            <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Pernyataan Manajemen</h4>
+                            <p>Sesuai dengan Juknis Kementerian BUMN tentang ICOFR No. SK-5/DKU.MBU/11/2024, Kami menyatakan bahwa:</p>
+                            <ol>
+                                <li>Kami telah menelaah laporan keuangan yang berakhir pada periode <span t-esc="doc.fiscal_year"/>.</li>
+                                <li>Berdasarkan pengetahuan kami, laporan keuangan tidak memuat pernyataan yang tidak benar tentang fakta material atau tidak mencantumkan fakta material yang diperlukan untuk membuat pernyataan yang dibuat, mengingat keadaan di mana pernyataan tersebut dibuat, tidak menyesatkan.</li>
+                                <li>Berdasarkan pengetahuan kami, laporan keuangan, dan informasi keuangan lainnya yang termasuk dalam laporan keuangan, secara wajar menyajikan dalam semua hal yang material atas kondisi keuangan dan hasil operasi untuk periode-periode yang disajikan dalam laporan.</li>
+                                <li>Kami telah mengimplementasikan pengendalian dan prosedur atas penyusunan laporan keuangan yang dianggap perlu untuk menyusun dan menyajikan secara wajar laporan keuangan (konsolidasi) dan bebas dari salah saji material.</li>
+                            </ol>
+                            <div style="margin-top: 10px;">
+                                <strong>Kesimpulan Efektivitas:</strong>
+                                <p t-esc="doc.effectiveness_statement" style="white-space: pre-line; border: 1px solid #eee; padding: 10px; background: #f9f9f9;"/>
                             </div>
                         </div>
                         
-                        <!-- Temuan dan Rencana Tindakan -->
+                        <!-- Tabel Defisiensi (Lampiran 11 Poin 6) -->
                         <t t-if="doc.finding_ids">
                             <div style="margin-bottom: 20px;">
-                                <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Temuan</h4>
-                                <t t-foreach="doc.finding_ids" t-as="finding">
-                                    <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                                        <h5 style="margin-top: 0; color: #e74c3c;">
-                                            <t t-esc="finding.name"/> 
-                                            (<t t-esc="dict(finding._fields['severity_level'].selection).get(finding.severity_level, finding.severity_level)"/>)
-                                        </h5>
-                                        <p><strong>Tipe:</strong> <t t-esc="dict(finding._fields['finding_type'].selection).get(finding.finding_type, finding.finding_type)"/></p>
-                                        <p><strong>Deskripsi:</strong> <span t-esc="finding.description" style="white-space: pre-line;"/></p>
-                                        <p><strong>Status:</strong> <t t-esc="dict(finding._fields['status'].selection).get(finding.status, finding.status)"/></p>
-                                    </div>
-                                </t>
+                                <h4 style="color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px;">Daftar Defisiensi Signifikan / Kelemahan Material</h4>
+                                <table class="table table-sm table-bordered">
+                                    <thead style="background-color: #f2f2f2;">
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Deskripsi Defisiensi &amp; Dampak</th>
+                                            <th>FSLI Terkait</th>
+                                            <th>Jenis Defisiensi</th>
+                                            <th>Rencana Remediasi</th>
+                                            <th>Target Selesai</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-set="idx" t-value="1"/>
+                                        <t t-foreach="doc.finding_ids" t-as="finding">
+                                            <tr>
+                                                <td><t t-esc="idx"/></td>
+                                                <td><t t-esc="finding.description"/></td>
+                                                <td><t t-esc="finding.fsli_id.name if hasattr(finding, 'fsli_id') else '-'"/></td>
+                                                <td><t t-esc="dict(finding._fields['severity_level'].selection).get(finding.severity_level, finding.severity_level)"/></td>
+                                                <td><t t-esc="finding.action_plan_ids[0].name if finding.action_plan_ids else '-'"/></td>
+                                                <td><t t-esc="finding.action_plan_ids[0].target_completion_date if finding.action_plan_ids else '-'"/></td>
+                                            </tr>
+                                            <t t-set="idx" t-value="idx + 1"/>
+                                        </t>
+                                    </tbody>
+                                </table>
                             </div>
                         </t>
                         

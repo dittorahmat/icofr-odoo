@@ -21,6 +21,7 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         # Data
         "data/icofr_data.xml",
         "data/icofr_coso_data.xml",
+        "data/icofr_cobit_data.xml",
 
         # Security
         "security/security.xml",
@@ -39,6 +40,7 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/master_data_upload_wizard_views.xml",
         "views/rcm_upload_wizard_views.xml",
         "views/sample_selection_wizard_views.xml",
+        "views/financial_data_import_wizard_views.xml",
         "views/population_pull_erp_wizard_views.xml",
         "views/copy_period_wizard_views.xml",
 
@@ -69,6 +71,7 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/line_report_views.xml",
         "views/csa_campaign_views.xml",
         "views/new_features_views.xml",
+        "views/icofr_wbs_views.xml",
 
         # Data
         "data/account_mapping_upload_data.xml",

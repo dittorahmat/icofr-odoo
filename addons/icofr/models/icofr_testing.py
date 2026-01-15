@@ -135,11 +135,30 @@ class IcofrTesting(models.Model):
         ('approved', 'Disetujui')
     ], string='Status Pengujian', default='planned',
        help='Status dari proses pengujian')
-    
+
     evidence_attachment_ids = fields.Many2many(
         'ir.attachment',
         string='Lampiran Bukti',
         help='File bukti yang mendukung hasil pengujian'
+    )
+
+    # Lampiran 7: Atribut Pengujian (Checklist Format)
+    attr_a_desc = fields.Char('Deskripsi Atribut A')
+    attr_b_desc = fields.Char('Deskripsi Atribut B')
+    attr_c_desc = fields.Char('Deskripsi Atribut C')
+    attr_d_desc = fields.Char('Deskripsi Atribut D')
+
+    is_remediation_test = fields.Boolean(
+        string='Pengujian Remediasi',
+        default=False,
+        help='Centang jika ini adalah pengujian ulang setelah perbaikan (Remediasi) sesuai Tabel 23 Juknis'
+    )
+    
+    sample_size_recommended = fields.Char(
+        string='Rekomendasi Jumlah Sampel',
+        compute='_compute_sample_size',
+        store=True,
+        help='Rentang jumlah sampel yang disarankan sesuai Tabel 22/23 Juknis BUMN'
     )
 
     # Fields for sampling calculator according to SK BUMN
@@ -148,7 +167,9 @@ class IcofrTesting(models.Model):
         ('weekly', 'Mingguan'),
         ('monthly', 'Bulanan'),
         ('quarterly', 'Triwulanan'),
-        ('yearly', 'Tahunan')
+        ('yearly', 'Tahunan'),
+        ('event_driven', 'Berdasarkan Kejadian'),
+        ('per_transaction', 'Per Transaksi')
     ], string='Frekuensi Kontrol',
        help='Frekuensi pelaksanaan kontrol yang diuji')
 
@@ -158,9 +179,10 @@ class IcofrTesting(models.Model):
     )
 
     sample_size_calculated = fields.Integer(
-        string='Ukuran Sampel Terhitung',
+        string='Ukuran Sampel (Target)',
         compute='_compute_sample_size',
-        help='Ukuran sampel yang dihitung menggunakan kalkulator sampling'
+        store=True,
+        help='Jumlah sampel minimal yang harus diuji sesuai kalkulator sampling'
     )
 
     sampling_method = fields.Selection([
@@ -188,52 +210,75 @@ class IcofrTesting(models.Model):
         help='Area kerja untuk mendokumentasikan hasil pengujian'
     )
 
-    @api.depends('test_type', 'control_frequency', 'population_size', 'confidence_level', 'control_id.control_risk_level', 'control_id.control_type_detailed')
+    @api.depends('test_type', 'control_frequency', 'population_size', 'is_remediation_test', 'control_id.control_risk_level', 'control_id.control_type_detailed')
     def _compute_sample_size(self):
         """
-        Compute sample size based on frequency and risk level according to 
-        Table 22: Ilustrasi - Penentuan Jumlah Sampel (Juknis ICOFR BUMN)
+        Compute sample size according to Table 22 (TOE) and Table 23 (Remediation)
+        of Juknis ICOFR BUMN (SK-5/DKU.MBU/11/2024)
         """
         for record in self:
-            # Design Validation (Test of One) always needs 1 sample
+            risk = record.control_id.control_risk_level or 'low'
+            freq = record.control_frequency or record.control_id.frequency
+            
             if record.test_type == 'design_validation':
                 record.sample_size_calculated = 1
+                record.sample_size_recommended = "1 (Test of One)"
                 continue
 
-            # Default to 0 if not TOE
             if record.test_type != 'toe':
                 record.sample_size_calculated = 0
+                record.sample_size_recommended = "N/A"
                 continue
 
             size = 0
-            # Check for Automated Controls (1 sample per scenario)
-            if record.control_id.control_type_detailed == 'automated':
-                size = 1
-            else:
-                # Manual / ITDM Controls logic based on Frequency & Risk
-                risk = record.control_id.control_risk_level or 'low'
-                freq = record.control_frequency or record.control_id.frequency
-                
-                if freq == 'yearly': # Tahunan
-                    size = 1
-                elif freq == 'quarterly': # Kuartalan
-                    size = 2 if risk == 'low' else 3
-                elif freq == 'monthly': # Bulanan
-                    size = 2 if risk == 'low' else 5
-                elif freq == 'weekly': # Mingguan
-                    size = 5 if risk == 'low' else 15
-                elif freq == 'daily': # Harian
-                    size = 15 if risk == 'low' else 40
-                elif freq in ('per_transaction', 'every_change', 'event_driven'): 
-                    size = 30 if risk == 'low' else 60
-                else:
-                    size = 25
+            recommended = ""
 
-            # Cap at population size if known and non-zero
-            if record.population_size and record.population_size > 0:
+            # TABLE 23: Remediation Testing Logic
+            if record.is_remediation_test:
+                mapping = {
+                    'yearly': (1, "1"),
+                    'quarterly': (2, "2"),
+                    'monthly': (2, "2"),
+                    'weekly': (5, "5"),
+                    'daily': (15, "15"),
+                    'per_transaction': (30, "30"),
+                    'event_driven': (30, "30"),
+                }
+                val = mapping.get(freq, (25, "25"))
+                size = val[0]
+                recommended = val[1]
+            
+            # TABLE 22: Standard TOE Logic
+            else:
+                if record.control_id.control_type_detailed == 'automated':
+                    size = 1
+                    recommended = "1 (Per Skenario)"
+                else:
+                    if freq == 'yearly':
+                        size = 1
+                        recommended = "1"
+                    elif freq == 'quarterly':
+                        size = 3 if risk == 'high' else 2
+                        recommended = "2 - 3"
+                    elif freq == 'monthly':
+                        size = 5 if risk == 'high' else 2
+                        recommended = "2 - 5"
+                    elif freq == 'weekly':
+                        size = 15 if risk == 'high' else 5
+                        recommended = "5 - 15"
+                    elif freq == 'daily':
+                        size = 40 if risk == 'high' else 15
+                        recommended = "15 - 40"
+                    else: # > Daily / Per Transaction / Every Change / Event Driven
+                        size = 60 if risk == 'high' else 30
+                        recommended = "30 - 60"
+
+            # Cap at population size if known
+            if record.population_size > 0:
                 size = min(size, record.population_size)
                 
             record.sample_size_calculated = size
+            record.sample_size_recommended = recommended
     
     recommendation = fields.Text(
         string='Rekomendasi',

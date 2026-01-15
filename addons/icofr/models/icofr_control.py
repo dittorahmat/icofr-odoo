@@ -90,6 +90,12 @@ class IcofrControl(models.Model):
         help='Kontrol ini menjamin valuasi asersi'
     )
 
+    # IPO Attributes (SK BUMN Tabel 13 & Lampiran 5)
+    ipo_completeness = fields.Boolean('IPO: Completeness', help='Menjamin seluruh transaksi tercatat')
+    ipo_accuracy = fields.Boolean('IPO: Accuracy', help='Menjamin transaksi dicatat dengan nilai/periode tepat')
+    ipo_validity = fields.Boolean('IPO: Validity', help='Menjamin hanya transaksi terotorisasi yang tercatat')
+    ipo_restricted_access = fields.Boolean('IPO: Restricted Access', help='Menjamin data diproteksi dari akses tidak sah')
+
     control_type_detailed = fields.Selection([
         ('manual', 'Manual'),
         ('semi_manual', 'Semi-Manual'),
@@ -99,6 +105,14 @@ class IcofrControl(models.Model):
     ], string='Tipe Kontrol Terperinci',
        help='Jenis kontrol yang lebih rinci')
 
+    # Detailed Automated Types (Lampiran 5b Point xxvii)
+    automated_control_type = fields.Selection([
+        ('auto_control', 'Automated Control'),
+        ('auto_calc', 'Automated Calculation'),
+        ('restricted_access', 'Restricted Access'),
+        ('interface', 'Interface')
+    ], string='Jenis Otomatis Spesifik', help='Klasifikasi detail untuk kontrol otomatis sesuai Juknis')
+
     control_specific_type = fields.Selection([
         ('standard', 'Standar'),
         ('mrc', 'Management Review Control (MRC)'),
@@ -107,6 +121,39 @@ class IcofrControl(models.Model):
         ('service_org', 'Service Organization (Pihak Ketiga)')
     ], string='Kategori Spesifik', default='standard',
        help='Kategori kontrol spesifik yang memerlukan prosedur validasi khusus sesuai Juknis')
+
+    # ITGC Areas (SK BUMN Tabel 1)
+    itgc_area = fields.Selection([
+        ('prog_dev', 'Program Development'),
+        ('prog_change', 'Program Changes'),
+        ('comp_ops', 'Computer Operations'),
+        ('access_data', 'Access to Program and Data')
+    ], string='Area ITGC', help='4 Area Utama ITGC sesuai Tabel 1 Juknis BUMN')
+
+    # EUC Attributes (SK BUMN Tabel 14)
+    euc_complexity = fields.Selection([
+        ('low', 'Rendah'),
+        ('medium', 'Sedang'),
+        ('high', 'Tinggi')
+    ], string='Kompleksitas EUC', help='Tingkat kompleksitas Spreadsheet/EUC')
+    
+    euc_has_version_ctrl = fields.Boolean('Version Control')
+    euc_has_access_ctrl = fields.Boolean('Access Control')
+    euc_has_change_ctrl = fields.Boolean('Change Control')
+    euc_has_integrity_ctrl = fields.Boolean('Data Integrity')
+
+    # IPE Attributes (SK BUMN Tabel 15)
+    ipe_type = fields.Selection([
+        ('standard', 'Laporan Standar'),
+        ('custom', 'Laporan Custom'),
+        ('query', 'Laporan Query (Ad-hoc)')
+    ], string='Tipe IPE', help='Jenis laporan yang dihasilkan sistem')
+
+    # MRC Attributes (Bab III 2.2.c.2)
+    mrc_precision_threshold = fields.Char(
+        string='Threshold Presisi MRC',
+        help='Contoh: Selisih > 5% atau > Rp 1 Miliar harus diinvestigasi'
+    )
 
     control_risk_level = fields.Selection([
         ('low', 'Rendah'),
@@ -231,11 +278,15 @@ class IcofrControl(models.Model):
     )
 
     status = fields.Selection([
+        ('draft', 'Draft'),
+        ('waiting_l1_approval', 'Menunggu Persetujuan L1'),
+        ('under_review', 'Review Lini 2'),
+        ('waiting_l2_approval', 'Menunggu Persetujuan L2'),
         ('active', 'Aktif'),
         ('inactive', 'Tidak Aktif'),
-        ('under_review', 'Dalam Review')
-    ], string='Status', default='active',
-       help='Status dari kontrol internal')
+        ('obsolete', 'Usang')
+    ], string='Status', default='draft', tracking=True,
+       help='Status siklus hidup kontrol internal')
     
     design_validation_ids = fields.One2many(
         'icofr.testing',
@@ -244,6 +295,47 @@ class IcofrControl(models.Model):
         string='Validasi Rancangan',
         help='Riwayat validasi rancangan (Test of One) oleh Lini 2'
     )
+    
+    # --- Workflow Methods ---
+
+    def action_submit_l1(self):
+        """Lini 1 Staff submit ke Lini 1 Manager"""
+        self.ensure_one()
+        self.write({'status': 'waiting_l1_approval'})
+        self.message_post(body="Kontrol disubmit oleh Staff Lini 1, menunggu persetujuan Manajer Unit.")
+
+    def action_approve_l1(self):
+        """Lini 1 Manager approve, lanjut ke Lini 2 Staff"""
+        self.ensure_one()
+        self.write({'status': 'under_review'})
+        self.message_post(body="Kontrol disetujui Manajer Lini 1, diserahkan ke Tim ICORF (Lini 2) untuk review.")
+
+    def action_verify_l2(self):
+        """Lini 2 Staff verifikasi desain, lanjut ke Lini 2 Manager"""
+        self.ensure_one()
+        self.write({'status': 'waiting_l2_approval'})
+        self.message_post(body="Desain divalidasi oleh Staff ICORF, menunggu final approval Manajer ICORF.")
+
+    def action_approve_l2(self):
+        """Lini 2 Manager final approve -> Active"""
+        self.ensure_one()
+        self.write({'status': 'active'})
+        self.message_post(body="Kontrol RESMI AKTIF. Disetujui oleh Manajer ICORF.")
+
+    def action_draft(self):
+        """Reset ke Draft (Reject)"""
+        self.ensure_one()
+        self.write({'status': 'draft'})
+        self.message_post(body="Kontrol dikembalikan ke status Draft (Revisi Diperlukan).")
+
+    # Deprecated methods kept for compatibility if needed, redirected to new flow
+    def action_submit(self):
+        return self.action_submit_l1()
+
+    def action_validate(self):
+        return self.action_verify_l2()
+
+    # --- Restored Fields ---
 
     design_effective = fields.Boolean(
         string='Rancangan Efektif',
@@ -318,31 +410,6 @@ class IcofrControl(models.Model):
             controls = self.search([('code', '=', record.code)])
             if len(controls) > 1:
                 raise ValidationError("Kode kontrol harus unik!")
-    
-    def action_submit(self):
-        """Method to submit control for review by Line 2"""
-        self.ensure_one()
-        self.write({
-            'status': 'under_review'
-        })
-        # Send notification
-        self.message_post(
-            body=f"Kontrol telah disubmit untuk review oleh {self.env.user.name}",
-            subtype_xmlid='mail.mt_comment'
-        )
-        return True
-
-    def action_validate(self):
-        """Method for Line 2 to validate control design"""
-        self.ensure_one()
-        self.write({
-            'status': 'active'
-        })
-        self.message_post(
-            body=f"Desain kontrol telah divalidasi oleh {self.env.user.name}",
-            subtype_xmlid='mail.mt_comment'
-        )
-        return True
 
     # Dashboard-related methods and fields
     def action_export_controls(self):

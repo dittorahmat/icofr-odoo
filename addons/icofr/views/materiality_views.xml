@@ -11,6 +11,7 @@
                 <header>
                     <button name="action_calculate_materiality" type="object" string="Hitung Ulang Materialitas" class="oe_highlight"/>
                     <button name="action_update_balances_from_erp" type="object" string="Tarik Saldo dari ERP" class="btn-success" icon="fa-refresh"/>
+                    <button name="%(action_icofr_financial_data_import_wizard)d" type="action" string="Import Data Keuangan (Excel)" class="btn-primary" icon="fa-upload" context="{'default_materiality_id': id}"/>
                     <button name="action_export_materiality" type="object" string="Ekspor"/>
                     <button name="%(action_icofr_account_mapping_upload_wizard)d" type="action" string="Upload Excel Pemetaan Akun" class="btn-primary"/>
                 </header>
@@ -26,6 +27,11 @@
                             <field name="name"/>
                             <field name="fiscal_year"/>
                             <field name="company_id"/>
+                        </group>
+                        <group string="Konfigurasi Grup (Tabel 25)">
+                            <field name="is_group_consolidation"/>
+                            <field name="number_of_significant_locations" invisible="not is_group_consolidation"/>
+                            <field name="group_multiplier" invisible="not is_group_consolidation"/>
                         </group>
                         <group>
                             <field name="materiality_basis"/>
@@ -51,6 +57,16 @@
                             <field name="risk_factor_level" widget="radio"/>
                             <field name="performance_materiality_percent"/>
                             <field name="performance_materiality_amount" widget="monetary"/>
+                        </group>
+                    </group>
+
+                    <group string="Scoping Coverage Analysis (Aturan 2/3)" name="coverage_analysis" class="oe_edit_only">
+                        <group>
+                            <field name="coverage_revenue_percent" widget="progressbar"/>
+                            <field name="coverage_assets_percent" widget="progressbar"/>
+                        </group>
+                        <group>
+                            <field name="coverage_status" widget="badge" decoration-success="coverage_status == 'pass'" decoration-danger="coverage_status == 'fail'"/>
                         </group>
                     </group>
                     

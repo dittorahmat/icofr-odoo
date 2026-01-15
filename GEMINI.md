@@ -17,35 +17,37 @@ The system implements the **Three Lines of Defense** model:
 - **Change Management Log (Appendix 6):** Audit-ready logging of all modifications to business processes and controls with before/after snapshots.
 - **Aggregated Deficiency Evaluation:** Grouping mechanism to assess the collective impact of multiple control deficiencies.
 - **ERP Integration for Audit Sampling:** Wizard-driven data pulling from Odoo GL (`account.move.line`) to ensure audit populations are grounded in actual transactions.
-- **Audit Sampling Calculator:** Implementation of SK-BUMN Table 22 for sample size determination based on control frequency and risk level.
-- **ITGC & COBIT 2019 Mapping:** Specific support for IT General Controls mapped to international standards.
+- **Audit Sampling Calculator:** Implementation of SK-BUMN Table 22 for sample size determination based on control frequency and risk level, and Table 23 for Remediation Testing.
+- **Scoping Coverage Analysis (2/3 Rule):** Automated verification that significant accounts in scope cover at least 66.7% of total Assets and Revenue as required by Bab III Pasal 1.3.
+- **Whistleblowing System (WBS):** Dedicated module for recording and investigating fraud/integrity reports to comply with COSO Principle 14.
+- **ITGC, EUC, IPE, & MRC Mapping:** Extended control attributes for IT General Controls (4 Areas), spreadsheet complexity (EUC), system report types (IPE), and Management Review precision (MRC).
+- **Interactive DoD Working Paper:** Digital implementation of Lampiran 10 (Kotak 1-7) for transparent deficiency classification.
+- **Detailed Testing Attributes:** Support for Lampiran 7 checklist (Attributes A, B, C, D) at the transaction level.
 
 ### Key Components
 ...
 
 ### Key Models
 
-- `icofr.control`: Internal controls registry with change history logging.
+- `icofr.control`: Internal controls registry with ITGC, EUC, IPE, and MRC technical attributes.
+
+- `icofr.wbs.entry`: Whistleblowing System for fraud and integrity report management.
+
+- `icofr.testing`: Testing procedures with automated sampling calculator (Tabel 22 & 23) and attribute checklists (Lampiran 7).
+
+- `icofr.materiality`: Materiality thresholds with automated **Scoping Coverage Analysis (Aturan 2/3)**.
+
+- `icofr.finding`: Findings documentation with **DoD Working Paper** (Lampiran 10) decision tree.
 
 - `icofr.risk`: Financial risk matrix with integrated **Qualitative Factors (Tabel 11)**.
 
-- `icofr.change.log`: Dedicated log for **Appendix 6** (Change Management) compliance.
+### Excel-First Strategy (Implemented)
 
-- `icofr.testing`: Testing procedures and results (TOD, TOE, and Design Validation).
+To facilitate rapid adoption without immediate ERP integration, the system supports a comprehensive "Excel-First" approach:
 
-- `icofr.certification`: CEO/CFO certification workflow.
-
-- `icofr.pojk.report`: Regulatory reporting with digital signature support.
-
-- `icofr.audit.population`: Transaction population for audit sampling.
-
-- `icofr.finding`: Findings documentation with **DoD Wizard** decision tree.
-
-- `icofr.finding.group`: Aggregated evaluation of multiple small deficiencies.
-
-- `icofr.materiality`: Calculation of thresholds with **Haircut Logic (Tabel 4)**.
-
-
+- **Financial Data Import**: Users can upload financial statement data (Revenue, Assets, Net Income) via Excel directly into the `icofr.materiality` model using the `icofr.financial.data.import.wizard`.
+- **RCM Bulk Upload**: The `icofr.rcm.upload.wizard` (available in Utilitas menu) allows bulk uploading of Risk Control Matrices (Risk, Control, assertions, etc.) directly into the system.
+- **Account Mapping Upload**: The `icofr.account.mapping.upload.wizard` enables bulk import of General Ledger accounts and their FSLI (Financial Statement Line Item) associations.
 
 ## Building and Running
 
@@ -73,6 +75,14 @@ The system implements the **Three Lines of Defense** model:
 
 ### Coding Standards
 
+*   **Scoping Rule**: The system automatically fails coverage status if significant accounts do not meet the 66.7% threshold of total financial value (Assets/Revenue) as per Table 6.
+
+*   **Sampling Engine**: Sample sizes are dynamically calculated based on control frequency (Daily to Yearly) and risk (Low/High). Remediation tests use a specialized "Zero Tolerance" set (Tabel 23).
+
+*   **Technical Control Validation**: Controls marked as EUC require validation of Version Control and Data Integrity, while IPE requires validation of system extraction parameters (Tabel 14 & 15).
+
+*   **Certification Reporting**: The `icofr.certification` report uses formal verbiage from **Lampiran 11** and includes a mandatory summary table of all MW/SD findings.
+
 *   **Digital Signatures:** The `icofr.pojk.report` model uses an `is_signed` flag to lock records. Once signed, the `write` method prevents modifications.
 
 *   **Testing Workflows:** `icofr.testing` supports `design_validation` (Test of One) for Line 2, and `tod`/`toe` for Line 3. Design validation is mandatory for new controls or after ineffective CSA.
@@ -92,6 +102,15 @@ The system implements the **Three Lines of Defense** model:
 *   **ERP Data Pull for Sampling:** The system supports pulling transaction data directly from Odoo's `account.move.line` into the `icofr.audit.population` model via the `icofr.population.pull.erp.wizard`. This ensures testing is based on actual financial data.
 
 *   **COSO 2013 Master Data:** The 5 Components and 17 Principles of the COSO Framework are implemented as **System Data** (not Demo Data) in `icofr/data/icofr_coso_data.xml`. This ensures the compliance framework is automatically populated upon module installation.
+
+*   **COBIT 2019 Master Data:** The 40 Governance and Management Objectives of the COBIT 2019 Framework are implemented as **System Data** in `icofr/data/icofr_cobit_data.xml`. This ensures ITGC reference data is standardized and available upon installation.
+
+*   **Control Workflow**: The `icofr.control` model implements a hierarchical review workflow (`draft` -> `waiting_l1_approval` -> `under_review` -> `waiting_l2_approval` -> `active`). 
+    *   **Lini 1 (Operational)**: Staff submits, Unit Manager approves.
+    *   **Lini 2 (Risk/ICOFR)**: Risk Officer verifies, Head of Risk gives final validation.
+    This ensures a "4-Eyes Principle" at every line of defense.
+
+
 
 
 

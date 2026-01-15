@@ -8,34 +8,46 @@
         <field name="sequence">10</field>
     </record>
 
-    <!-- Lini 1: Business Process Owner -->
+    <!-- Lini 1: Business Process Owner (Staff) -->
     <record id="group_icofr_line_1" model="res.groups">
-        <field name="name">Lini 1 (Process Owner)</field>
+        <field name="name">Lini 1 - Staff (Process Owner)</field>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
-    <!-- Lini 2: Risk / ICOFR Team -->
-    <record id="group_icofr_line_2" model="res.groups">
-        <field name="name">Lini 2 (Risk/ICOFR Team)</field>
+    <!-- Lini 1: Manager -->
+    <record id="group_icofr_line_1_manager" model="res.groups">
+        <field name="name">Lini 1 - Manager (Unit Head)</field>
         <field name="implied_ids" eval="[(4, ref('group_icofr_line_1'))]"/>
+    </record>
+
+    <!-- Lini 2: Risk / ICOFR Team (Staff) -->
+    <record id="group_icofr_line_2" model="res.groups">
+        <field name="name">Lini 2 - Staff (Risk Officer)</field>
+        <field name="implied_ids" eval="[(4, ref('group_icofr_line_1_manager'))]"/>
+    </record>
+
+    <!-- Lini 2: Manager -->
+    <record id="group_icofr_line_2_manager" model="res.groups">
+        <field name="name">Lini 2 - Manager (Head of Risk)</field>
+        <field name="implied_ids" eval="[(4, ref('group_icofr_line_2'))]"/>
     </record>
 
     <!-- Lini 3: Internal Audit -->
     <record id="group_icofr_line_3" model="res.groups">
-        <field name="name">Lini 3 (Internal Audit)</field>
+        <field name="name">Lini 3 - Internal Audit</field>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <!-- Management: CEO/CFO -->
     <record id="group_icofr_manager" model="res.groups">
         <field name="name">Management (CEO/CFO)</field>
-        <field name="implied_ids" eval="[(4, ref('group_icofr_line_2'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_icofr_line_2_manager'))]"/>
     </record>
 
     <!-- Administrator -->
     <record id="group_icofr_admin" model="res.groups">
         <field name="name">Administrator</field>
-        <field name="implied_ids" eval="[(4, ref('group_icofr_line_3')), (4, ref('group_icofr_line_2'))]"/>
+        <field name="implied_ids" eval="[(4, ref('group_icofr_line_3')), (4, ref('group_icofr_line_2_manager'))]"/>
         <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
     </record>
 
