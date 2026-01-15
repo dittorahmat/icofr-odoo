@@ -53,6 +53,14 @@ class IcofrTesting(models.Model):
     ], string='Kesimpulan Desain',
        help='Kesimpulan atas efektivitas rancangan pengendalian (TOD)')
 
+    # Lampiran 8: Detail Verifikasi Rancangan (Checklist)
+    tod_objective_attainment = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Pencapaian Objektif')
+    tod_timing_accuracy = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Ketepatan Waktu/Frekuensi')
+    tod_authority_competence = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Wewenang & Kompetensi')
+    tod_info_reliability = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Keandalan Informasi')
+    tod_period_coverage = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Cakupan Periode')
+    tod_evidence_sufficiency = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Kecukupan Bukti')
+
     # Design Validation Specific Fields (Line 2)
     design_validation_conclusion = fields.Selection([
         ('effective', 'Rancangan Efektif'),

@@ -230,6 +230,12 @@ class IcofrFinding(models.Model):
     box_6_prudent_official = fields.Boolean('Kotak 6: Auditor menyimpulkan sebagai Kelemahan Material?')
     box_7_aggregate = fields.Boolean('Kotak 7: Terdapat defisiensi lain yang memengaruhi akun yang sama?')
 
+    # Tabel 24: Distribusi Pelaporan (Pihak-pihak yang telah diinformasikan)
+    reported_to_ceo = fields.Boolean('Dilaporkan ke CEO & Direksi Terkait', help='Wajib untuk CD, SD, MW')
+    reported_to_board = fields.Boolean('Dilaporkan ke Dewan Komisaris/Pengawas', help='Wajib untuk SD, MW')
+    reported_to_audit_committee = fields.Boolean('Dilaporkan ke Komite Audit', help='Wajib untuk CD, SD, MW')
+    reported_to_mgmt_assessment = fields.Boolean('Tercantum dalam Asesmen Manajemen', help='Wajib untuk SD, MW')
+
     company_id = fields.Many2one(
         'res.company',
         string='Perusahaan',

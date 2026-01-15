@@ -94,6 +94,16 @@
                                     <field name="box_7_aggregate"/>
                                 </group>
                             </group>
+                            <group string="Penyampaian Defisiensi (Tabel 24 Juknis BUMN)">
+                                <group>
+                                    <field name="reported_to_ceo"/>
+                                    <field name="reported_to_audit_committee"/>
+                                </group>
+                                <group>
+                                    <field name="reported_to_board"/>
+                                    <field name="reported_to_mgmt_assessment"/>
+                                </group>
+                            </group>
                         </page>
                         <page string="Rekomendasi">
                             <field name="recommendation"/>

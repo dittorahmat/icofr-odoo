@@ -19,27 +19,30 @@ The system implements the **Three Lines of Defense** model:
 - **ERP Integration for Audit Sampling:** Wizard-driven data pulling from Odoo GL (`account.move.line`) to ensure audit populations are grounded in actual transactions.
 - **Audit Sampling Calculator:** Implementation of SK-BUMN Table 22 for sample size determination based on control frequency and risk level, and Table 23 for Remediation Testing.
 - **Scoping Coverage Analysis (2/3 Rule):** Automated verification that significant accounts in scope cover at least 66.7% of total Assets and Revenue as required by Bab III Pasal 1.3.
+- **Group Materiality Multiplier:** Automated calculation of materiality multiplier (1.5x to 9x) for consolidation entities based on Table 25.
 - **Whistleblowing System (WBS):** Dedicated module for recording and investigating fraud/integrity reports to comply with COSO Principle 14.
 - **ITGC, EUC, IPE, & MRC Mapping:** Extended control attributes for IT General Controls (4 Areas), spreadsheet complexity (EUC), system report types (IPE), and Management Review precision (MRC).
+- **IPO (Information Processing Objectives):** Integration of C, A, V, and RA (Completeness, Accuracy, Validity, Restricted Access) attributes into the RCM as per Table 13.
 - **Interactive DoD Working Paper:** Digital implementation of Lampiran 10 (Kotak 1-7) for transparent deficiency classification.
-- **Detailed Testing Attributes:** Support for Lampiran 7 checklist (Attributes A, B, C, D) at the transaction level.
+- **Detailed Testing Attributes:** Support for Lampiran 7 checklist (Attributes A, B, C, D) and Lampiran 8 TOD detailed validation at the transaction level.
+- **Finding Distribution Tracker:** Automated tracking of deficiency reporting to CEO, Board, and Audit Committee as per Table 24 requirements.
 
 ### Key Components
 ...
 
 ### Key Models
 
-- `icofr.control`: Internal controls registry with ITGC, EUC, IPE, and MRC technical attributes.
+- `icofr.control`: Internal controls registry with ITGC, EUC, IPE, MRC, and IPO technical attributes.
 
 - `icofr.wbs.entry`: Whistleblowing System for fraud and integrity report management.
 
-- `icofr.testing`: Testing procedures with automated sampling calculator (Tabel 22 & 23) and attribute checklists (Lampiran 7).
+- `icofr.testing`: Testing procedures with automated sampling calculator (Tabel 22 & 23), TOD checklists (Lampiran 8), and attribute checklists (Lampiran 7).
 
-- `icofr.materiality`: Materiality thresholds with automated **Scoping Coverage Analysis (Aturan 2/3)**.
+- `icofr.materiality`: Materiality thresholds with automated **Scoping Coverage Analysis (Aturan 2/3)** and **Group Multiplier (Tabel 25)**.
 
-- `icofr.finding`: Findings documentation with **DoD Working Paper** (Lampiran 10) decision tree.
+- `icofr.finding`: Findings documentation with **DoD Working Paper** (Lampiran 10) and **Distribution Matrix** (Tabel 24).
 
-- `icofr.risk`: Financial risk matrix with integrated **Qualitative Factors (Tabel 11)**.
+- `icofr.risk`: Financial risk matrix with integrated **Qualitative Factors (Tabel 11)** and **Risk Rating Matrix (Tabel 12)**.
 
 ### Excel-First Strategy (Implemented)
 
@@ -77,9 +80,15 @@ To facilitate rapid adoption without immediate ERP integration, the system suppo
 
 *   **Scoping Rule**: The system automatically fails coverage status if significant accounts do not meet the 66.7% threshold of total financial value (Assets/Revenue) as per Table 6.
 
+*   **Risk Rating Logic**: Final Risk Rating is automatically computed by taking the HIGHER of Quantitative (Likelihood x Impact) and Qualitative scores, following the 3x3 matrix in Table 12.
+
+*   **Group Multiplier**: For group entities, the system automatically applies a multiplier (Table 25) based on the number of significant locations to determine the maximum materiality allocation.
+
 *   **Sampling Engine**: Sample sizes are dynamically calculated based on control frequency (Daily to Yearly) and risk (Low/High). Remediation tests use a specialized "Zero Tolerance" set (Tabel 23).
 
 *   **Technical Control Validation**: Controls marked as EUC require validation of Version Control and Data Integrity, while IPE requires validation of system extraction parameters (Tabel 14 & 15).
+
+*   **IPO Mapping**: Every control in the RCM should be mapped to relevant Information Processing Objectives (Completeness, Accuracy, Validity, or Restricted Access) as per Table 13.
 
 *   **Certification Reporting**: The `icofr.certification` report uses formal verbiage from **Lampiran 11** and includes a mandatory summary table of all MW/SD findings.
 

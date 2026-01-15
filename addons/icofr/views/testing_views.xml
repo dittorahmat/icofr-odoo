@@ -52,6 +52,18 @@
                             </group>
                         </page>
                         <page string="Test of Design (TOD)" invisible="test_type != 'tod'">
+                            <group string="Kertas Kerja Verifikasi Rancangan (Lampiran 8 Juknis)">
+                                <group>
+                                    <field name="tod_objective_attainment"/>
+                                    <field name="tod_timing_accuracy"/>
+                                    <field name="tod_authority_competence"/>
+                                </group>
+                                <group>
+                                    <field name="tod_info_reliability"/>
+                                    <field name="tod_period_coverage"/>
+                                    <field name="tod_evidence_sufficiency"/>
+                                </group>
+                            </group>
                             <group>
                                 <field name="design_description" placeholder="Evaluasi rancangan pengendalian..."/>
                                 <field name="design_conclusion" widget="radio" options="{'horizontal': true}"/>
