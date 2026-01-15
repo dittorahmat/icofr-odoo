@@ -14,15 +14,25 @@ The system implements the **Three Lines of Defense** model:
 - **Automated Deficiency Classification:** Real-time evaluation of findings against materiality thresholds, including automated downgrades via effective Compensating Controls.
 - **DoD Wizard (Degree of Deficiency):** Interactive decision tree guiding auditors through classification (CD/SD/MW) based on AS 2201 / Gambar 5 guidelines.
 - **Qualitative Risk Matrix:** Integrated assessment using Table 11 & 12 (Inherent risk, history of errors, etc.) combined with quantitative likelihood/impact.
-- **Change Management Log (Appendix 6):** Audit-ready logging of all modifications to business processes and controls with before/after snapshots.
+- **Change Management Log (Appendix 6):** Audit-ready logging of all modifications with mandatory 'Before' and 'After' descriptions and references.
 - **Aggregated Deficiency Evaluation:** Grouping mechanism to assess the collective impact of multiple control deficiencies.
 - **ERP Integration for Audit Sampling:** Wizard-driven data pulling from Odoo GL (`account.move.line`) to ensure audit populations are grounded in actual transactions.
+- **IPE & MRC Technical Verification:** Specialized checklists for system reports (Tabel 20) and management review precision (Tabel 21).
+- **COSO Mapping Matrix:** Visual dashboard to ensure all 17 COSO principles are covered by active key controls (Lampiran 1).
+- **RCM Mandatory Attributes:** Compliance fields for Supporting Application, Executing Function, and Impacted FS Items (Tabel 18 & 19).
+- **Testing Methodologies:** Standardized recording of Inquiry, Observation, Inspection, and Reperformance methods (Gambar 4).
 - **Audit Sampling Calculator:** Implementation of SK-BUMN Table 22 for sample size determination based on control frequency and risk level, and Table 23 for Remediation Testing.
 - **Scoping Coverage Analysis (2/3 Rule):** Automated verification that significant accounts in scope cover at least 66.7% of total Assets and Revenue as required by Bab III Pasal 1.3.
+- **Materiality-Based Risk Rating:** Quantitative rating logic (Tinggi/Sedang/Rendah) driven by monetary exposure vs. active materiality thresholds (OM/PM) as per Table 10.
+- **Industry Cluster Mapping:** Pre-defined risk classification for 11 BUMN Industry Clusters (Energy, Logistics, Financial, etc.) as required by Lampiran 2.
+- **EUC Technical Enforcement:** Automated validation rules ensuring High-Complexity spreadsheets meet all 5 mandatory control criteria (Tabel 14).
 - **Group Materiality Multiplier:** Automated calculation of materiality multiplier (1.5x to 9x) for consolidation entities based on Table 25.
 - **Whistleblowing System (WBS):** Dedicated module for recording and investigating fraud/integrity reports to comply with COSO Principle 14.
 - **ITGC, EUC, IPE, & MRC Mapping:** Extended control attributes for IT General Controls (4 Areas), spreadsheet complexity (EUC), system report types (IPE), and Management Review precision (MRC).
 - **IPO (Information Processing Objectives):** Integration of C, A, V, and RA (Completeness, Accuracy, Validity, Restricted Access) attributes into the RCM as per Table 13.
+- **RCM Mandatory Attributes:** Added fields for Supporting Application, Executing Function, Impacted FS Items (Table 18 & 19), and Control Effective Period.
+- **Testing Methodology:** Support for inquiry, observation, inspection, and reperformance methods with specific documentation (Gambar 4).
+- **CSA Exception Handling:** Logic to handle 'No Transaction' scenarios in Control Self-Assessment (Bab IV Pasal 2.1).
 - **Interactive DoD Working Paper:** Digital implementation of Lampiran 10 (Kotak 1-7) for transparent deficiency classification.
 - **Detailed Testing Attributes:** Support for Lampiran 7 checklist (Attributes A, B, C, D) and Lampiran 8 TOD detailed validation at the transaction level.
 - **Finding Distribution Tracker:** Automated tracking of deficiency reporting to CEO, Board, and Audit Committee as per Table 24 requirements.
@@ -43,6 +53,8 @@ The system implements the **Three Lines of Defense** model:
 - `icofr.finding`: Findings documentation with **DoD Working Paper** (Lampiran 10) and **Distribution Matrix** (Tabel 24).
 
 - `icofr.risk`: Financial risk matrix with integrated **Qualitative Factors (Tabel 11)** and **Risk Rating Matrix (Tabel 12)**.
+
+- `icofr.coso.mapping`: Dynamic SQL-view matrix for monitoring 17 COSO Principles coverage (Lampiran 1).
 
 ### Excel-First Strategy (Implemented)
 
@@ -89,6 +101,10 @@ To facilitate rapid adoption without immediate ERP integration, the system suppo
 *   **Technical Control Validation**: Controls marked as EUC require validation of Version Control and Data Integrity, while IPE requires validation of system extraction parameters (Tabel 14 & 15).
 
 *   **IPO Mapping**: Every control in the RCM should be mapped to relevant Information Processing Objectives (Completeness, Accuracy, Validity, or Restricted Access) as per Table 13.
+
+*   **IPE/MRC Validation**: pengujian for IPE must verify parameters and extraction validity (Tabel 20), while MRC requires proof of professional skepticism and reperformance (Tabel 21).
+
+*   **Testing Methodology**: Auditors must select and document the specific testing method (Inquiry, Observation, Inspection, Reperformance) used for each TOE result as per Gambar 4.
 
 *   **Certification Reporting**: The `icofr.certification` report uses formal verbiage from **Lampiran 11** and includes a mandatory summary table of all MW/SD findings.
 

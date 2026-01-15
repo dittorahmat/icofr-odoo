@@ -37,6 +37,7 @@
                             <field name="control_id"/>
                             <field name="test_type"/>
                             <field name="tester_id"/>
+                            <field name="testing_method"/>
                         </group>
                         <group>
                             <field name="test_date"/>
@@ -116,6 +117,31 @@
                                     <field name="testing_notes"/>
                                 </list>
                             </field>
+                        </page>
+                        <page string="Verifikasi Teknis (IPE/MRC)" invisible="control_id.control_specific_type not in ('ipe', 'mrc')">
+                            <div class="alert alert-info" role="alert" invisible="control_id.control_specific_type != 'ipe'">
+                                <strong>Panduan IPE (Tabel 20):</strong> Lakukan pengujian untuk memastikan parameter ekstraksi benar dan data lengkap.
+                            </div>
+                            <div class="alert alert-info" role="alert" invisible="control_id.control_specific_type != 'mrc'">
+                                <strong>Panduan MRC (Tabel 21):</strong> Pastikan adanya bukti professional skepticism dan investigasi atas deviasi di luar threshold.
+                            </div>
+                            <group invisible="control_id.control_specific_type != 'ipe'">
+                                <group string="Atribut IPE">
+                                    <field name="ipe_parameter_verified" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="ipe_extraction_valid" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="ipe_itgc_effective" widget="radio" options="{'horizontal': true}"/>
+                                </group>
+                            </group>
+                            <group invisible="control_id.control_specific_type != 'mrc'">
+                                <group string="Atribut MRC">
+                                    <field name="mrc_skepticism_applied" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="mrc_threshold_appropriate" widget="radio" options="{'horizontal': true}"/>
+                                </group>
+                                <group string="Eksekusi MRC">
+                                    <field name="mrc_reperformance_done" widget="radio" options="{'horizontal': true}"/>
+                                    <field name="mrc_investigation_proven" widget="radio" options="{'horizontal': true}"/>
+                                </group>
+                            </group>
                         </page>
                         <page string="Detail Prosedur &amp; Hasil">
                             <field name="testing_procedures"/>

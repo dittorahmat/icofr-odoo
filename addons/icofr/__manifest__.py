@@ -54,6 +54,7 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/workflow_views.xml",
         "views/calendar_views.xml",
         "views/coso_element_views.xml",
+        "views/coso_mapping_views.xml",
         "views/materiality_views.xml",
         "views/pojk_report_views.xml",
         "views/csa_views.xml",

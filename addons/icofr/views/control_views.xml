@@ -55,10 +55,15 @@
                             <field name="control_type"/>
                             <field name="control_specific_type"/>
                             <field name="control_risk_level"/>
+                            <field name="supporting_app"/>
                             <field name="service_provider_name" invisible="control_specific_type != 'service_org'"/>
                             <field name="soc_report_ref" invisible="control_specific_type != 'service_org'"/>
                             <field name="frequency"/>
                             <field name="owner_id"/>
+                            <field name="valid_from"/>
+                            <field name="valid_to"/>
+                            <field name="executing_department"/>
+                            <field name="executing_job_title"/>
                         </group>
                         <group string="Atribut Teknis (Juknis BUMN)">
                             <field name="itgc_control" widget="boolean_toggle"/>
@@ -67,6 +72,7 @@
                             <field name="control_type_detailed"/>
                             <field name="automated_control_type" invisible="control_type_detailed != 'automated'"/>
 
+                            <field name="impacted_fsli_ids" widget="many2many_tags"/>
                             <field name="euc_complexity" invisible="control_specific_type != 'euc'"/>
                             <group colspan="2" invisible="control_specific_type != 'euc'">
                                 <field name="euc_has_version_ctrl"/>

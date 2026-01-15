@@ -59,6 +59,30 @@ class IcofrControl(models.Model):
         help='Pengguna yang bertanggung jawab atas kontrol ini'
     )
 
+    # RCM Minimum Info (Tabel 18 & 19)
+    executing_department = fields.Char(
+        string='Fungsi Pelaksana (Departemen)',
+        help='Unit/Departemen yang menjalankan aktivitas pengendalian'
+    )
+    
+    executing_job_title = fields.Char(
+        string='Pelaku Pengendalian (Jabatan)',
+        help='Posisi/Jabatan yang melakukan aktivitas pengendalian (misal: Kasir, Accounting Manager)'
+    )
+
+    supporting_app = fields.Char(
+        string='Aplikasi Pendukung',
+        help='Nama sistem/aplikasi yang menunjang kontrol (Wajib untuk Otomatis/ITDM)'
+    )
+
+    impacted_fsli_ids = fields.Many2many(
+        'icofr.account.mapping',
+        'icofr_control_fsli_rel',
+        'control_id', 'fsli_id',
+        string='Item Laporan Keuangan Terdampak',
+        help='FSLI yang dimitigasi risikonya oleh kontrol ini'
+    )
+
     # SK BUMN Attributes
     assertion_existence = fields.Boolean(
         string='Asersi Keberadaan',
@@ -141,6 +165,20 @@ class IcofrControl(models.Model):
     euc_has_access_ctrl = fields.Boolean('Access Control')
     euc_has_change_ctrl = fields.Boolean('Change Control')
     euc_has_integrity_ctrl = fields.Boolean('Data Integrity')
+    euc_has_availability_ctrl = fields.Boolean('Availability Control', help='Checklist availability sesuai Tabel 14')
+
+    @api.constrains('control_specific_type', 'euc_complexity', 'euc_has_version_ctrl', 'euc_has_access_ctrl', 'euc_has_change_ctrl', 'euc_has_integrity_ctrl', 'euc_has_availability_ctrl')
+    def _check_euc_minimum_controls(self):
+        """
+        Validation according to Table 14: Ilustrasi – Pengendalian Sesuai dengan Tingkat Kompleksitasnya.
+        High Complexity EUC requires all 5 controls.
+        """
+        for record in self:
+            if record.control_specific_type == 'euc' and record.euc_complexity == 'high':
+                if not all([record.euc_has_version_ctrl, record.euc_has_access_ctrl, 
+                           record.euc_has_change_ctrl, record.euc_has_integrity_ctrl, 
+                           record.euc_has_availability_ctrl]):
+                    raise ValidationError("Sesuai Juknis BUMN Tabel 14, EUC Kompleksitas Tinggi WAJIB memiliki seluruh kontrol: Version, Access, Change, Integrity, dan Availability!")
 
     # IPE Attributes (SK BUMN Tabel 15)
     ipe_type = fields.Selection([
@@ -287,6 +325,10 @@ class IcofrControl(models.Model):
         ('obsolete', 'Usang')
     ], string='Status', default='draft', tracking=True,
        help='Status siklus hidup kontrol internal')
+
+    # Effective Period (Lampiran 5)
+    valid_from = fields.Date(string='Berlaku Sejak', help='Tanggal mulai efektif berlakunya kontrol')
+    valid_to = fields.Date(string='Berlaku Hingga', help='Tanggal berakhirnya validitas kontrol (jika ada)')
     
     design_validation_ids = fields.One2many(
         'icofr.testing',

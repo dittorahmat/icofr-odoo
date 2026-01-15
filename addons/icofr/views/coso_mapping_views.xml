@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Matrix View for COSO Principle Mapping -->
+    <record id="view_icofr_coso_mapping_list" model="ir.ui.view">
+        <field name="name">icofr.coso.mapping.list</field>
+        <field name="model">icofr.coso.mapping</field>
+        <field name="arch" type="xml">
+            <list string="Matriks Kepatuhan COSO (Lampiran 1)" create="false" delete="false" edit="false">
+                <field name="component_name" groupby="component_name"/>
+                <field name="principle_code"/>
+                <field name="principle_name"/>
+                <field name="control_count" decoration-danger="control_count == 0" decoration-success="control_count > 0" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_icofr_coso_mapping" model="ir.actions.act_window">
+        <field name="name">Matriks Prinsip COSO</field>
+        <field name="res_model">icofr.coso.mapping</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p>
+                Tampilan ini menunjukkan pemetaan antara 17 Prinsip COSO dengan Kontrol Internal yang aktif.
+                Pastikan setiap prinsip memiliki minimal satu kontrol utama sesuai Lampiran 1 Juknis BUMN.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Matriks di bawah Master Data -->
+    <menuitem id="menu_icofr_coso_mapping"
+              name="Matriks Kepatuhan COSO"
+              parent="menu_icofr_master"
+              action="action_icofr_coso_mapping"
+              sequence="46"/>
+</odoo>

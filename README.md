@@ -49,12 +49,19 @@ The ICORF module implements the COSO 2013 Internal Control framework and complie
 - **Materiality Calculator**: Automatic calculation of Overall Materiality and Performance Materiality following POJK No. 15 Tahun 2024 requirements, including **Tabel 4 Haircut Logic**.
 - **Scoping Coverage Analysis**: Automated verification of the **2/3 Rule** (66.7% coverage) for significant accounts in scope.
 - **Group Multiplier Engine**: Automated materiality multiplier calculation (1.5x to 9x) for consolidation based on **Tabel 25**.
+- **Materiality-Driven Risk Rating**: Precision quantitative rating (Tinggi/Sedang/Rendah) drive by per-company materiality thresholds as per **Tabel 10**.
+- **Industry Risk Clusters**: Pre-defined risk frameworks for 11 BUMN clusters (Energy, Logistics, etc.) following **Lampiran 2**.
+- **Technical Control Enforcement**: Strict automated validation ensuring High-Complexity EUCs meet all **Tabel 14** mandatory controls.
 - **Audit Sampling Engine**: Precision calculator implementing **Tabel 22** (TOE) and **Tabel 23** (Remediation) based on frequency and risk.
 - **Whistleblowing System (WBS)**: Fraud and integrity reporting module for COSO Principle 14 compliance.
 - **Technical Attribute Matrix**: Specialized fields for **ITGC Areas**, **EUC Complexity**, **IPE Types**, **MRC Precision**, and **IPO (C, A, V, RA)**.
 - **Interactive DoD Working Paper**: Digital version of **Lampiran 10** for transparent severity assessment.
 - **Detailed TOD Checklist**: Comprehensive Design Effectiveness validation grid as per **Lampiran 8**.
 - **Finding Distribution Tracking**: Automated flags for reporting to CEO, Board, and Audit Committee as per **Tabel 24**.
+- **COSO Principle Matrix**: Visual assurance dashboard mapping active controls to all 17 COSO principles (**Lampiran 1**).
+- **IPE & MRC Verification**: specialized technical checklists for system reports and management review precision (**Tabel 20 & 21**).
+- **Extended RCM Attributes**: Comprehensive tracking of Supporting Applications, Executing Functions, Impacted FS Items, and **Effective Period** (**Tabel 18 & 19**).
+- **Testing Method Framework**: Support for Inquiry, Observation, Inspection, and Reperformance methodologies (**Gambar 4**).
 - **Three Lines of Defense**: Complete role separation for Lini 1 (Process Owners), Lini 2 (Risk/ICOFR Team), and Lini 3 (Internal Auditors) with appropriate access controls.
 - **Control Workflow**: Robust hierarchical approval workflow (`Staff` -> `Manager`) for both Lini 1 and Lini 2, enforcing the "4-Eyes Principle" and Segregation of Duties.
 - **Master Data Integration**: Built-in **COSO 2013** (Principles & Attributes) and **COBIT 2019** (Objectives) frameworks as System Data, ensuring standardized compliance from day one.
@@ -192,6 +199,7 @@ addons/icofr/
 │   ├── icofr_notification.py # Notification system
 │   ├── icofr_process.py     # Business process management
 │   ├── icofr_materiality.py # Materiality & Scoping
+│   ├── icofr_coso_mapping.py # COSO Principle Matrix
 │   ├── icofr_account_mapping.py # FSLI Mapping
 │   ├── icofr_wbs.py         # Whistleblowing System
 │   └── icofr_export.py      # Export functionality

@@ -36,16 +36,36 @@
                         </h2>
                     </div>
                     <group>
-                        <group>
+                        <group string="Identifikasi">
+                            <field name="industry_cluster"/>
                             <field name="risk_category"/>
                             <field name="risk_type"/>
+                            <field name="is_fraud_risk"/>
                             <field name="owner_id"/>
                         </group>
-                        <group>
-                            <field name="status"/>
+                        <group string="Penilaian Risiko (Tabel 10, 11, 12)">
+                            <field name="potential_loss_amount" widget="monetary"/>
+                            <field name="likelihood"/>
+                            <field name="impact"/>
+                            <field name="qualitative_risk_level" widget="badge" decoration-danger="qualitative_risk_level == 'high'" decoration-warning="qualitative_risk_level == 'medium'"/>
+                            <field name="risk_level" widget="badge" decoration-danger="risk_level == 'high'" decoration-warning="risk_level == 'medium'"/>
                         </group>
                     </group>
                     <notebook>
+                        <page string="Faktor Kualitatif (Tabel 11)">
+                            <group>
+                                <group>
+                                    <field name="factor_inherent_risk"/>
+                                    <field name="factor_volume_changes"/>
+                                    <field name="factor_history_errors"/>
+                                </group>
+                                <group>
+                                    <field name="factor_elc_effectiveness"/>
+                                    <field name="factor_control_characteristics"/>
+                                    <field name="factor_competence"/>
+                                </group>
+                            </group>
+                        </page>
                         <page string="Deskripsi">
                             <field name="description"/>
                             <field name="objective"/>

@@ -61,6 +61,17 @@ class IcofrTesting(models.Model):
     tod_period_coverage = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Cakupan Periode')
     tod_evidence_sufficiency = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Kecukupan Bukti')
 
+    # Tabel 20: Atribut IPE (Information Produced by Entity)
+    ipe_parameter_verified = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Verifikasi Parameter Laporan')
+    ipe_extraction_valid = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Validitas Ekstraksi Data')
+    ipe_itgc_effective = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Kecukupan ITGC Aplikasi')
+
+    # Tabel 21: Atribut MRC (Management Review Control)
+    mrc_skepticism_applied = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Penerapan Professional Skepticism')
+    mrc_threshold_appropriate = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Kesesuaian Ambang Batas (Threshold)')
+    mrc_reperformance_done = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Pelaksanaan Reperformance Analisis')
+    mrc_investigation_proven = fields.Selection([('pass', 'Ya'), ('fail', 'Tidak')], string='Bukti Investigasi Anomali')
+
     # Design Validation Specific Fields (Line 2)
     design_validation_conclusion = fields.Selection([
         ('effective', 'Rancangan Efektif'),
@@ -126,14 +137,23 @@ class IcofrTesting(models.Model):
         string='Temuan',
         help='Temuan selama proses pengujian'
     )
+
+    # Bab V 1.1: Metode Pengujian (Gambar 4)
+    testing_method = fields.Selection([
+        ('inquiry', 'Wawancara (Inquiry)'),
+        ('observation', 'Observasi (Observation)'),
+        ('inspection', 'Inspeksi (Inspection)'),
+        ('reperformance', 'Pelaksanaan Kembali (Reperformance)')
+    ], string='Metode Pengujian Utama', help='Metode yang digunakan sesuai Gambar 4 Juknis BUMN')
     
     effectiveness = fields.Selection([
         ('effective', 'Efektif'),
         ('partially_effective', 'Efektif Sebagian'),
         ('ineffective', 'Tidak Efektif'),
+        ('no_transaction', 'Tidak Ada Transaksi (N/A)'),
         ('not_tested', 'Tidak Diuji')
     ], string='Efektivitas', required=True,
-       help='Efektivitas kontrol berdasarkan hasil pengujian')
+       help='Efektivitas kontrol berdasarkan hasil pengujian (termasuk opsi No Transaction sesuai Hal 59)')
     
     status = fields.Selection([
         ('planned', 'Terjadwal'),

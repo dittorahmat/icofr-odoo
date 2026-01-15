@@ -65,7 +65,29 @@ class IcofrRisk(models.Model):
         ('very_high', 'Sangat Tinggi')
     ], string='Dampak', required=True,
        help='Tingkat dampak dari risiko')
-    
+
+    # SK BUMN Tabel 10: Kuantifikasi Risiko
+    potential_loss_amount = fields.Float(
+        string='Potensi Nilai Salah Saji (Rp)',
+        help='Estimasi nilai dampak moneter jika risiko terjadi (Tabel 10)'
+    )
+
+    industry_cluster = fields.Selection([
+        ('general', 'Umum'),
+        ('energy', 'Energi, Minyak & Gas'),
+        ('pangan', 'Pangan & Pupuk'),
+        ('financial', 'Jasa Keuangan'),
+        ('mineral', 'Mineral & Batubara'),
+        ('telecom', 'Telekomunikasi & Media'),
+        ('infra', 'Infrastruktur'),
+        ('insurance', 'Asuransi & Dana Pensiun'),
+        ('tourism', 'Pariwisata'),
+        ('plantation', 'Perkebunan & Kehutanan'),
+        ('logistics', 'Logistik')
+    ], string='Klaster Usaha', default='general', help='Kategori risiko berdasarkan klaster BUMN (Lampiran 2)')
+
+    is_fraud_risk = fields.Boolean('Risiko Kecurangan (Fraud)', help='Centang jika risiko termasuk kategori fraud (Tabel 9)')
+
     risk_level = fields.Selection([
         ('very_low', 'Sangat Rendah'),
         ('low', 'Rendah'),
@@ -243,83 +265,52 @@ class IcofrRisk(models.Model):
             else:
                 record.qualitative_risk_level = 'low'
 
-    @api.depends('likelihood', 'impact', 'qualitative_risk_level')
+    @api.depends('likelihood', 'impact', 'qualitative_risk_level', 'potential_loss_amount', 'company_id')
     def _compute_risk_level(self):
         """
         Menghitung tingkat risiko Kombinasi (Tabel 12 SK BUMN).
-        Menggabungkan Faktor Kuantitatif (Likelihood x Impact) dengan Faktor Kualitatif.
-        Prinsip Tabel 12: Jika SALAH SATU (Kuantitatif atau Kualitatif) adalah TINGGI, maka Total Risiko = TINGGI.
+        Kuantitatif ditentukan oleh Tabel 10:
+        - Tinggi: >= OM
+        - Medium: Antara OM dan 15% PM
+        - Rendah: < 15% PM
         """
-        # Matrix Kuantitatif (Likelihood x Impact)
-        # Mapping outcome matrix ke High/Medium/Low standard
-        quant_map = {
-            'very_low': 'low',
-            'low': 'low',
-            'medium': 'medium',
-            'high': 'high',
-            'very_high': 'high'
-        }
-
-        risk_matrix = {
-            ('very_low', 'very_low'): 'very_low',
-            ('very_low', 'low'): 'very_low',
-            ('very_low', 'medium'): 'low',
-            ('very_low', 'high'): 'low',
-            ('very_low', 'very_high'): 'medium',
-            
-            ('low', 'very_low'): 'very_low',
-            ('low', 'low'): 'low',
-            ('low', 'medium'): 'low',
-            ('low', 'high'): 'medium',
-            ('low', 'very_high'): 'medium',
-            
-            ('medium', 'very_low'): 'low',
-            ('medium', 'low'): 'low',
-            ('medium', 'medium'): 'medium',
-            ('medium', 'high'): 'medium',
-            ('medium', 'very_high'): 'high',
-            
-            ('high', 'very_low'): 'medium',
-            ('high', 'low'): 'medium',
-            ('high', 'medium'): 'high',
-            ('high', 'high'): 'high',
-            ('high', 'very_high'): 'very_high',
-            
-            ('very_high', 'very_low'): 'medium',
-            ('very_high', 'low'): 'high',
-            ('very_high', 'medium'): 'high',
-            ('very_high', 'high'): 'very_high',
-            ('very_high', 'very_high'): 'very_high',
-        }
-        
-        priority_map = {'high': 3, 'medium': 2, 'low': 1} # For final comparison
+        priority_map = {'high': 3, 'medium': 2, 'low': 1}
 
         for record in self:
-            # 1. Hitung Kuantitatif (Existing Logic)
-            quant_result_raw = 'medium'
-            if record.likelihood and record.impact:
-                quant_result_raw = risk_matrix.get((record.likelihood, record.impact), 'medium')
-            
-            # Map raw quantitative result (very_low..very_high) to simple Low/Medium/High for comparison
-            quant_simple = quant_map.get(quant_result_raw, 'medium')
+            # Fetch Materiality for each record's company
+            fiscal_year = str(fields.Date.today().year)
+            materiality = self.env['icofr.materiality'].search([
+                ('company_id', '=', record.company_id.id),
+                ('fiscal_year', '=', fiscal_year),
+                ('active', '=', True)
+            ], limit=1)
+
+            om = materiality.overall_materiality_amount if materiality else 1000000000.0
+            pm_15_percent = (materiality.performance_materiality_amount * 0.15) if materiality else 75000000.0
+
+            # 1. Hitung Kuantitatif (Tabel 10)
+            val = record.potential_loss_amount
+            if val >= om:
+                quant_simple = 'high'
+            elif val > pm_15_percent:
+                quant_simple = 'medium'
+            else:
+                quant_simple = 'low'
             
             # 2. Ambil Kualitatif
             qual_simple = record.qualitative_risk_level or 'low'
 
             # 3. Kombinasi (Table 12 Logic - Max Concept)
-            score_quant = priority_map.get(quant_simple, 2)
+            score_quant = priority_map.get(quant_simple, 1)
             score_qual = priority_map.get(qual_simple, 1)
             
             final_score = max(score_quant, score_qual)
             
-            # Kembalikan ke format field risk_level (yang punya very_low..very_high)
-            # Kita mapping High -> High, Medium -> Medium, Low -> Low
-            # (Note: risk_level field uses 5 scales, Table 12 uses 3. We map conservatively)
-            if final_score == 3: # High
+            if final_score == 3:
                 record.risk_level = 'high' 
-            elif final_score == 2: # Medium
+            elif final_score == 2:
                 record.risk_level = 'medium'
-            else: # Low
+            else:
                 record.risk_level = 'low'
     
     @api.constrains('code')
