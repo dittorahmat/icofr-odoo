@@ -79,6 +79,12 @@ The ICORF module implements the COSO 2013 Internal Control framework and complie
   - **Financial Data Import**: Upload financial statements via Excel for materiality calculation without live ERP integration.
   - **RCM Bulk Upload**: Migrate existing Risk Control Matrices (Excel) into the system instantly via the Utilitas menu.
   - **Account Mapping Import**: Bulk upload General Ledger accounts and FSLI mappings.
+- **Banking Sector Support**: Specialized demo data and risk frameworks for the financial sector, including **Kredit Ritel**, **Giro Wajib Minimum (GWM)**, and **Compliance AML/KYC** processes.
+- **Service Organization Monitoring**: Manage third-party vendors and track **SOC 1/2 Reports** to ensure external control effectiveness (**Bab III Pasal 4.3**).
+- **Interactive Compliance Guide (FAQ)**: Built-in repository of the 14 most common implementation questions from **Lampiran 12 Juknis BUMN**.
+- **Specialist Validation**: Document and evaluate third-party experts' credibility and assumptions (**Bab III Pasal 2.2.b.4**).
+- **Remediation Sampling Engine**: Automated sample size calculation specifically for post-fix testing based on **Tabel 23**.
+- **CSA "No Transaction" Support**: Accurate handling of controls with no activity during the assessment period to maintain audit integrity.
 
 ## Prerequisites
 

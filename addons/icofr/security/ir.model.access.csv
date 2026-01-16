@@ -110,3 +110,6 @@ access_icofr_wbs_entry_mgr,icofr.wbs.entry,model_icofr_wbs_entry,group_icofr_man
 access_icofr_wbs_entry_ext,icofr.wbs.entry,model_icofr_wbs_entry,group_icofr_external_auditor,1,0,0,0
 access_icofr_financial_data_import_wizard,icofr.financial.data.import.wizard,model_icofr_financial_data_import_wizard,base.group_user,1,1,1,1
 access_icofr_coso_mapping,icofr.coso.mapping,model_icofr_coso_mapping,base.group_user,1,0,0,0
+access_icofr_service_organization,icofr.service.organization,model_icofr_service_organization,group_icofr_line_2,1,1,1,1
+access_icofr_soc_report,icofr.soc.report,model_icofr_soc_report,group_icofr_line_2,1,1,1,1
+access_icofr_faq,icofr.faq,model_icofr_faq,base.group_user,1,1,1,1

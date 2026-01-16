@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Service Organization Views -->
+    <record id="view_icofr_service_org_list" model="ir.ui.view">
+        <field name="name">icofr.service.organization.list</field>
+        <field name="model">icofr.service.organization</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="contact_person"/>
+                <field name="email"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_icofr_service_org_form" model="ir.ui.view">
+        <field name="name">icofr.service.organization.form</field>
+        <field name="model">icofr.service.organization</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nama Organisasi Layanan..."/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="contact_person"/>
+                        </group>
+                        <group>
+                            <field name="email"/>
+                            <field name="phone"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Deskripsi Layanan" name="description">
+                            <field name="service_description"/>
+                        </page>
+                        <page string="Laporan SOC" name="soc_reports">
+                            <field name="soc_report_ids">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="report_type"/>
+                                    <field name="period_end"/>
+                                    <field name="conclusion"/>
+                                    <field name="external_auditor"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Kontrol Terkait" name="controls">
+                            <field name="control_ids" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_icofr_service_organization" model="ir.actions.act_window">
+        <field name="name">Organisasi Layanan (Pihak Ketiga)</field>
+        <field name="res_model">icofr.service.organization</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan Organisasi Layanan pihak ketiga.
+            </p>
+            <p>
+                Sesuai Bab III Pasal 4.3 Juknis, kontrol yang dialihkan ke pihak ketiga harus dipantau melalui SOC Report.
+            </p>
+        </field>
+    </record>
+
+    <!-- FAQ Views -->
+    <record id="view_icofr_faq_list" model="ir.ui.view">
+        <field name="name">icofr.faq.list</field>
+        <field name="model">icofr.faq</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="category"/>
+                <field name="question"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_icofr_faq_form" model="ir.ui.view">
+        <field name="name">icofr.faq.form</field>
+        <field name="model">icofr.faq</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="category"/>
+                        <field name="sequence"/>
+                    </group>
+                    <div class="oe_title">
+                        <label for="question" string="Pertanyaan"/>
+                        <h1>
+                            <field name="question" placeholder="Masukkan pertanyaan sesuai Lampiran 12..."/>
+                        </h1>
+                    </div>
+                    <group string="Jawaban">
+                        <field name="answer" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_icofr_faq" model="ir.actions.act_window">
+        <field name="name">Panduan Juknis (FAQ)</field>
+        <field name="res_model">icofr.faq</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_group_by_category': 1}</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_icofr_service_org"
+              name="Service Organization (SOC)"
+              sequence="70"
+              parent="icofr.menu_icofr_master"
+              action="action_icofr_service_organization"
+              groups="icofr.group_icofr_line_2"/>
+
+    <menuitem id="menu_icofr_faq"
+              name="Panduan Juknis (FAQ)"
+              sequence="100"
+              parent="icofr.menu_icofr_utilities"
+              action="action_icofr_faq"/>
+
+</odoo>

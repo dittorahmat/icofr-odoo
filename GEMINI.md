@@ -36,13 +36,26 @@ The system implements the **Three Lines of Defense** model:
 - **Interactive DoD Working Paper:** Digital implementation of Lampiran 10 (Kotak 1-7) for transparent deficiency classification.
 - **Detailed Testing Attributes:** Support for Lampiran 7 checklist (Attributes A, B, C, D) and Lampiran 8 TOD detailed validation at the transaction level.
 - **Finding Distribution Tracker:** Automated tracking of deficiency reporting to CEO, Board, and Audit Committee as per Table 24 requirements.
+- **Service Organization Monitoring:** Dedicated module for managing third-party vendors and their **SOC 1/2 Type II Reports** as required by Bab III Pasal 4.3.
+- **Specialist Involvement Validation:** Specific attributes for evaluating **Specialist Credibility**, Assumption Validity, and Fairness as per Bab III Pasal 2.2.b.4.
+- **Remediation Sampling Engine:** Standalone logic implementing **Table 23** for post-remediation testing with specific observation periods.
+- **CSA "No Transaction" Logic:** Support for 'No Transaction' status in CSA to ensure audit accuracy for dormant controls (Bab IV Pasal 2.1.c).
+- **Interactive compliance FAQ:** Integrated 14-point decision guide from Lampiran 12 to assist users in resolving implementation ambiguities.
 
 ### Key Components
 ...
 
 ### Key Models
 
-- `icofr.control`: Internal controls registry with ITGC, EUC, IPE, MRC, and IPO technical attributes.
+- `icofr.control`: Internal controls registry with ITGC, EUC, IPE, MRC, IPO, and **Specialist/Service Org** technical attributes.
+
+- `icofr.service.organization`: Registry for third-party service providers (Data Centers, Payroll Outsourcing, etc.).
+
+- `icofr.soc.report`: Tracking of SOC 1 Type I/II and SOC 2 reports for external control assurance.
+
+- `icofr.faq`: Interactive repository of Juknis Lampiran 12 FAQ for user guidance.
+
+- `icofr.finding.group`: Aggregated evaluation module with **Grouping Basis** (Account, COSO Principle, or Process).
 
 - `icofr.wbs.entry`: Whistleblowing System for fraud and integrity report management.
 
@@ -63,6 +76,7 @@ To facilitate rapid adoption without immediate ERP integration, the system suppo
 - **Financial Data Import**: Users can upload financial statement data (Revenue, Assets, Net Income) via Excel directly into the `icofr.materiality` model using the `icofr.financial.data.import.wizard`.
 - **RCM Bulk Upload**: The `icofr.rcm.upload.wizard` (available in Utilitas menu) allows bulk uploading of Risk Control Matrices (Risk, Control, assertions, etc.) directly into the system.
 - **Account Mapping Upload**: The `icofr.account.mapping.upload.wizard` enables bulk import of General Ledger accounts and their FSLI (Financial Statement Line Item) associations.
+- **Banking Sector Presets**: Built-in demo data and risk profiles specifically for the **Financial/Banking Sector**, including Kredit Ritel, GWM (Statutory Reserve), and AML/KYC processes.
 
 ## Building and Running
 

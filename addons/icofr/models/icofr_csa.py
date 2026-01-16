@@ -74,9 +74,16 @@ class IcofrCsa(models.Model):
         ('highly_effective', 'Sangat Efektif'),
         ('effective', 'Efektif'),
         ('partially_effective', 'Efektif Sebagian'),
-        ('ineffective', 'Tidak Efektif')
+        ('ineffective', 'Tidak Efektif'),
+        ('no_transaction', 'Tidak Ada Transaksi')
     ], string='Hasil Efektivitas',
        help='Efektivitas kontrol berdasarkan hasil CSA')
+
+    # Bab IV Pasal 2.1.c: Status Tidak Ada Transaksi
+    no_transaction = fields.Boolean(
+        string='Tidak Ada Transaksi',
+        help='Centang jika tidak terdapat transaksi terkait aktivitas pengendalian selama periode penilaian'
+    )
 
     # CSA Questionnaire Fields
     design_effective = fields.Boolean(

@@ -54,9 +54,10 @@
                                     <field name="documentation_accurate"/>
                                 </group>
                                 <group string="Efektivitas Operasional">
-                                    <field name="operating_effective"/>
-                                    <field name="frequency_complied"/>
-                                    <field name="exception_handled"/>
+                                    <field name="no_transaction"/>
+                                    <field name="operating_effective" invisible="no_transaction"/>
+                                    <field name="frequency_complied" invisible="no_transaction"/>
+                                    <field name="exception_handled" invisible="no_transaction"/>
                                 </group>
                             </group>
                         </page>

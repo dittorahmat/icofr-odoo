@@ -12,7 +12,7 @@ class IcofrCosoMapping(models.Model):
     control_count = fields.Integer('Jumlah Kontrol Terpetakan')
     
     def init(self):
-        self._cr.execute("""
+        self.env.cr.execute("""
             CREATE OR REPLACE VIEW icofr_coso_mapping AS (
                 SELECT 
                     ce.id as id,

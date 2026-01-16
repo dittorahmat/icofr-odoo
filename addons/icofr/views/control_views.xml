@@ -56,8 +56,15 @@
                             <field name="control_specific_type"/>
                             <field name="control_risk_level"/>
                             <field name="supporting_app"/>
-                            <field name="service_provider_name" invisible="control_specific_type != 'service_org'"/>
-                            <field name="soc_report_ref" invisible="control_specific_type != 'service_org'"/>
+                            <field name="is_outsourced"/>
+                            <field name="service_org_id" invisible="not is_outsourced" required="is_outsourced"/>
+                            <group string="Informasi Spesialis" colspan="2" invisible="not involves_specialist">
+                                <field name="specialist_name"/>
+                                <field name="specialist_credibility"/>
+                                <field name="specialist_assumption_validity"/>
+                                <field name="specialist_fairness_justification"/>
+                            </group>
+                            <field name="involves_specialist"/>
                             <field name="frequency"/>
                             <field name="owner_id"/>
                             <field name="valid_from"/>

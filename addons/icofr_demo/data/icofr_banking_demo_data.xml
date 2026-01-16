@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Banking Industry Cluster Demo Data (Lampiran 2) -->
+
+    <!-- Banking Specific Users -->
+    <record id="demo_user_credit_officer" model="res.users">
+        <field name="name">Credit Officer (Bambang)</field>
+        <field name="login">credit_officer</field>
+        <field name="password">Credit123</field>
+        <field name="email">bambang@bankdemo.com</field>
+    </record>
+
+    <record id="demo_user_treasury_manager" model="res.users">
+        <field name="name">Treasury Manager (Luluk)</field>
+        <field name="login">treasury_mgr</field>
+        <field name="password">Treasury123</field>
+        <field name="email">luluk@bankdemo.com</field>
+    </record>
+
+    <!-- Assign Groups to Banking Users -->
+    <record id="icofr.group_icofr_line_1" model="res.groups">
+        <field name="user_ids" eval="[(4, ref('demo_user_credit_officer'))]"/>
+    </record>
+
+    <record id="icofr.group_icofr_line_1_manager" model="res.groups">
+        <field name="user_ids" eval="[(4, ref('demo_user_treasury_manager'))]"/>
+    </record>
+
+    <!-- Banking Business Processes -->
+    <record id="proc_banking_credit_001" model="icofr.process">
+        <field name="name">Pemberian Kredit Ritel</field>
+        <field name="code">BANK-PROC-CREDIT-001</field>
+        <field name="description">Proses end-to-end pemberian fasilitas kredit ritel kepada nasabah perorangan</field>
+        <field name="category">operational</field>
+        <field name="owner_id" ref="demo_user_credit_officer"/>
+        <field name="status">active</field>
+    </record>
+
+    <record id="proc_banking_treasury_001" model="icofr.process">
+        <field name="name">Manajemen Likuiditas &amp; Treasury</field>
+        <field name="code">BANK-PROC-TREAS-001</field>
+        <field name="description">Pengelolaan likuiditas bank, penempatan dana, dan pemenuhan kewajiban GWM</field>
+        <field name="category">operational</field>
+        <field name="owner_id" ref="demo_user_treasury_manager"/>
+        <field name="status">active</field>
+    </record>
+
+    <record id="proc_banking_aml_001" model="icofr.process">
+        <field name="name">Compliance AML &amp; KYC</field>
+        <field name="code">BANK-PROC-AML-001</field>
+        <field name="description">Proses verifikasi nasabah (KYC) dan monitoring transaksi mencurigakan (AML)</field>
+        <field name="category">compliance</field>
+        <field name="owner_id" ref="demo_user_risk_manager"/>
+        <field name="status">active</field>
+    </record>
+
+    <!-- Banking Specific Risks (Lampiran 2 - Jasa Keuangan) -->
+    <record id="risk_banking_credit_001" model="icofr.risk">
+        <field name="name">Pemberian Kredit Tanpa Analisis Memadai</field>
+        <field name="code">BANK-RISK-CREDIT-001</field>
+        <field name="risk_category">operational</field>
+        <field name="risk_type">inherent</field>
+        <field name="industry_cluster">financial</field>
+        <field name="description">Risiko kesalahan dalam penilaian kelayakan kredit yang menyebabkan NPL tinggi</field>
+        <field name="process_id" ref="proc_banking_credit_001"/>
+        <field name="owner_id" ref="demo_user_credit_officer"/>
+        <field name="likelihood">medium</field>
+        <field name="impact">very_high</field>
+        <field name="potential_loss_amount">5000000000.0</field> <!-- 5 Billion -->
+        <field name="status">identified</field>
+    </record>
+
+    <record id="risk_banking_liq_001" model="icofr.risk">
+        <field name="name">Pelanggaran Rasio Likuiditas (GWM)</field>
+        <field name="code">BANK-RISK-LIQ-001</field>
+        <field name="risk_category">compliance</field>
+        <field name="risk_type">inherent</field>
+        <field name="industry_cluster">financial</field>
+        <field name="description">Risiko kegagalan memenuhi Giro Wajib Minimum (GWM) yang ditetapkan Bank Indonesia</field>
+        <field name="process_id" ref="proc_banking_treasury_001"/>
+        <field name="owner_id" ref="demo_user_treasury_manager"/>
+        <field name="likelihood">low</field>
+        <field name="impact">very_high</field>
+        <field name="potential_loss_amount">10000000000.0</field> <!-- 10 Billion -->
+        <field name="status">identified</field>
+    </record>
+
+    <record id="risk_banking_aml_001" model="icofr.risk">
+        <field name="name">Kegagalan Deteksi Transaksi Pencucian Uang</field>
+        <field name="code">BANK-RISK-AML-001</field>
+        <field name="risk_category">compliance</field>
+        <field name="risk_type">inherent</field>
+        <field name="industry_cluster">financial</field>
+        <field name="description">Risiko sanksi regulasi dan denda akibat kegagalan sistem pemantauan AML</field>
+        <field name="process_id" ref="proc_banking_aml_001"/>
+        <field name="owner_id" ref="demo_user_risk_manager"/>
+        <field name="likelihood">medium</field>
+        <field name="impact">high</field>
+        <field name="status">identified</field>
+        <field name="is_fraud_risk" eval="True"/>
+    </record>
+
+    <!-- Banking Controls -->
+    <record id="ctrl_banking_credit_001" model="icofr.control">
+        <field name="name">Otorisasi Berjenjang Kredit Ritel</field>
+        <field name="code">BANK-CTRL-CREDIT-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Penerapan batas wewenang memutus kredit (BWMK) secara sistematis berdasarkan limit kredit</field>
+        <field name="process_id" ref="proc_banking_credit_001"/>
+        <field name="risk_ids" eval="[(4, ref('risk_banking_credit_001'))]"/>
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="demo_user_credit_officer"/>
+        <field name="status">active</field>
+        <field name="assertion_authorization" eval="True"/>
+        <field name="control_type_detailed">it_dependent</field>
+    </record>
+
+    <record id="ctrl_banking_liq_001" model="icofr.control">
+        <field name="name">Monitoring Harian Rasio Likuiditas</field>
+        <field name="code">BANK-CTRL-LIQ-001</field>
+        <field name="control_type">detective</field>
+        <field name="description">Review harian terhadap posisi kas dan GWM oleh Treasury Manager</field>
+        <field name="process_id" ref="proc_banking_treasury_001"/>
+        <field name="risk_ids" eval="[(4, ref('risk_banking_liq_001'))]"/>
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="demo_user_treasury_manager"/>
+        <field name="status">active</field>
+        <field name="assertion_completeness" eval="True"/>
+        <field name="assertion_accuracy" eval="True"/>
+    </record>
+
+    <record id="ctrl_banking_aml_001" model="icofr.control">
+        <field name="name">Automated PEP &amp; Sanction Screening</field>
+        <field name="code">BANK-CTRL-AML-001</field>
+        <field name="control_type">preventive</field>
+        <field name="description">Sistem otomatis yang memeriksa setiap pembukaan rekening baru terhadap daftar PEP dan sanksi internasional</field>
+        <field name="process_id" ref="proc_banking_aml_001"/>
+        <field name="risk_ids" eval="[(4, ref('risk_banking_aml_001'))]"/>
+        <field name="frequency">daily</field>
+        <field name="owner_id" ref="demo_user_risk_manager"/>
+        <field name="status">active</field>
+        <field name="control_type_detailed">automated</field>
+    </record>
+
+    <!-- Banking Testing Schedules -->
+    <record id="schedule_banking_credit_001" model="icofr.testing.schedule">
+        <field name="name">Pengujian Otorisasi Kredit Ritel - Semester I</field>
+        <field name="control_id" ref="ctrl_banking_credit_001"/>
+        <field name="schedule_type">one_time</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="start_date" eval="time.strftime('%Y-06-01')"/>
+        <field name="end_date" eval="time.strftime('%Y-06-30')"/>
+        <field name="status">active</field>
+        <field name="description">Pengujian atas efektivitas implementasi BWMK pada sistem perkreditan</field>
+    </record>
+
+    <!-- Banking Testing Results (Test of Effectiveness) -->
+    <record id="test_banking_liq_001" model="icofr.testing">
+        <field name="name">Uji Efektivitas Monitoring GWM - Jan 2024</field>
+        <field name="control_id" ref="ctrl_banking_liq_001"/>
+        <field name="test_type">compliance</field>
+        <field name="tester_id" ref="demo_user_jane_smith"/>
+        <field name="test_date" eval="time.strftime('%Y-01-20')"/>
+        <field name="status">completed</field>
+        <field name="testing_procedures">Review laporan posisi kas harian dan verifikasi apakah Treasury Manager melakukan sign-off setiap hari</field>
+        <field name="test_results">Laporan tersedia untuk seluruh hari kerja di Januari, terdapat bukti approval digital pada sistem</field>
+        <field name="effectiveness">effective</field>
+    </record>
+
+    <!-- Banking Finding Example -->
+    <record id="find_banking_aml_001" model="icofr.finding">
+        <field name="name">Update Database Sanksi Terlambat</field>
+        <field name="code">BANK-FIND-AML-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">medium</field>
+        <field name="description">Database screening PEP/Sanction tidak diperbarui secara real-time, terdapat delay 24 jam</field>
+        <field name="risk_id" ref="risk_banking_aml_001"/>
+        <field name="control_id" ref="ctrl_banking_aml_001"/>
+        <field name="owner_id" ref="demo_user_risk_manager"/>
+        <field name="status">open</field>
+        <field name="impact_assessment">Potensi pembukaan rekening untuk entitas tersanksi dalam jendela waktu 24 jam</field>
+        <field name="root_cause">Integrasi API vendor penyedia data mengalami kendala teknis</field>
+    </record>
+
+    <!-- Banking Account Mappings -->
+    <record id="map_banking_loans" model="icofr.account.mapping">
+        <field name="name">Kredit yang Diberikan - Loans and Advances</field>
+        <field name="gl_account">1300.001</field>
+        <field name="account_description">Pinjaman yang diberikan kepada nasabah ritel dan korporasi</field>
+        <field name="fsl_item">Loans and Advances</field>
+        <field name="account_balance">150000000000.0</field> <!-- 150 Billion -->
+        <field name="significance_level">significant</field>
+        <field name="has_fraud_risk" eval="True"/>
+        <field name="is_complex_transaction" eval="True"/>
+    </record>
+
+    <record id="map_banking_deposits" model="icofr.account.mapping">
+        <field name="name">Simpanan Nasabah - Customer Deposits</field>
+        <field name="gl_account">2100.001</field>
+        <field name="account_description">Dana pihak ketiga (Tabungan, Giro, Deposito)</field>
+        <field name="fsl_item">Customer Deposits</field>
+        <field name="account_balance">120000000000.0</field> <!-- 120 Billion -->
+        <field name="significance_level">significant</field>
+    </record>
+
+    <!-- Banking Financial Data for Materiality -->
+    <record id="mat_banking_2024" model="icofr.materiality">
+        <field name="name">Materialitas Bank Demo 2024</field>
+        <field name="fiscal_year">2024</field>
+        <field name="total_assets_amount" eval="200000000000.0"/> <!-- 200 Billion -->
+        <field name="revenue_amount" eval="15000000000.0"/> <!-- 15 Billion (Interest Income) -->
+        <field name="net_income_amount" eval="2000000000.0"/> <!-- 2 Billion -->
+        <field name="overall_materiality_percent">1.0</field> <!-- 1% of Assets is common in Banking if using Asset basis -->
+        <field name="performance_materiality_percent">75.0</field>
+        <field name="calculation_method">percent_assets</field>
+        <field name="materiality_basis">total_assets</field>
+    </record>
+
+</odoo>

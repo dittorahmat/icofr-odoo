@@ -29,6 +29,7 @@ providing a realistic demonstration of the system for training and evaluation pu
     'data': [
         'icofr_demo_data.xml',
         'data/icofr_demo_workflow.xml',
+        'data/icofr_banking_demo_data.xml',
     ],
     'demo': [
         'icofr_demo_data.xml',

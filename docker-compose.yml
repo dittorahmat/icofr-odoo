@@ -25,7 +25,7 @@ services:
       - ./addons:/mnt/extra-addons
       - ./odoo.conf:/etc/odoo/odoo.conf
     restart: unless-stopped
-    command: odoo -u icofr -d odoo
+    command: odoo -u icofr,icofr_demo -d odoo
 
 volumes:
   odoo_db_data:

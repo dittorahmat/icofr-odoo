@@ -92,6 +92,11 @@ class IcofrAccountMapping(models.Model):
         help='Apakah akun ini melibatkan transaksi dengan pihak berelasi?'
     )
 
+    qualitative_justification = fields.Text(
+        string='Justifikasi Kualitatif',
+        help='Penjelasan detail mengenai faktor kualitatif yang membuat akun ini signifikan (Ref: Tabel 5)'
+    )
+
     materiality_id = fields.Many2one(
         'icofr.materiality',
         string='Perhitungan Materialitas',

@@ -51,6 +51,17 @@ class IcofrControl(models.Model):
     ], string='Lini Pemilik Kontrol', default='line_1', tracking=True,
        help='Lini pertahanan yang memiliki kontrol ini')
 
+    # Bab III Pasal 4.3: Pengendalian yang Dialihkan kepada Pihak Ketiga
+    is_outsourced = fields.Boolean('Kontrol Outsourcing?', help='Centang jika kontrol ini dijalankan oleh pihak ketiga/Service Organization')
+    service_org_id = fields.Many2one('icofr.service.organization', string='Organisasi Layanan', help='Penyedia jasa yang menjalankan kontrol ini')
+
+    # Bab III Pasal 2.2.b.4: Pengendalian yang Melibatkan Spesialis
+    involves_specialist = fields.Boolean('Melibatkan Spesialis?', help='Centang jika kontrol ini melibatkan tenaga ahli/spesialis (misal: Aktuaria, Surveyor)')
+    specialist_name = fields.Char('Nama/Instansi Spesialis')
+    specialist_credibility = fields.Text('Kredibilitas & Kompetensi', help='Sertifikasi, lisensi, atau akreditasi profesional spesialis')
+    specialist_assumption_validity = fields.Text('Validitas Data & Asumsi', help='Evaluasi atas validitas data dan asumsi yang digunakan spesialis')
+    specialist_fairness_justification = fields.Text('Justifikasi Kewajaran', help='Justifikasi manajemen atas kewajaran hasil kerja spesialis')
+
     owner_id = fields.Many2one(
         'res.users',
         string='Pemilik Kontrol',
@@ -209,6 +220,23 @@ class IcofrControl(models.Model):
     soc_report_ref = fields.Char(
         string='Referensi Laporan SOC',
         help='Nomor/Tanggal Laporan SOC 1 Type 2 yang relevan'
+    )
+
+    soc_period = fields.Char(
+        string='Periode Laporan SOC',
+        help='Periode yang dicakup dalam laporan SOC (Misal: 1 Jan - 31 Des 202X)'
+    )
+
+    soc_opinion = fields.Selection([
+        ('qualified', 'Wajar Dengan Pengecualian'),
+        ('unqualified', 'Wajar Tanpa Pengecualian'),
+        ('adverse', 'Tidak Wajar'),
+        ('disclaimer', 'Tidak Memberikan Pendapat')
+    ], string='Opini Laporan SOC', help='Opini auditor independen atas laporan SOC')
+
+    specialist_competence = fields.Text(
+        string='Kompetensi Spesialis',
+        help='Dokumentasi kredibilitas, sertifikasi, dan kompetensi spesialis (jika melibatkan tenaga ahli)'
     )
 
     frequency_detailed = fields.Selection([

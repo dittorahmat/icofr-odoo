@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- FAQ dari Lampiran 12 Juknis BUMN SK-5/DKU.MBU/11/2024 -->
+        
+        <record id="faq_1" model="icofr.faq">
+            <field name="sequence">1</field>
+            <field name="category">general</field>
+            <field name="question">Apa tanggung jawab perusahaan terkait ICOFR?</field>
+            <field name="answer">Tanggung jawab perusahaan meliputi: 
+a. Merancang pengendalian dan prosedur pengungkapan untuk memastikan informasi material pelaporan keuangan diketahui manajemen.
+b. Mengevaluasi efektivitas pengendalian dan prosedur pengungkapan secara periodik.
+c. Menyusun rencana remediasi atas defisiensi yang diidentifikasi.
+d. Mengungkapkan defisiensi signifikan dan kelemahan material kepada stakeholder terkait.
+e. Menyusun Laporan Asesmen Manajemen.
+f. Mendapatkan asurans oleh praktisi eksternal.</field>
+        </record>
+
+        <record id="faq_2" model="icofr.faq">
+            <field name="sequence">2</field>
+            <field name="category">testing</field>
+            <field name="question">Apakah saja jenis metode sampling yang dapat digunakan dalam melakukan pengujian atas operasi pengendalian?</field>
+            <field name="answer">Metode pengambilan sampel dapat mengacu pada SA 530, diantaranya: 
+a. Pemilihan acak (Random number generators).
+b. Pemilihan sistematik (Interval sampling).
+c. Sampling Unit Moneter (Monetary unit sampling).
+d. Pemilihan sembarang (Haphazard selection) - Catatan: Tidak tepat untuk sampling statistik.</field>
+        </record>
+
+        <record id="faq_3" model="icofr.faq">
+            <field name="sequence">3</field>
+            <field name="category">general</field>
+            <field name="question">Apabila manajemen menerapkan sistem baru di akhir tahun, apakah perlu dilakukan pengujian atas sistem baru dan lama?</field>
+            <field name="answer">Ya. Karena sistem baru mempengaruhi pemrosesan transaksi untuk akun signifikan pada tanggal penilaian, maka rancangan dan pengujian sistem baru harus dilakukan. Selain itu, karena sebagian besar transaksi diproses di sistem lama, manajemen harus tetap memahami dan memperoleh bukti bahwa pengendalian sistem lama beroperasi efektif selama periode tersebut.</field>
+        </record>
+
+        <record id="faq_4" model="icofr.faq">
+            <field name="sequence">4</field>
+            <field name="category">scoping</field>
+            <field name="question">Bagaimana penentuan multiplier dan materialitas untuk grup?</field>
+            <field name="answer">Tingkat perkalian (multiplier) diaplikasikan berdasarkan jumlah lokasi/perusahaan signifikan (Tabel 25). Alokasi dilakukan secara proporsional berdasarkan total aset masing-masing lokasi, dengan ketentuan nilai alokasi individu tidak boleh melebihi OM Grup.</field>
+        </record>
+
+        <record id="faq_5" model="icofr.faq">
+            <field name="sequence">5</field>
+            <field name="category">scoping</field>
+            <field name="question">Apakah perusahaan yang dimiliki dengan metode investasi - Ekuitas masuk dalam ruang lingkup evaluasi ICOFR?</field>
+            <field name="answer">Akun investee tidak dikonsolidasikan baris demi baris, sehingga pengendalian pencatatan internal investee bukan bagian dari ICOFR investor. Namun, investor harus memiliki pengendalian atas pencatatan investasi, seperti pemilihan metode akuntansi, pengakuan laba/rugi, dan saldo akun investasi.</field>
+        </record>
+
+        <record id="faq_6" model="icofr.faq">
+            <field name="sequence">6</field>
+            <field name="category">scoping</field>
+            <field name="question">Perusahaan mana saja yang perlu menerapkan perancangan dan pengujian ELC?</field>
+            <field name="answer">Rancangan dan pengujian atas Entity Level Control (ELC) perlu dilakukan atas seluruh entitas yang menjadi cakupan/ruang lingkup ICOFR.</field>
+        </record>
+
+        <record id="faq_7" model="icofr.faq">
+            <field name="sequence">7</field>
+            <field name="category">testing</field>
+            <field name="question">Bagaimana hubungan evaluasi ICOFR dengan audit laporan keuangan?</field>
+            <field name="answer">Apabila terdapat adjustment signifikan pada laporan keuangan (dari auditor eksternal atau late adjustment), Lini 3 harus mempertimbangkan adanya indikasi pengendalian yang tidak efektif. Lini 1 dapat melakukan penyesuaian (adjustment) untuk memastikan kewajaran angka laporan keuangan akhir tahun.</field>
+        </record>
+
+        <record id="faq_8" model="icofr.faq">
+            <field name="sequence">8</field>
+            <field name="category">reporting</field>
+            <field name="question">Apakah pengungkapan signifikan juga mencakup pengungkapan lainnya diluar laporan keuangan perusahaan?</field>
+            <field name="answer">Tidak. Pengungkapan yang menjadi cakupan ICOFR adalah pengungkapan pada laporan keuangan dan catatannya sesuai dengan prinsip akuntansi yang berlaku umum (PSAK).</field>
+        </record>
+
+        <record id="faq_9" model="icofr.faq">
+            <field name="sequence">9</field>
+            <field name="category">reporting</field>
+            <field name="question">Apakah temuan pada draf awal laporan keuangan otomatis merupakan defisiensi material?</field>
+            <field name="answer">Belum tentu, selama perusahaan dapat mengkomunikasikan secara jelas status penyelesaian laporan dan luas pengendalian yang beroperasi saat draf diberikan. Jika kelalaian tidak dikomunikasikan, auditor dapat menganggapnya sebagai indikator kuat defisiensi material.</field>
+        </record>
+
+        <record id="faq_10" model="icofr.faq">
+            <field name="sequence">10</field>
+            <field name="category">testing</field>
+            <field name="question">Apakah semua temuan yang ditemukan dalam pengujian pengendalian secara definisi merupakan defisiensi pengendalian?</field>
+            <field name="answer">Ya. Berdasarkan Juknis, pengambilan sampel TOE menggunakan pendekatan 'zero tolerance', sehingga setiap temuan yang belum diremediasi pada saat evaluasi dikategorikan sebagai defisiensi pengendalian.</field>
+        </record>
+
+        <record id="faq_11" model="icofr.faq">
+            <field name="sequence">11</field>
+            <field name="category">reporting</field>
+            <field name="question">Apakah jenis pelaporan yang digunakan untuk SAS 70 dalam konteks ICOFR?</field>
+            <field name="answer">Laporan yang digunakan adalah SOC Report 1 tipe 2, yang mencakup kesesuaian rancangan dan efektivitas operasional pengendalian pada Service Organization (SO).</field>
+        </record>
+
+        <record id="faq_12" model="icofr.faq">
+            <field name="sequence">12</field>
+            <field name="category">reporting</field>
+            <field name="question">Jenis kegiatan Service Organization (SO) apa yang perlu menjadi cakupan?</field>
+            <field name="answer">SO yang mempengaruhi: 
+a. Kelas transaksi signifikan.
+b. Prosedur pencatatan dan pelaporan transaksi.
+c. Catatan akuntansi pendukung akun spesifik.
+d. Sistem informasi yang menangkap peristiwa signifikan.
+e. Proses penyusunan laporan keuangan dan estimasi akuntansi.</field>
+        </record>
+
+        <record id="faq_13" model="icofr.faq">
+            <field name="sequence">13</field>
+            <field name="category">general</field>
+            <field name="question">Kapan kewajiban implementasi ICOFR berlaku bagi anak perusahaan yang baru diakuisisi?</field>
+            <field name="answer">Berlaku mulai tahun buku berikutnya dari tahun akuisisi. Namun, pada tahun akuisisi, perusahaan harus mengungkapkan bahwa pengendalian internal anak perusahaan tersebut belum dievaluasi dalam cakupan ICOFR grup.</field>
+        </record>
+
+        <record id="faq_14" model="icofr.faq">
+            <field name="sequence">14</field>
+            <field name="category">reporting</field>
+            <field name="question">Apakah asesmen manajemen perlu disertai dengan Laporan Asurans dari praktisi eksternal?</field>
+            <field name="answer">Ya, kami mendorong perusahaan untuk menyertakan Laporan Asesmen Manajemen dan Laporan Praktisi Eksternal tentang asurans atas asesmen tersebut dalam Laporan Tahunan perusahaan.</field>
+        </record>
+
+    </data>
+</odoo>

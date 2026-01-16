@@ -84,6 +84,7 @@
                                     <field name="fsl_item"/>
                                     <field name="significance_level"/>
                                     <field name="is_significant_account"/>
+                                    <field name="qualitative_justification" optional="hide"/>
                                     <field name="status"/>
                                 </list>
                             </field>
@@ -192,6 +193,7 @@
                         </group>
                         <group>
                             <field name="has_related_party"/>
+                            <field name="qualitative_justification"/>
                         </group>
                     </group>
                     <group>

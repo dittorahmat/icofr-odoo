@@ -25,6 +25,18 @@ class IcofrFindingGroup(models.Model):
         help='Tahun fiskal evaluasi'
     )
 
+    # Bab VII Pasal 1.1.g: Evaluasi Agregasi
+    grouping_basis = fields.Selection([
+        ('account', 'Akun/FSLI yang Sama'),
+        ('disclosure', 'Pengungkapan yang Sama'),
+        ('coso', 'Komponen/Prinsip COSO yang Sama'),
+        ('process', 'Proses Bisnis yang Sama'),
+        ('other', 'Pertimbangan Profesional Lainnya')
+    ], string='Dasar Pengelompokan', required=True, default='account')
+
+    impacted_fsli_id = fields.Many2one('icofr.account.mapping', string='Akun/FSLI Terkait')
+    coso_principle_id = fields.Many2one('icofr.coso.element', string='Prinsip COSO Terkait', domain="[('is_principle', '=', True)]")
+
     company_id = fields.Many2one(
         'res.company',
         string='Perusahaan',
