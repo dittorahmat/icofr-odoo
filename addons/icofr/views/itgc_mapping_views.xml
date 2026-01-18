@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_icofr_itgc_mapping_list" model="ir.ui.view">
+        <field name="name">icofr.itgc.mapping.list</field>
+        <field name="model">icofr.itgc.mapping</field>
+        <field name="arch" type="xml">
+            <list string="Matriks Pemetaan ITGC vs COBIT 2019" create="false" delete="false" edit="false">
+                <field name="cobit_code"/>
+                <field name="cobit_name"/>
+                
+                <!-- Program Development -->
+                <field name="is_required_prog_dev" invisible="1"/>
+                <field name="ctrl_count_prog_dev" 
+                       string="Prog Dev"
+                       decoration-danger="is_required_prog_dev and ctrl_count_prog_dev == 0"
+                       decoration-success="is_required_prog_dev and ctrl_count_prog_dev > 0"
+                       decoration-muted="not is_required_prog_dev"
+                       widget="badge"/>
+
+                <!-- Program Changes -->
+                <field name="is_required_prog_change" invisible="1"/>
+                <field name="ctrl_count_prog_change" 
+                       string="Prog Changes"
+                       decoration-danger="is_required_prog_change and ctrl_count_prog_change == 0"
+                       decoration-success="is_required_prog_change and ctrl_count_prog_change > 0"
+                       decoration-muted="not is_required_prog_change"
+                       widget="badge"/>
+
+                <!-- Computer Operations -->
+                <field name="is_required_comp_ops" invisible="1"/>
+                <field name="ctrl_count_comp_ops" 
+                       string="Comp Ops"
+                       decoration-danger="is_required_comp_ops and ctrl_count_comp_ops == 0"
+                       decoration-success="is_required_comp_ops and ctrl_count_comp_ops > 0"
+                       decoration-muted="not is_required_comp_ops"
+                       widget="badge"/>
+
+                <!-- Access to Data -->
+                <field name="is_required_access_data" invisible="1"/>
+                <field name="ctrl_count_access_data" 
+                       string="Access Data"
+                       decoration-danger="is_required_access_data and ctrl_count_access_data == 0"
+                       decoration-success="is_required_access_data and ctrl_count_access_data > 0"
+                       decoration-muted="not is_required_access_data"
+                       widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_icofr_itgc_mapping" model="ir.actions.act_window">
+        <field name="name">Matriks ITGC vs COBIT 2019</field>
+        <field name="res_model">icofr.itgc.mapping</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Dashboard Pemetaan ITGC (Tabel 1 Juknis BUMN)
+            </p>
+            <p>
+                Dashboard ini menunjukkan cakupan kontrol ITGC aktif terhadap objektif COBIT 2019. 
+                Warna merah menandakan ada cakupan wajib sesuai Tabel 1 yang belum memiliki kontrol aktif.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item under Dashboard -->
+    <menuitem id="menu_icofr_itgc_mapping"
+              name="Matriks ITGC-COBIT"
+              parent="menu_icofr_dashboard"
+              action="action_icofr_itgc_mapping"
+              sequence="20"/>
+</odoo>

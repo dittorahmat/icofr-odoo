@@ -81,10 +81,36 @@ class IcofrControl(models.Model):
         help='Posisi/Jabatan yang melakukan aktivitas pengendalian (misal: Kasir, Accounting Manager)'
     )
 
+    # Tabel 17, 18, 19: Level Pengendalian
+    control_level = fields.Selection([
+        ('tlc', 'Transaction Level Control (TLC)'),
+        ('elc_direct', 'Direct Entity Level Control (ELC)'),
+        ('elc_indirect', 'Indirect Entity Level Control (ELC)'),
+        ('elc_monitoring', 'Monitoring Entity Level Control (ELC)'),
+        ('itgc', 'IT General Control (ITGC)')
+    ], string='Level Pengendalian', default='tlc', required=True,
+       help='Klasifikasi level kontrol sesuai struktur Tabel 17-19 Juknis BUMN.')
+
+    application_id = fields.Many2one(
+        'icofr.application',
+        string='Aplikasi Terkait',
+        help='Aplikasi signifikan yang menjalankan kontrol otomatis ini.'
+    )
+
     supporting_app = fields.Char(
-        string='Aplikasi Pendukung',
+        string='Aplikasi Pendukung (Legacy)',
+        compute='_compute_supporting_app',
+        store=True, readonly=False,
         help='Nama sistem/aplikasi yang menunjang kontrol (Wajib untuk Otomatis/ITDM)'
     )
+
+    @api.depends('application_id')
+    def _compute_supporting_app(self):
+        for record in self:
+            if record.application_id:
+                record.supporting_app = record.application_id.name
+            elif not record.supporting_app:
+                record.supporting_app = False
 
     impacted_fsli_ids = fields.Many2many(
         'icofr.account.mapping',
@@ -165,6 +191,12 @@ class IcofrControl(models.Model):
         ('access_data', 'Access to Program and Data')
     ], string='Area ITGC', help='4 Area Utama ITGC sesuai Tabel 1 Juknis BUMN')
 
+    # Hal 46: Risiko Keamanan Siber
+    is_cyber_related = fields.Boolean(
+        string='Terkait Keamanan Siber',
+        help='Centang jika kontrol ini memitigasi risiko keamanan siber (Cyber Security)'
+    )
+
     # EUC Attributes (SK BUMN Tabel 14)
     euc_complexity = fields.Selection([
         ('low', 'Rendah'),
@@ -233,6 +265,22 @@ class IcofrControl(models.Model):
         ('adverse', 'Tidak Wajar'),
         ('disclaimer', 'Tidak Memberikan Pendapat')
     ], string='Opini Laporan SOC', help='Opini auditor independen atas laporan SOC')
+
+    @api.onchange('service_org_id')
+    def _onchange_service_org(self):
+        """Auto-populate SOC info from the latest report of the selected organization"""
+        if self.service_org_id and self.service_org_id.soc_report_ids:
+            latest_report = self.service_org_id.soc_report_ids[0] # Ordered by period_end desc
+            self.soc_report_ref = latest_report.name
+            self.soc_period = f"{latest_report.period_start} s/d {latest_report.period_end}"
+            # Map conclusion
+            mapping = {
+                'unqualified': 'unqualified',
+                'qualified': 'qualified',
+                'adverse': 'adverse',
+                'disclaimer': 'disclaimer'
+            }
+            self.soc_opinion = mapping.get(latest_report.conclusion)
 
     specialist_competence = fields.Text(
         string='Kompetensi Spesialis',

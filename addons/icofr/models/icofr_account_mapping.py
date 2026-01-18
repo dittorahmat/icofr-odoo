@@ -92,10 +92,25 @@ class IcofrAccountMapping(models.Model):
         help='Apakah akun ini melibatkan transaksi dengan pihak berelasi?'
     )
 
+    # Tabel 5: Faktor Kualitatif Spesifik
+    is_qualitative_significant = fields.Boolean('Signifikan (Kualitatif)?', help='Tandai jika akun signifikan karena faktor non-moneter sesuai Tabel 5.')
+    is_construction_wip = fields.Boolean('WIP BUMN Konstruksi?', help='Akun Pekerjaan dalam Proses pada BUMN berbasis konstruksi.')
+    is_held_by_third_party = fields.Boolean('Dikelola Pihak Ketiga?', help='Persediaan atau aset yang dikelola oleh pihak ketiga.')
+    is_loan_covenant = fields.Boolean('Terkait Loan Covenant?', help='Akun yang dipersyaratkan dalam perjanjian pinjaman.')
+    is_onerous_contract = fields.Boolean('Kontrak Memberatkan?', help='Provisi terkait Onerous Contract.')
+
     qualitative_justification = fields.Text(
         string='Justifikasi Kualitatif',
         help='Penjelasan detail mengenai faktor kualitatif yang membuat akun ini signifikan (Ref: Tabel 5)'
     )
+
+    @api.onchange('is_construction_wip', 'is_held_by_third_party', 'is_loan_covenant', 'is_onerous_contract', 'has_fraud_risk', 'is_complex_transaction', 'has_related_party')
+    def _onchange_qualitative_factors(self):
+        """Auto-check the overall qualitative significance if any specific factor is set"""
+        if any([self.is_construction_wip, self.is_held_by_third_party, self.is_loan_covenant, 
+                self.is_onerous_contract, self.has_fraud_risk, self.is_complex_transaction, 
+                self.has_related_party]):
+            self.is_qualitative_significant = True
 
     materiality_id = fields.Many2one(
         'icofr.materiality',
@@ -171,14 +186,19 @@ class IcofrAccountMapping(models.Model):
             record.is_significant_account = is_significant
 
     @api.depends('account_balance', 'materiality_id.performance_materiality_amount', 
-                 'has_fraud_risk', 'is_complex_transaction', 'has_related_party')
+                 'has_fraud_risk', 'is_complex_transaction', 'has_related_party', 
+                 'is_qualitative_significant', 'is_construction_wip', 'is_held_by_third_party')
     def _compute_significance_level(self):
         for record in self:
             # Quantitative limit
             pm = record.materiality_id.performance_materiality_amount if record.materiality_id else 0
             
             # Qualitative factors
-            qualitative_trigger = record.has_fraud_risk or record.is_complex_transaction or record.has_related_party
+            qualitative_trigger = any([
+                record.has_fraud_risk, record.is_complex_transaction, record.has_related_party,
+                record.is_qualitative_significant, record.is_construction_wip, 
+                record.is_held_by_third_party, record.is_loan_covenant, record.is_onerous_contract
+            ])
             
             if pm > 0 and record.account_balance > pm:
                 record.significance_level = 'significant'

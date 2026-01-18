@@ -150,6 +150,10 @@
         <field name="impact_currency_id" ref="base.IDR"/>
         <field name="qualitative_impact_score">4.0</field>
         <field name="deficiency_category">significant_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
         <field name="classification_reason">Dampak keuangan Rp. 500 jt, melebihi threshold materialitas 0.5% dari pendapatan</field>
         <field name="control_id" ref="icofr_demo.demo_ctrl_cash_001"/>
         <field name="risk_id" ref="icofr_demo.demo_risk_fraud_001"/>
@@ -171,6 +175,10 @@
         <field name="impact_currency_id" ref="base.IDR"/>
         <field name="qualitative_impact_score">5.0</field>
         <field name="deficiency_category">material_weakness</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
         <field name="classification_reason">Dampak keuangan Rp. 2 miliar, melebihi Overall Materiality</field>
         <field name="control_id" ref="icofr_demo.demo_ctrl_withdraw_001"/>
         <field name="risk_id" ref="icofr_demo.demo_risk_unauth_001"/>
@@ -192,6 +200,8 @@
         <field name="impact_currency_id" ref="base.IDR"/>
         <field name="qualitative_impact_score">2.0</field>
         <field name="deficiency_category">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
         <field name="classification_reason">Dampak di bawah Performance Materiality</field>
         <field name="control_id" ref="icofr_demo.demo_ctrl_withdraw_001"/>
         <field name="risk_id" ref="icofr_demo.demo_risk_payroll_001"/>
@@ -290,6 +300,8 @@
         <field name="finding_type">control_deficiency</field>
         <field name="severity_level">low</field>
         <field name="quantitative_impact_amount">300000000</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
         <field name="impact_assessment_method">automatic</field>
         <field name="control_id" ref="icofr_demo.demo_ctrl_withdraw_001"/>
         <field name="owner_id" ref="demo_user_line1_process_owner"/>
@@ -302,6 +314,8 @@
         <field name="finding_type">control_deficiency</field>
         <field name="severity_level">low</field>
         <field name="quantitative_impact_amount">400000000</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
         <field name="impact_assessment_method">automatic</field>
         <field name="control_id" ref="icofr_demo.demo_ctrl_withdraw_001"/>
         <field name="owner_id" ref="demo_user_line1_process_owner"/>
@@ -336,6 +350,10 @@
         <field name="finding_type">significant_deficiency</field>
         <field name="severity_level">high</field>
         <field name="quantitative_impact_amount">1200000000</field> <!-- Over OM threshold -->
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
         <field name="impact_assessment_method">automatic</field>
         <field name="control_id" ref="icofr_demo.demo_ctrl_cash_001"/>
         <field name="compensating_control_id" ref="demo_ctrl_compensating_recon"/>
@@ -355,6 +373,8 @@
         <field name="finding_type">control_deficiency</field>
         <field name="severity_level">medium</field>
         <field name="deficiency_category">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
         <field name="description">User yang resign masih memiliki akses aktif di sistem.</field>
         <field name="owner_id" ref="demo_user_line1_process_owner"/>
         <field name="company_id" ref="base.main_company"/>

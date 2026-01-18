@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Klaster Industri BUMN (Lampiran 2 SK BUMN) -->
+        <record id="cluster_umum" model="icofr.industry.cluster">
+            <field name="name">Umum (General)</field>
+            <field name="code">UMUM</field>
+            <field name="sequence">1</field>
+            <field name="description">Risiko umum yang berlaku untuk seluruh entitas BUMN (Struktur keuangan kompleks, tekanan politik, dll)</field>
+        </record>
+
+        <record id="cluster_energi" model="icofr.industry.cluster">
+            <field name="name">Industri Energi - Minyak dan Gas</field>
+            <field name="code">ENERGI</field>
+            <field name="sequence">2</field>
+            <field name="description">Risiko terkait estimasi cadangan, pengakuan pendapatan kontrak jangka panjang, dan kepatuhan lingkungan.</field>
+        </record>
+
+        <record id="cluster_pangan" model="icofr.industry.cluster">
+            <field name="name">Industri Pangan dan Pupuk</field>
+            <field name="code">PANGAN</field>
+            <field name="sequence">3</field>
+            <field name="description">Risiko terkait kompleksitas kontrak distributor, penilaian persediaan siklus panjang, dan regulasi pangan.</field>
+        </record>
+
+        <record id="cluster_finansial" model="icofr.industry.cluster">
+            <field name="name">Jasa Keuangan</field>
+            <field name="code">FINANSIAL</field>
+            <field name="sequence">4</field>
+            <field name="description">Risiko pengakuan pendapatan instrumen keuangan (derivatif), penilaian aset keuangan, cadangan kerugian kredit, dan AML.</field>
+        </record>
+
+        <record id="cluster_mineral" model="icofr.industry.cluster">
+            <field name="name">Industri Mineral dan Batubara</field>
+            <field name="code">MINERAL</field>
+            <field name="sequence">5</field>
+            <field name="description">Risiko estimasi cadangan mineral, volatilitas harga komoditas terhadap penurunan nilai aset, dan rehabilitasi lahan.</field>
+        </record>
+
+        <record id="cluster_telecom" model="icofr.industry.cluster">
+            <field name="name">Jasa Telekomunikasi dan Media</field>
+            <field name="code">TELECOM</field>
+            <field name="sequence">6</field>
+            <field name="description">Risiko bundling produk/layanan, penilaian infrastruktur jaringan, dan perubahan teknologi yang cepat.</field>
+        </record>
+
+        <record id="cluster_infra" model="icofr.industry.cluster">
+            <field name="name">Jasa Infrastruktur</field>
+            <field name="code">INFRA</field>
+            <field name="sequence">7</field>
+            <field name="description">Risiko pengakuan pendapatan proyek konstruksi (percentage of completion) dan penilaian aset infrastruktur publik.</field>
+        </record>
+
+        <record id="cluster_asuransi" model="icofr.industry.cluster">
+            <field name="name">Jasa Asuransi dan Dana Pensiun</field>
+            <field name="code">ASURANSI</field>
+            <field name="sequence">8</field>
+            <field name="description">Risiko aktuaria (manfaat masa depan), estimasi klaim IBNR, dan fluktuasi nilai investasi.</field>
+        </record>
+
+        <record id="cluster_tourism" model="icofr.industry.cluster">
+            <field name="name">Jasa Pariwisata dan Pendukung</field>
+            <field name="code">TOURISM</field>
+            <field name="sequence">9</field>
+            <field name="description">Risiko pengakuan pendapatan layanan musiman dan kepatuhan lingkungan destinasi wisata.</field>
+        </record>
+
+        <record id="cluster_perkebunan" model="icofr.industry.cluster">
+            <field name="name">Industri Perkebunan dan Kehutanan</field>
+            <field name="code">PERKEBUNAN</field>
+            <field name="sequence">10</field>
+            <field name="description">Risiko penilaian aset biologis, pelaporan keberlanjutan (ESG), dan regulasi deforestasi.</field>
+        </record>
+
+        <record id="cluster_logistik" model="icofr.industry.cluster">
+            <field name="name">Jasa Logistik</field>
+            <field name="code">LOGISTIK</field>
+            <field name="sequence">11</field>
+            <field name="description">Risiko penilaian aset fisik (kereta, pelabuhan), akuntansi sewa/lease, dan variasi layanan transportasi.</field>
+        </record>
+    </data>
+</odoo>

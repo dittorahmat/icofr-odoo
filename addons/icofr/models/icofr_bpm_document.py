@@ -30,4 +30,11 @@ class IcofrBpmDocument(models.Model):
     description = fields.Text(string='Deskripsi/Catatan Perubahan')
     
     owner_id = fields.Many2one('res.users', string='Pemilik Dokumen', default=lambda self: self.env.user)
+    
+    # Tabel 16: Komponen Minimum Dokumentasi BPM
+    related_department = fields.Char(
+        string='Departemen/Fungsi Terkait',
+        help='Unit atau fungsi organisasi yang terlibat dalam proses bisnis ini.'
+    )
+
     company_id = fields.Many2one('res.company', string='Perusahaan', default=lambda self: self.env.company)

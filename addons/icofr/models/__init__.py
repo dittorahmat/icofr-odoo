@@ -22,7 +22,11 @@ from . import icofr_account_mapping_upload_wizard
 from . import icofr_qualitative_assessment
 from . import icofr_dashboard
 from . import icofr_bpm_document
+from . import icofr_industry_cluster
+from . import icofr_external_adjustment
 from . import icofr_cobit_element
+from . import icofr_company_extension
+from . import icofr_external_assurance
 from . import icofr_notification_scheduler
 from . import icofr_finding_group
 
@@ -35,4 +39,6 @@ from . import icofr_finding_extension
 from . import icofr_change_log
 from . import icofr_wbs
 from . import icofr_coso_mapping
+from . import icofr_itgc_mapping
+from . import icofr_application
 from . import icofr_additional_compliance

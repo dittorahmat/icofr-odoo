@@ -45,6 +45,10 @@ class IcofrSocReport(models.Model):
         ('disclaimer', 'Tidak Memberikan Pendapat (Disclaimer)')
     ], string='Opini Auditor', required=True)
     
+    # Hal 56-57: Gap Analysis Periode SOC
+    has_bridge_letter = fields.Boolean('Ada Bridge Letter?', help='Surat keterangan dari vendor yang menjamin kontrol tetap efektif sejak akhir periode SOC hingga akhir tahun buku perusahaan.')
+    gap_analysis_notes = fields.Text('Analisis Celah Periode', help='Catatan evaluasi jika periode laporan SOC tidak mencakup seluruh tahun buku perusahaan (Gap Analysis).')
+    
     notes = fields.Text('Catatan/Pengecualian Penting')
     attachment = fields.Binary('Lampiran Laporan')
     file_name = fields.Char('Nama File')

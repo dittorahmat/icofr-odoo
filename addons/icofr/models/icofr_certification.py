@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class IcofrCertification(models.Model):
@@ -174,6 +175,23 @@ class IcofrCertification(models.Model):
         default=lambda self: self.env.user,
         help='Pengguna yang membuat sertifikasi'
     )
+
+    # Lampiran 11: Poin-Poin Pernyataan CEO/CFO (Page 110)
+    ack_financial_review = fields.Boolean('1. Telah menelaah laporan keuangan', default=False)
+    ack_no_misstatement = fields.Boolean('2. Tidak memuat pernyataan yang tidak benar', default=False)
+    ack_fair_presentation = fields.Boolean('3. Menyajikan secara wajar kondisi keuangan', default=False)
+    ack_control_impl = fields.Boolean('4. Telah mengimplementasikan pengendalian internal', default=False)
+    ack_deficiency_disclosure = fields.Boolean('5. Telah mengungkapkan seluruh MW dan SD', default=False)
+    
+    @api.constrains('status', 'ack_financial_review', 'ack_no_misstatement', 'ack_fair_presentation', 'ack_control_impl', 'ack_deficiency_disclosure')
+    def _check_acknowledgments(self):
+        """Sertifikasi tidak dapat disetujui jika poin-poin Lampiran 11 belum dicentang."""
+        for record in self:
+            if record.status == 'approved':
+                if not all([record.ack_financial_review, record.ack_no_misstatement, 
+                           record.ack_fair_presentation, record.ack_control_impl, 
+                           record.ack_deficiency_disclosure]):
+                    raise ValidationError("Sesuai Lampiran 11 Juknis BUMN, SELURUH poin pernyataan (1-5) WAJIB dicentang sebelum sertifikasi disetujui!")
 
     @api.depends('action_plan_ids', 'finding_ids')
     def _compute_related_counts(self):

@@ -484,6 +484,20 @@ class IcofrLine3Report(models.Model):
         help='Jumlah rekomendasi dari hasil audit'
     )
 
+    # Bab VII 1.2: Komponen Laporan Hasil Pengujian Lini Ketiga
+    executive_summary = fields.Html(
+        string='Ringkasan Eksekutif',
+        help='Ringkasan hasil pengujian rancangan dan operasi pengendalian (Efektif/Tidak Efektif).'
+    )
+
+    finding_ids = fields.Many2many(
+        'icofr.finding',
+        string='Rincian Temuan (Defisiensi)',
+        compute='_compute_line3_data',
+        store=True,
+        help='Daftar temuan detail untuk pelaporan (Akar Masalah, Remediasi, dll).'
+    )
+
     summary = fields.Text(
         string='Ringkasan Laporan',
         compute='_compute_summary',
@@ -510,20 +524,20 @@ class IcofrLine3Report(models.Model):
             
             report.testing_performed = len(tests)
             
-            # Ambil temuan yang diidentifikasi oleh Lini 3
+            # Ambil temuan yang diidentifikasi oleh Lini 3 (via testing atau manual input)
+            # Filter temuan yang dibuat oleh Lini 3 atau terkait dengan test Lini 3
             findings = self.env['icofr.finding'].search([
                 ('create_date', '>=', report.period_start),
                 ('create_date', '<=', report.period_end),
                 ('company_id', '=', report.company_id.id)
             ])
             
-            # Filter temuan yang terkait dengan pengujian yang dilakukan oleh Lini 3
             l3_findings = findings.filtered(
-                lambda f: f.control_id and f.control_id.test_ids and 
-                any(test.tester_id.id == report.user_id.id for test in f.control_id.test_ids)
+                lambda f: f.created_by_id == report.user_id or (f.test_id and f.test_id.tester_id == report.user_id)
             )
             
             report.findings_identified = len(l3_findings)
+            report.finding_ids = l3_findings # Populate the Many2many field
             
             # Temuan berdasarkan klasifikasi
             report.material_weakness_identified = len(l3_findings.filtered(lambda f: f.deficiency_classified == 'material_weakness'))

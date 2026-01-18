@@ -84,7 +84,13 @@ class IcofrRisk(models.Model):
         ('tourism', 'Pariwisata'),
         ('plantation', 'Perkebunan & Kehutanan'),
         ('logistics', 'Logistik')
-    ], string='Klaster Usaha', default='general', help='Kategori risiko berdasarkan klaster BUMN (Lampiran 2)')
+    ], string='Klaster Usaha (Legacy)', default='general', help='Kategori risiko berdasarkan klaster BUMN (Lampiran 2)')
+
+    industry_cluster_id = fields.Many2one(
+        'icofr.industry.cluster',
+        string='Klaster Industri BUMN',
+        help='Referensi ke Master Data Klaster BUMN (Lampiran 2)'
+    )
 
     is_fraud_risk = fields.Boolean('Risiko Kecurangan (Fraud)', help='Centang jika risiko termasuk kategori fraud (Tabel 9)')
 

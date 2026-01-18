@@ -8,6 +8,7 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 - Buat dan kelola kontrol internal dengan berbagai jenis, frekuensi, dan pemilik.
 - Kaitkan kontrol dengan proses bisnis dan risiko terkait.
 - Lacak efektivitas dan status kontrol.
+- **Hierarki Level Pengendalian**: Kategorisasi formal ELC (Direct/Indirect/Monitoring) dan TLC sesuai Tabel 17-19.
 - **Dukungan Spesialis**: Atribut khusus untuk mencatat kredibilitas dan validitas asumsi tenaga ahli (Bab III Pasal 2.2.b.4).
 
 ### 2. Manajemen Risiko
@@ -19,6 +20,7 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 - Definisikan dan dokumentasikan proses bisnis.
 - Kaitkan proses dengan kontrol dan risiko.
 - Kelompokkan kontrol berdasarkan proses bisnis.
+- **Dukungan Sub-proses**: Implementasi struktur hierarki proses sesuai Lampiran 3 (Tabel 7).
 
 ### 4. Jadwal Pengujian
 - Buat jadwal pengujian berkala untuk kontrol.
@@ -71,11 +73,12 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 - Fitur perhitungan materialitas otomatis untuk Overall Materiality dan Performance Materiality.
 - Berdasarkan standar POJK No. 15 Tahun 2024.
 - Menggunakan metode persentase pendapatan, total aset, atau laba bersih.
-- Analisis cakupan scoping (Aturan 2/3) otomatis.
+- **Analisis Cakupan Scoping Otomatis**: Verifikasi Aturan 2/3 (66.7%) untuk akun dan lokasi signifikan.
 
 ### 14. Pemetaan Akun
 - Pemetaan akun General Ledger (GL) ke Financial Statement Line Item (FSLI).
 - Mendukung kalkulasi materialitas yang lebih akurat.
+- **Scoping Kualitatif Lanjutan**: Triger signifikansi otomatis untuk akun WIP, Pihak Ketiga, dan Loan Covenant (Tabel 5).
 - Fitur upload Excel untuk import data pemetaan akun secara massal.
 
 ### 15. Penilaian Mandiri Kontrol (CSA)
@@ -109,6 +112,7 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 
 ### 22. Laporan Khusus per Lini Pertahanan
 - Laporan khusus untuk Lini 1 (Pemilik Proses), Lini 2 (Tim Risiko/ICOFR), dan Lini 3 (Audit Internal).
+- **Pelaporan Lini 3 Profesional**: Narasi ringkasan eksekutif dan rincian defisiensi untuk laporan formal (Bab VII).
 
 ### 23. Fitur Copy Period
 - Wizard untuk menyalin data dari satu periode fiskal ke periode lain (efisiensi RCM).
@@ -139,6 +143,18 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 ### 31. Panduan Juknis Interaktif (FAQ)
 - Repositori 14 poin tanya-jawab dari **Lampiran 12 Juknis BUMN**.
 
+### 32. Matriks Pemetaan ITGC-COBIT
+- Dashboard visual pemetaan 4 area ITGC (Prog Dev, Changes, Ops, Access) ke objektif COBIT 2019 sesuai **Tabel 1**.
+
+### 33. Asurans Praktisi Eksternal
+- Modul pelacakan opini dan asurans dari Praktisi Eksternal (KAP) sesuai mandat **Bab VIII**.
+
+### 34. Sertifikasi Terintegrasi Lampiran 11
+- Digitalisasi surat pernyataan CEO/CFO dengan checkbox wajib untuk 5 poin pengakuan integritas pelaporan.
+
+### 35. Manajemen Aplikasi Signifikan
+- Registri sistem IT yang terintegrasi dengan kontrol otomatis untuk analisis dampak ITGC (Bab III 1.5).
+
 ## Panduan Penggunaan
 
 ### 1. Awal Penggunaan
@@ -156,9 +172,10 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 1. Buka menu "ICORF" > "Master Data" > "Kontrol Internal".
 2. Klik "New" untuk membuat kontrol baru.
 3. Isi informasi kontrol seperti nama, kode, jenis, dan frekuensi.
-4. Untuk kontrol outsourcing, centang **"Kontrol Outsourcing?"** dan hubungkan dengan **Service Organization**.
-5. Jika melibatkan tenaga ahli, centang **"Melibatkan Spesialis?"** dan isi data kredibilitasnya.
-6. Hubungkan dengan proses bisnis, risiko, Prinsip COSO, dan Elemen COBIT.
+4. Tentukan **Level Pengendalian** (ELC/TLC).
+5. Untuk kontrol outsourcing, centang **"Kontrol Outsourcing?"** dan hubungkan dengan **Service Organization**.
+6. Jika melibatkan tenaga ahli, centang **"Melibatkan Spesialis?"** dan isi data kredibilitasnya.
+7. Hubungkan dengan proses bisnis, risiko, Prinsip COSO, dan Elemen COBIT.
 
 ### 4. Membuat Risiko
 1. Buka menu "ICORF" > "Master Data" > "Risiko Finansial".
@@ -193,19 +210,20 @@ Modul ini menyediakan sistem untuk mengelola Internal Controls Over Financial Re
 ### 9. Sertifikasi dan Laporan
 1. Buka menu "ICORF" > "Kepatuhan" > "Sertifikasi ICORF".
 2. Buat entri sertifikasi baru untuk periode tahunan/kuartalan.
-3. Lakukan proses persetujuan oleh CFO dan CEO.
-4. Untuk laporan regulasi, buka "ICORF" > "Kepatuhan" > "Laporan POJK 15/2024".
+3. Pastikan poin pernyataan (1-5) telah dicentang sesuai **Lampiran 11**.
+4. Lakukan proses persetujuan oleh CFO dan CEO.
+5. Untuk laporan regulasi, buka "ICORF" > "Kepatuhan" > "Laporan POJK 15/2024".
 
 ### 10. Menggunakan Dashboard
 1. Buka menu "ICORF" > "Dashboard".
 2. Lihat ringkasan status kontrol, risiko, dan pengujian secara real-time.
-3. Gunakan filter untuk melihat data per perusahaan atau per periode.
+3. Akses **"Matriks ITGC-COBIT"** untuk memastikan cakupan tata kelola TI sudah sesuai standar.
 
 ### 11. Perhitungan Materialitas & Scoping
 1. Buka menu "ICORF" > "Master Data" > "Kalkulator Materialitas".
 2. Masukkan data keuangan (Pendapatan, Aset, Laba) atau klik **"Tarik Data dari ERP"**.
 3. Sistem akan menghitung OM/PM otomatis.
-4. Pastikan status scoping menunjukkan **"LULUS"** pada analisis aturan 2/3.
+4. Pastikan status scoping menunjukkan **"LULUS"** pada analisis aturan 2/3 (Akun & Lokasi).
 
 ### 12. Penilaian Mandiri Kontrol (CSA)
 1. Buka menu "ICORF" > "Operasional" > "Penilaian Mandiri Kontrol".

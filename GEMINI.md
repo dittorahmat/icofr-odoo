@@ -19,14 +19,22 @@ The system implements the **Three Lines of Defense** model:
 - **ERP Integration for Audit Sampling:** Wizard-driven data pulling from Odoo GL (`account.move.line`) to ensure audit populations are grounded in actual transactions.
 - **IPE & MRC Technical Verification:** Specialized checklists for system reports (Tabel 20) and management review precision (Tabel 21).
 - **COSO Mapping Matrix:** Visual dashboard to ensure all 17 COSO principles are covered by active key controls (Lampiran 1).
+- **ITGC vs COBIT Dashboard:** Visual mapping of 4 ITGC areas to 15 COBIT 2019 objectives as required by **Tabel 1**.
+- **Significant Application Registry:** System-wide mapping of IT applications to automated controls for consolidated ITGC impact analysis (Bab III 1.5).
+- **Control Level Classification:** Structural mapping of ELC (Direct/Indirect/Monitoring) and TLC (Transaction Level) as per **Tabel 17-19**.
+- **Qualitative Account Significance:** Support for non-monetary scoping triggers like WIP BUMN Konstruksi, Loan Covenants, and 3rd Party Assets (**Tabel 5**).
+- **Line 3 Audit Reporting:** Formally structured reports with executive summaries and detailed deficiency disclosures (**Bab VII**).
 - **RCM Mandatory Attributes:** Compliance fields for Supporting Application, Executing Function, and Impacted FS Items (Tabel 18 & 19).
 - **Testing Methodologies:** Standardized recording of Inquiry, Observation, Inspection, and Reperformance methods (Gambar 4).
 - **Audit Sampling Calculator:** Implementation of SK-BUMN Table 22 for sample size determination based on control frequency and risk level, and Table 23 for Remediation Testing.
-- **Scoping Coverage Analysis (2/3 Rule):** Automated verification that significant accounts in scope cover at least 66.7% of total Assets and Revenue as required by Bab III Pasal 1.3.
+- **Scoping Coverage Analysis (2/3 Rule):** Automated verification that significant accounts and locations in scope cover at least 66.7% of total Assets and Revenue as required by Bab III Pasal 1.3.
 - **Materiality-Based Risk Rating:** Quantitative rating logic (Tinggi/Sedang/Rendah) driven by monetary exposure vs. active materiality thresholds (OM/PM) as per Table 10.
 - **Industry Cluster Mapping:** Pre-defined risk classification for 11 BUMN Industry Clusters (Energy, Logistics, Financial, etc.) as required by Lampiran 2.
 - **EUC Technical Enforcement:** Automated validation rules ensuring High-Complexity spreadsheets meet all 5 mandatory control criteria (Tabel 14).
-- **Group Materiality Multiplier:** Automated calculation of materiality multiplier (1.5x to 9x) for consolidation entities based on Table 25.
+- **Group Materiality Multiplier:** Automated calculation of materiality multiplier (1.5x to 9x) for consolidation entities based on Table 25, with automated counting of significant locations.
+- **Group Materiality Allocation:** Automated validation rule ensuring subsidiary materiality thresholds do not exceed the Group Overall Materiality (Hal 115).
+- **External Assurance Tracking:** Dedicated module for recording independent auditor reviews and opinions on management's ICOFR assessment (Bab VIII).
+- **Interactive Certification Paper:** Digitized Lampiran 11 with mandatory CEO/CFO point-by-point acknowledgment checkboxes for financial review, misstatement prevention, and control implementation.
 - **Whistleblowing System (WBS):** Dedicated module for recording and investigating fraud/integrity reports to comply with COSO Principle 14.
 - **ITGC, EUC, IPE, & MRC Mapping:** Extended control attributes for IT General Controls (4 Areas), spreadsheet complexity (EUC), system report types (IPE), and Management Review precision (MRC).
 - **IPO (Information Processing Objectives):** Integration of C, A, V, and RA (Completeness, Accuracy, Validity, Restricted Access) attributes into the RCM as per Table 13.
@@ -36,11 +44,13 @@ The system implements the **Three Lines of Defense** model:
 - **Interactive DoD Working Paper:** Digital implementation of Lampiran 10 (Kotak 1-7) for transparent deficiency classification.
 - **Detailed Testing Attributes:** Support for Lampiran 7 checklist (Attributes A, B, C, D) and Lampiran 8 TOD detailed validation at the transaction level.
 - **Finding Distribution Tracker:** Automated tracking of deficiency reporting to CEO, Board, and Audit Committee as per Table 24 requirements.
-- **Service Organization Monitoring:** Dedicated module for managing third-party vendors and their **SOC 1/2 Type II Reports** as required by Bab III Pasal 4.3.
+- **Service Organization Monitoring:** Dedicated module for managing third-party vendors and their **SOC 1/2 Type II Reports** with Gap Analysis & Bridge Letter support (Bab III Pasal 4.3).
 - **Specialist Involvement Validation:** Specific attributes for evaluating **Specialist Credibility**, Assumption Validity, and Fairness as per Bab III Pasal 2.2.b.4.
 - **Remediation Sampling Engine:** Standalone logic implementing **Table 23** for post-remediation testing with specific observation periods.
 - **CSA "No Transaction" Logic:** Support for 'No Transaction' status in CSA to ensure audit accuracy for dormant controls (Bab IV Pasal 2.1.c).
-- **Interactive compliance FAQ:** Integrated 14-point decision guide from Lampiran 12 to assist users in resolving implementation ambiguities.
+- **Interactive Compliance FAQ:** Integrated 14-point decision guide from Lampiran 12 to assist users in resolving implementation ambiguities.
+- **External Audit Adjustments:** Module to record external audit findings as indicators of control deficiency (Hal 69).
+- **Cyber Security Mapping:** Field `is_cyber_related` for IT controls to map specific cyber risks (Hal 46).
 
 ### Key Components
 ...
@@ -49,9 +59,15 @@ The system implements the **Three Lines of Defense** model:
 
 - `icofr.control`: Internal controls registry with ITGC, EUC, IPE, MRC, IPO, and **Specialist/Service Org** technical attributes.
 
+- `icofr.application`: Registry for significant IT systems linked to automated controls (Bab III 1.5).
+
 - `icofr.service.organization`: Registry for third-party service providers (Data Centers, Payroll Outsourcing, etc.).
 
-- `icofr.soc.report`: Tracking of SOC 1 Type I/II and SOC 2 reports for external control assurance.
+- `icofr.soc.report`: Tracking of SOC 1 Type I/II and SOC 2 reports for external control assurance with Bridge Letter validation.
+
+- `icofr.itgc.mapping`: Dynamic SQL-view dashboard for monitoring ITGC coverage vs COBIT objectives (**Tabel 1**).
+
+- `icofr.external.assurance`: Tracking of independent auditor reviews and opinions on management assessments (Bab VIII).
 
 - `icofr.faq`: Interactive repository of Juknis Lampiran 12 FAQ for user guidance.
 
@@ -61,13 +77,17 @@ The system implements the **Three Lines of Defense** model:
 
 - `icofr.testing`: Testing procedures with automated sampling calculator (Tabel 22 & 23), TOD checklists (Lampiran 8), and attribute checklists (Lampiran 7).
 
-- `icofr.materiality`: Materiality thresholds with automated **Scoping Coverage Analysis (Aturan 2/3)** and **Group Multiplier (Tabel 25)**.
+- `icofr.materiality`: Materiality thresholds with automated **Scoping Coverage Analysis (Aturan 2/3)**, **Group Multiplier (Tabel 25)**, and Group Allocation validation.
 
 - `icofr.finding`: Findings documentation with **DoD Working Paper** (Lampiran 10) and **Distribution Matrix** (Tabel 24).
 
-- `icofr.risk`: Financial risk matrix with integrated **Qualitative Factors (Tabel 11)** and **Risk Rating Matrix (Tabel 12)**.
+- `icofr.risk`: Financial risk matrix with integrated **Qualitative Factors (Tabel 11)** and **Risk Rating Matrix (Tabel 12)** linked to **Industry Clusters**.
 
 - `icofr.coso.mapping`: Dynamic SQL-view matrix for monitoring 17 COSO Principles coverage (Lampiran 1).
+
+- `icofr.industry.cluster`: Master data for 11 BUMN industry clusters (Energy, Mineral, Financial, etc.) as per Lampiran 2.
+
+- `icofr.external.adjustment`: Tracking of external audit adjustments for deficiency indicators.
 
 ### Excel-First Strategy (Implemented)
 
@@ -158,5 +178,3 @@ To facilitate rapid adoption without immediate ERP integration, the system suppo
 *   **Company Hierarchy:** Avoid setting `parent_id` for `res.company` in XML data after initial creation, as Odoo prevents hierarchy changes once data exists.
 
 *   **External IDs:** Ensure wizards are defined before they are used in button actions to avoid `External ID not found` errors.
-
-

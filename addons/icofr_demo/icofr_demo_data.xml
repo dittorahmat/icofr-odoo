@@ -423,6 +423,11 @@
         <field name="certification_date" eval="(datetime.now() - timedelta(days=15)).strftime('%Y-%m-%d')"/>
         <field name="certified_by_id" ref="demo_user_finance_manager"/>
         <field name="status">approved</field>
+        <field name="ack_financial_review" eval="True"/>
+        <field name="ack_no_misstatement" eval="True"/>
+        <field name="ack_fair_presentation" eval="True"/>
+        <field name="ack_control_impl" eval="True"/>
+        <field name="ack_deficiency_disclosure" eval="True"/>
         <field name="scope">Semua kontrol internal atas pelaporan keuangan</field>
         <field name="effectiveness_statement">Berdasarkan penilaian manajemen, kontrol internal atas pelaporan keuangan efektif</field>
     </record>
@@ -471,6 +476,11 @@
         <field name="scope">All internal controls over financial reporting</field>
         <field name="effectiveness_statement">Based on our evaluation, management concluded that internal control over financial reporting was effective as of the end of fiscal year 2024.</field>
         <field name="status">approved</field>
+        <field name="ack_financial_review" eval="True"/>
+        <field name="ack_no_misstatement" eval="True"/>
+        <field name="ack_fair_presentation" eval="True"/>
+        <field name="ack_control_impl" eval="True"/>
+        <field name="ack_deficiency_disclosure" eval="True"/>
         <field name="created_by_id" ref="demo_user_ceo"/>
         <field name="notes">Sertifikasi untuk periode Q1 2024 sesuai dengan POJK No. 15 Tahun 2024</field>
     </record>
@@ -1066,6 +1076,10 @@
         <field name="quantitative_impact_amount">250000000.0</field>
         <field name="qualitative_impact_score">4.0</field>
         <field name="deficiency_category">significant_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
         <field name="impact_assessment_method">automatic</field>
     </record>
 
@@ -1083,6 +1097,8 @@
         <field name="status">in_progress</field>
         <field name="root_cause">Prosedur tidak diikuti secara konsisten</field>
         <field name="recommendation">Implementasi checklist verifikasi vendor dengan otorisasi ganda</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
         <field name="created_by_id" ref="demo_user_jane_smith"/>
         <field name="quantitative_impact_amount">50000000.0</field>
         <field name="qualitative_impact_score">2.5</field>
@@ -1112,6 +1128,10 @@
         <field name="manual_monetary_impact_amount">100000000.0</field>
         <field name="manual_qualitative_impact_score">3.5</field>
         <field name="override_deficiency_classification">significant_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
         <field name="override_reason">Manajemen menilai dampak operasional lebih besar dari yang dihitung sistem</field>
     </record>
 
@@ -1514,6 +1534,11 @@
         <field name="certification_date" eval="time.strftime('2024-12-15')"/>
         <field name="certified_by_id" ref="demo_user_ceo"/>
         <field name="status">approved</field>
+        <field name="ack_financial_review" eval="True"/>
+        <field name="ack_no_misstatement" eval="True"/>
+        <field name="ack_fair_presentation" eval="True"/>
+        <field name="ack_control_impl" eval="True"/>
+        <field name="ack_deficiency_disclosure" eval="True"/>
         <field name="scope">Semua kontrol internal atas pelaporan keuangan</field>
         <field name="effectiveness_statement">Berdasarkan penilaian manajemen, kontrol internal atas pelaporan keuangan efektif</field>
     </record>
@@ -2137,6 +2162,10 @@
         <field name="qualitative_impact_score">4.0</field>
         <field name="deficiency_category">control_deficiency</field>
         <field name="deficiency_classified">significant_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
         <field name="company_id" ref="base.main_company"/>
     </record>
 
@@ -2177,6 +2206,10 @@
         <field name="qualitative_impact_score">4.0</field>
         <field name="deficiency_category">control_deficiency</field>
         <field name="deficiency_classified">significant_deficiency</field>  <!-- Automatically classified as significant deficiency -->
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
         <field name="classification_method">automatic</field>
         <field name="deficiency_classification_reason">Klasifikasi otomatis berdasarkan dampak kuantitatif (di atas threshold) dan skor kualitatif tinggi</field>
         <field name="company_id" ref="base.main_company"/>
@@ -2199,6 +2232,10 @@
         <field name="qualitative_impact_score">3.5</field>
         <field name="deficiency_category">control_deficiency</field>
         <field name="deficiency_classified">significant_deficiency</field>  <!-- System automatic classification -->
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
         <field name="classification_method">automatic</field>
         <field name="deficiency_classification_reason">Klasifikasi otomatis berdasarkan dampak finansial yang tinggi</field>
         <field name="override_deficiency_classification">material_weakness</field>  <!-- Management override -->
@@ -2224,6 +2261,8 @@
         <field name="qualitative_impact_score">2.5</field>
         <field name="deficiency_category">process_deficiency</field>
         <field name="deficiency_classified">control_deficiency</field>  <!-- Manual classification by management -->
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
         <field name="classification_method">manual</field>
         <field name="deficiency_classification_reason">Klasifikasi manual berdasarkan pertimbangan profesional manajemen</field>
         <field name="company_id" ref="base.main_company"/>
@@ -2246,6 +2285,8 @@
         <field name="qualitative_impact_score">3.0</field>
         <field name="deficiency_category">timing_deficiency</field>
         <field name="deficiency_classified">control_deficiency</field>  <!-- System classification -->
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
         <field name="classification_method">hybrid</field>
         <field name="deficiency_classification_reason">Sistem klasifikasi menunjukkan control_deficiency, tetapi manajemen menilai perlu perhatian khusus karena risiko deteksi ketidaksesuaian</field>
         <field name="company_id" ref="base.main_company"/>
@@ -2343,6 +2384,10 @@
         <field name="qualitative_impact_score">4.0</field>
         <field name="deficiency_category">control_deficiency</field>
         <field name="deficiency_classified">significant_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
         <field name="company_id" ref="base.main_company"/>
     </record>
 
@@ -2410,6 +2455,11 @@
         <field name="certification_date" eval="time.strftime('2024-10-15')"/>
         <field name="certified_by_id" ref="demo_user_ceo"/>
         <field name="status">approved</field>
+        <field name="ack_financial_review" eval="True"/>
+        <field name="ack_no_misstatement" eval="True"/>
+        <field name="ack_fair_presentation" eval="True"/>
+        <field name="ack_control_impl" eval="True"/>
+        <field name="ack_deficiency_disclosure" eval="True"/>
         <field name="scope">Seluruh kontrol internal atas pelaporan keuangan termasuk temuan dari Q2</field>
         <field name="effectiveness_statement">Berdasarkan evaluasi manajemen, meskipun ditemukan beberapa kelemahan signifikan, kontrol internal secara keseluruhan efektif</field>
         <field name="finding_ids" eval="[(4, ref('demo_cross_module_finding'))]"/>  <!-- Link to the finding -->
@@ -2856,6 +2906,11 @@
         <field name="certification_date" eval="time.strftime('2024-12-20')"/>
         <field name="certified_by_id" ref="demo_user_ceo"/>
         <field name="status">approved</field>
+        <field name="ack_financial_review" eval="True"/>
+        <field name="ack_no_misstatement" eval="True"/>
+        <field name="ack_fair_presentation" eval="True"/>
+        <field name="ack_control_impl" eval="True"/>
+        <field name="ack_deficiency_disclosure" eval="True"/>
         <field name="scope">Konsolidasi kontrol internal atas pelaporan keuangan dari seluruh entitas grup</field>
         <field name="effectiveness_statement">Berdasarkan penilaian manajemen, kontrol internal konsolidasi atas pelaporan keuangan efektif secara keseluruhan</field>
         <field name="is_consolidated" eval="True"/>  <!-- Mark as consolidated certification -->
@@ -2878,6 +2933,55 @@
         <field name="owner_id" ref="demo_user_finance_manager"/>
         <field name="status">active</field>
         <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- Sub-processes for Closing (Table 7) -->
+    <record id="demo_subproc_coa_maint" model="icofr.process">
+        <field name="name">Pemeliharaan Bagan Akun (CoA)</field>
+        <field name="code">SUB-CLOSE-001</field>
+        <field name="parent_process_id" ref="demo_proc_closing_001"/>
+        <field name="category">financial</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+    </record>
+
+    <record id="demo_subproc_journal_entry" model="icofr.process">
+        <field name="name">Pencatatan Jurnal Manual</field>
+        <field name="code">SUB-CLOSE-002</field>
+        <field name="parent_process_id" ref="demo_proc_closing_001"/>
+        <field name="category">financial</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+    </record>
+
+    <record id="demo_subproc_reconciliation" model="icofr.process">
+        <field name="name">Rekonsiliasi (Bank/Sub-ledger)</field>
+        <field name="code">SUB-CLOSE-003</field>
+        <field name="parent_process_id" ref="demo_proc_closing_001"/>
+        <field name="category">financial</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+    </record>
+
+    <!-- Process: Fixed Assets (Table 7) -->
+    <record id="demo_proc_fixed_asset" model="icofr.process">
+        <field name="name">Manajemen Aset Tetap</field>
+        <field name="code">PROC-FA-001</field>
+        <field name="category">operational</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+    </record>
+
+    <record id="demo_subproc_fa_acquisition" model="icofr.process">
+        <field name="name">Pengadaan &amp; Penerimaan Aset</field>
+        <field name="code">SUB-FA-001</field>
+        <field name="parent_process_id" ref="demo_proc_fixed_asset"/>
+        <field name="category">operational</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
+    </record>
+
+    <record id="demo_subproc_fa_depreciation" model="icofr.process">
+        <field name="name">Perhitungan Depresiasi</field>
+        <field name="code">SUB-FA-002</field>
+        <field name="parent_process_id" ref="demo_proc_fixed_asset"/>
+        <field name="category">operational</field>
+        <field name="owner_id" ref="demo_user_finance_manager"/>
     </record>
 
     <!-- Risk: Fraud - Fictitious Revenue (Table 9 - Manipulasi Laporan Keuangan) -->
