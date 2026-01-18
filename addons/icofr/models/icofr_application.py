@@ -25,9 +25,25 @@ class IcofrApplication(models.Model):
     
     control_ids = fields.One2many('icofr.control', 'application_id', string='Kontrol Terkait')
     
-    company_id = fields.Many2one('res.company', string='Perusahaan', required=True, default=lambda self: self.env.company)
+    status = fields.Selection([
+        ('active', 'Aktif'),
+        ('inactive', 'Tidak Aktif'),
+        ('deprecated', 'Ditinggalkan')
+    ], string='Status', default='active')
+
+    # Bab III 1.5 & FAQ 4: Efektivitas ITGC Aplikasi
+    itgc_effectiveness = fields.Selection([
+        ('effective', 'Efektif'),
+        ('ineffective', 'Tidak Efektif'),
+        ('not_assessed', 'Belum Dinilai')
+    ], string='Efektivitas ITGC', default='not_assessed', tracking=True,
+       help='Status efektivitas ITGC aplikasi ini. Jika Tidak Efektif, maka kontrol otomatis di dalamnya dianggap tidak dapat diandalkan (FAQ 4).')
+    
+    last_itgc_assessment_date = fields.Date('Tanggal Penilaian ITGC Terakhir')
+
+    company_id = fields.Many2one('res.company', string='Perusahaan', default=lambda self: self.env.company)
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        ('code_unique', 'unique(code, company_id)', 'Kode aplikasi harus unik per perusahaan!')
-    ]
+    # _sql_constraints = [
+    #     ('code_unique', 'unique(code, company_id)', 'Kode aplikasi harus unik per perusahaan!')
+    # ]

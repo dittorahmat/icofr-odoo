@@ -193,11 +193,19 @@ class IcofrCertification(models.Model):
                            record.ack_deficiency_disclosure]):
                     raise ValidationError("Sesuai Lampiran 11 Juknis BUMN, SELURUH poin pernyataan (1-5) WAJIB dicentang sebelum sertifikasi disetujui!")
 
-    @api.depends('action_plan_ids', 'finding_ids')
+    @api.depends('action_plan_ids', 'finding_ids', 'finding_ids.deficiency_classified')
     def _compute_related_counts(self):
         for record in self:
             record.action_plan_count = len(record.action_plan_ids)
             record.finding_count = len(record.finding_ids)
+            
+            # Count by classification for summary table (Lampiran 11)
+            record.material_weaknesses_identified = len(record.finding_ids.filtered(lambda f: f.deficiency_classified == 'material_weakness'))
+            record.significant_deficiencies_identified = len(record.finding_ids.filtered(lambda f: f.deficiency_classified == 'significant_deficiency'))
+            record.control_deficiencies_identified = len(record.finding_ids.filtered(lambda f: f.deficiency_classified == 'control_deficiency'))
+            
+            # Set boolean flag if MW exists
+            record.material_weakness_identified = record.material_weaknesses_identified > 0
 
     def create_certification_workflow(self):
         """Method untuk membuat workflow persetujuan untuk sertifikasi"""

@@ -312,29 +312,27 @@ class IcofrFinding(models.Model):
         help='Catatan tambahan terkait temuan'
     )
 
-    # @api.constrains('deficiency_classified', 'reported_to_ceo', 'reported_to_board', 'reported_to_audit_committee', 'reported_to_mgmt_assessment')
-    # def _check_reporting_compliance(self):
-    #     """
-    #     Validation according to Table 24: Ilustrasi – Penyampaian Defisiensi oleh Lini Ketiga
-    #     """
-    #     if self._context.get('install_mode') or self._context.get('import_file'):
-    #         return
-    # 
-    #     for record in self:
-    #         # Skip if record is not yet fully initialized or classification is missing
-    #         if not record.deficiency_classified:
-    #             continue
-    #             
-    #         if record.deficiency_classified in ['material_weakness', 'significant_deficiency']:
-    #             # SD & MW must be reported to all 4
-    #             if not all([record.reported_to_ceo, record.reported_to_board, 
-    #                        record.reported_to_audit_committee, record.reported_to_mgmt_assessment]):
-    #                 raise ValidationError(f"Sesuai Juknis BUMN Tabel 24, temuan kategori '{dict(record._fields['deficiency_classified'].selection).get(record.deficiency_classified)}' WAJIB dilaporkan ke CEO, Dewan Pengawas, Komite Audit, dan tercantum dalam Asesmen Manajemen!")
-    #         
-    #         elif record.deficiency_classified == 'control_deficiency':
-    #             # CD must be reported to CEO and Audit Committee
-    #             if not all([record.reported_to_ceo, record.reported_to_audit_committee]):
-    #                 raise ValidationError("Sesuai Juknis BUMN Tabel 24, temuan kategori 'Kekurangan Kontrol' WAJIB dilaporkan minimal ke CEO dan Komite Audit!")
+    @api.constrains('deficiency_classified', 'reported_to_ceo', 'reported_to_board', 'reported_to_audit_committee', 'reported_to_mgmt_assessment', 'status')
+    def _check_reporting_compliance(self):
+        """
+        Validation according to Table 24: Ilustrasi – Penyampaian Defisiensi oleh Lini Ketiga
+        Enforced when status is moved towards closing.
+        """
+        for record in self:
+            # Skip if record is in draft or classification is missing
+            if record.status in ['draft', 'planned'] or not record.deficiency_classified:
+                continue
+                
+            if record.deficiency_classified in ['material_weakness', 'significant_deficiency']:
+                # SD & MW must be reported to all 4
+                if not all([record.reported_to_ceo, record.reported_to_board, 
+                           record.reported_to_audit_committee, record.reported_to_mgmt_assessment]):
+                    raise ValidationError(f"Sesuai Juknis BUMN Tabel 24, temuan kategori '{dict(record._fields['deficiency_classified'].selection).get(record.deficiency_classified)}' WAJIB dilaporkan ke CEO, Dewan Pengawas, Komite Audit, dan tercantum dalam Asesmen Manajemen sebelum dapat dilanjutkan!")
+            
+            elif record.deficiency_classified == 'control_deficiency':
+                # CD must be reported to CEO and Audit Committee
+                if not all([record.reported_to_ceo, record.reported_to_audit_committee]):
+                    raise ValidationError("Sesuai Juknis BUMN Tabel 24, temuan kategori 'Kekurangan Kontrol' WAJIB dilaporkan minimal ke CEO dan Komite Audit sebelum dapat dilanjutkan!")
 
     @api.depends('severity_level', 'quantitative_impact_amount', 'qualitative_impact_score',
                  'manual_monetary_impact_amount', 'manual_qualitative_impact_score',
@@ -477,8 +475,9 @@ class IcofrFinding(models.Model):
         return True
     
     def action_close_finding(self):
-        """Method untuk menutup temuan"""
+        """Method untuk menutup temuan dengan validasi kepatuhan pelaporan"""
         self.ensure_one()
+        self._check_reporting_compliance() # Explicit check before writing
         self.write({
             'status': 'closed',
             'closed_date': fields.Date.today()

@@ -12,6 +12,7 @@ from . import icofr_pojk_report
 from . import icofr_schedule
 from . import icofr_workflow_log
 from . import icofr_process
+from . import icofr_process_step
 from . import icofr_export
 from . import icofr_coso_element
 from . import icofr_materiality

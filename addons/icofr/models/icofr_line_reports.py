@@ -296,6 +296,14 @@ class IcofrLine2Report(models.Model):
         help='Jumlah kekurangan signifikan yang diidentifikasi'
     )
 
+    # Hal 61: Rekonsiliasi & Rincian Perubahan
+    comparison_line3_notes = fields.Text(
+        string='Perbandingan Hasil Lini 3',
+        help='Catatan perbandingan hasil pengujian Lini 2 vs Lini 3 (Wajib di Q4 sesuai Hal 61).'
+    )
+    process_changes_details = fields.Text('Rincian Perubahan Proses Bisnis')
+    ineffective_csa_details = fields.Text('Rincian CSA Tidak Efektif/Tidak Ada Transaksi')
+
     summary = fields.Text(
         string='Ringkasan Laporan',
         compute='_compute_summary',
@@ -477,6 +485,13 @@ class IcofrLine3Report(models.Model):
         help='Jumlah kekurangan signifikan yang diidentifikasi'
     )
 
+    findings_remedied = fields.Integer(
+        string='Temuan Remediasi',
+        compute='_compute_line3_data',
+        store=True,
+        help='Jumlah temuan yang telah selesai diperbaiki/diremediasi.'
+    )
+
     audit_recommendations = fields.Integer(
         string='Rekomendasi Audit',
         compute='_compute_line3_data',
@@ -542,6 +557,7 @@ class IcofrLine3Report(models.Model):
             # Temuan berdasarkan klasifikasi
             report.material_weakness_identified = len(l3_findings.filtered(lambda f: f.deficiency_classified == 'material_weakness'))
             report.significant_deficiency_identified = len(l3_findings.filtered(lambda f: f.deficiency_classified == 'significant_deficiency'))
+            report.findings_remedied = len(l3_findings.filtered(lambda f: f.status == 'closed'))
             
             # Hitung rekomendasi dari temuan
             report.audit_recommendations = sum(1 for f in l3_findings if f.recommendation)
@@ -577,6 +593,7 @@ class IcofrLine3Report(models.Model):
                 f"- Pengujian kepatuhan: {report.compliance_testing}\n"
                 f"- Kelemahan material: {report.material_weakness_identified}\n"
                 f"- Kekurangan signifikan: {report.significant_deficiency_identified}\n"
+                f"- Temuan diremediasi: {report.findings_remedied}\n"
                 f"- Rekomendasi audit: {report.audit_recommendations}"
             )
 

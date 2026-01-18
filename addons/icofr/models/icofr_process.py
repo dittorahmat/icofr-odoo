@@ -69,6 +69,13 @@ class IcofrProcess(models.Model):
         string='Dokumen BPM/SOP'
     )
 
+    process_step_ids = fields.One2many(
+        'icofr.process.step',
+        'process_id',
+        string='Langkah-Langkah Proses (BPM Terstruktur)',
+        help='Daftar langkah aktivitas terstruktur sesuai Lampiran 3 & 4 Juknis BUMN.'
+    )
+
 
     status = fields.Selection([
         ('active', 'Aktif'),
@@ -94,6 +101,12 @@ class IcofrProcess(models.Model):
         ('operational_process', 'Proses Operasional')
     ], string='Tipe Proses', default='business_process',
        help='Tipe dari proses bisnis')
+
+    # Tabel 16: Komponen Minimum Dalam Dokumentasi Diagram Alur Proses Bisnis
+    version = fields.Char(string='Versi Dokumentasi', default='1.0', help='Versi dari diagram alur proses bisnis')
+    page_count = fields.Integer(string='Jumlah Halaman', default=1)
+    location_id = fields.Many2one('res.partner', string='Lokasi Pelaksanaan', 
+                                help='Lokasi utama pelaksanaan aktivitas proses ini (biasanya Cabang/Unit)')
 
     notes = fields.Text(
         string='Catatan Tambahan',

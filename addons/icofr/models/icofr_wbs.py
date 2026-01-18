@@ -11,6 +11,15 @@ class IcofrWbsEntry(models.Model):
     code = fields.Char('Nomor Laporan', required=True, copy=False, default=lambda self: self.env['ir.sequence'].next_by_code('icofr.wbs.entry') or '/')
     
     report_date = fields.Date('Tanggal Laporan', default=fields.Date.today, required=True)
+    
+    report_source = fields.Selection([
+        ('hotline', 'Hotline / Telepon'),
+        ('email', 'Email Khusus WBS'),
+        ('website', 'Portal Web WBS'),
+        ('letter', 'Surat Tertulis'),
+        ('direct', 'Laporan Langsung')
+    ], string='Media Pelaporan', default='website')
+
     reporter_type = fields.Selection([
         ('internal', 'Internal (Karyawan)'),
         ('external', 'Eksternal (Vendor/Masyarakat)'),
@@ -40,6 +49,11 @@ class IcofrWbsEntry(models.Model):
         ('not_proven', 'Tidak Terbukti'),
         ('closed', 'Selesai / Ditutup')
     ], string='Status Penanganan', default='received', tracking=True)
+
+    disposition_to = fields.Char('Disposisi kepada Unit', help='Unit atau fungsi yang menangani investigasi.')
+    
+    finding_id = fields.Many2one('icofr.finding', string='Temuan Terkait', 
+                                help='Link ke temuan ICORF jika aduan ini memicu identifikasi defisiensi kontrol.')
 
     investigation_notes = fields.Text('Catatan Investigasi')
     resolution = fields.Text('Resolusi / Tindak Lanjut')

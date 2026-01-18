@@ -42,6 +42,16 @@ class IcofrMateriality(models.Model):
         help='Jumlah total aset perusahaan (dalam satuan mata uang lokal)'
     )
 
+    total_expense_amount = fields.Float(
+        string='Jumlah Total Beban',
+        help='Jumlah beban perusahaan untuk kalkulasi cakupan scoping.'
+    )
+
+    total_liability_amount = fields.Float(
+        string='Jumlah Total Liabilitas',
+        help='Jumlah liabilitas perusahaan untuk kalkulasi cakupan scoping.'
+    )
+
     # Group Materiality Multiplier (Table 25 SK BUMN)
     is_group_consolidation = fields.Boolean('Entitas Grup/Konsolidasian?')
     number_of_significant_locations = fields.Integer(
@@ -202,6 +212,18 @@ class IcofrMateriality(models.Model):
         help='Persentase cakupan akun aset signifikan terhadap total aset'
     )
 
+    coverage_expenses_percent = fields.Float(
+        string='Cakupan Beban (%)',
+        compute='_compute_coverage_ratios',
+        help='Persentase cakupan akun beban signifikan terhadap total beban'
+    )
+
+    coverage_liabilities_percent = fields.Float(
+        string='Cakupan Liabilitas (%)',
+        compute='_compute_coverage_ratios',
+        help='Persentase cakupan akun liabilitas signifikan terhadap total liabilitas'
+    )
+
     # Tabel 6 Juknis BUMN: Scoping Level Lokasi/Entitas
     coverage_locations_percent = fields.Float(
         string='Cakupan Lokasi (%)',
@@ -219,7 +241,7 @@ class IcofrMateriality(models.Model):
                  'revenue_amount', 'total_assets_amount', 'is_group_consolidation')
     def _compute_coverage_ratios(self):
         for record in self:
-            # 1. Account Coverage (Legacy logic)
+            # 1. Account Coverage (Tabel 6: Minimal 2/3 nilai akun/FSLI)
             sig_accounts = record.account_mapping_ids.filtered(lambda x: x.is_significant_account)
             rev_mapped = sum(sig_accounts.filtered(lambda x: 'Revenue' in (x.fsl_item or '') or 'Pendapatan' in (x.fsl_item or '')).mapped('account_balance'))
             record.coverage_revenue_percent = (rev_mapped / record.revenue_amount * 100) if record.revenue_amount > 0 else 0
@@ -227,22 +249,42 @@ class IcofrMateriality(models.Model):
             asset_mapped = sum(sig_accounts.filtered(lambda x: 'Asset' in (x.fsl_item or '') or 'Aset' in (x.fsl_item or '') or 'Aktiva' in (x.fsl_item or '')).mapped('account_balance'))
             record.coverage_assets_percent = (asset_mapped / record.total_assets_amount * 100) if record.total_assets_amount > 0 else 0
             
+            exp_mapped = sum(sig_accounts.filtered(lambda x: 'Expense' in (x.fsl_item or '') or 'Beban' in (x.fsl_item or '') or 'Biaya' in (x.fsl_item or '')).mapped('account_balance'))
+            record.coverage_expenses_percent = (exp_mapped / record.total_expense_amount * 100) if record.total_expense_amount > 0 else 0
+
+            lia_mapped = sum(sig_accounts.filtered(lambda x: 'Liability' in (x.fsl_item or '') or 'Liabilitas' in (x.fsl_item or '') or 'Kewajiban' in (x.fsl_item or '') or 'Utang' in (x.fsl_item or '')).mapped('account_balance'))
+            record.coverage_liabilities_percent = (lia_mapped / record.total_liability_amount * 100) if record.total_liability_amount > 0 else 0
+
             # 2. Location Coverage (Bab III 1.3 - Tabel 6)
-            # If group, calculate contribution of significant entities
+            # Menggunakan kontribusi finansial riil dari perusahaan, bukan sekadar jumlah (count).
             if record.is_group_consolidation:
-                sig_companies = self.env['res.company'].search([('is_significant_location', '=', True)])
-                # In a real ERP, we would sum the financial statements of these companies
-                # For this module, we assume user manages it or we simulate with a count-based ratio if data not linked
-                # Better: calculate ratio of (Sum of PM of sig locations / Total OM Group) or similar proxy if amounts not available
-                # Here we use the simplified count ratio vs total entities as a proxy, or 100% if not group
-                total_companies = self.env['res.company'].search_count([])
-                record.coverage_locations_percent = (len(sig_companies) / total_companies * 100) if total_companies > 0 else 100
+                # FAQ 13: Entitas baru diakuisisi dikecualikan dari kewajiban evaluasi di tahun pertama.
+                # Kita hanya menghitung entitas yang 'eligible' (bukan newly acquired).
+                eligible_companies = self.env['res.company'].search([('is_newly_acquired', '=', False)])
+                sig_companies = eligible_companies.filtered(lambda c: c.is_significant_location)
+                
+                # Hitung total kontribusi dari lokasi signifikan terpilih
+                sig_revenue = sum(sig_companies.mapped('icofr_revenue_contribution'))
+                sig_assets = sum(sig_companies.mapped('icofr_asset_contribution'))
+                
+                # Denominator adalah total eligible (bukan total absolut grup agar fair terhadap entitas baru)
+                total_eligible_rev = sum(eligible_companies.mapped('icofr_revenue_contribution')) or record.revenue_amount
+                total_eligible_assets = sum(eligible_companies.mapped('icofr_asset_contribution')) or record.total_assets_amount
+                
+                # Ambil nilai terendah antara cakupan aset dan revenue untuk status lokasi
+                loc_rev_ratio = (sig_revenue / total_eligible_rev * 100) if total_eligible_rev > 0 else 0
+                loc_asset_ratio = (sig_assets / total_eligible_assets * 100) if total_eligible_assets > 0 else 0
+                record.coverage_locations_percent = min(loc_rev_ratio, loc_asset_ratio)
             else:
                 record.coverage_locations_percent = 100.0
 
-            # Overall Status (Must meet 2/3 threshold)
+            # Overall Status (Must meet 2/3 threshold for ALL metrics)
             threshold = 66.67
-            if record.coverage_revenue_percent >= threshold and record.coverage_assets_percent >= threshold and record.coverage_locations_percent >= threshold:
+            if (record.coverage_revenue_percent >= threshold and 
+                record.coverage_assets_percent >= threshold and 
+                record.coverage_expenses_percent >= threshold and
+                record.coverage_liabilities_percent >= threshold and
+                record.coverage_locations_percent >= threshold):
                 record.coverage_status = 'pass'
             else:
                 record.coverage_status = 'fail'
@@ -268,6 +310,14 @@ class IcofrMateriality(models.Model):
         string='Catatan Perhitungan',
         help='Catatan tentang perhitungan materialitas dan pertimbangan lainnya'
     )
+
+    # Hal 16 Juknis BUMN: Dokumentasi Konsultasi Auditor Eksternal
+    has_auditor_consultation = fields.Boolean(
+        string='Sudah Diskusi dengan Auditor Eksternal?',
+        help='Centang jika pendekatan materialitas telah didiskusikan dengan Auditor Eksternal sesuai Hal 16.'
+    )
+    auditor_consultation_date = fields.Date('Tanggal Konsultasi')
+    auditor_consultation_notes = fields.Text('Catatan Masukan Auditor')
 
     active = fields.Boolean(
         string='Aktif',
@@ -346,6 +396,75 @@ class IcofrMateriality(models.Model):
                 company_id = new_vals.get('company_id', '')
                 new_vals['name'] = f'Materialitas {fiscal_year} - {company_id}'
             return super(IcofrMateriality, self).create(new_vals)
+
+    def action_allocate_to_subsidiaries(self):
+        """
+        Hal 115 Juknis BUMN: Menghitung alokasi materialitas secara proporsional 
+        berdasarkan total aset masing-masing Lokasi/Perusahaan signifikan.
+        """
+        self.ensure_one()
+        if not self.is_group_consolidation:
+            raise ValidationError("Fitur alokasi hanya tersedia untuk entitas tingkat Grup/Konsolidasian.")
+
+        # Cari anak perusahaan (lokasi signifikan)
+        subsidiaries = self.env['res.company'].search([
+            ('is_significant_location', '=', True),
+            ('id', '!=', self.company_id.id)
+        ])
+        
+        if not subsidiaries:
+            raise ValidationError("Tidak ditemukan anak perusahaan yang ditandai sebagai Lokasi Signifikan.")
+
+        total_group_assets = sum(subsidiaries.mapped('icofr_asset_contribution'))
+        if total_group_assets <= 0:
+            raise ValidationError("Total aset kontribusi anak perusahaan harus lebih besar dari nol untuk kalkulasi proporsional.")
+
+        # Nilai maksimal yang boleh dialokasikan (Group OM * Multiplier)
+        total_allocatable_om = self.overall_materiality_amount * self.group_multiplier
+        
+        results = []
+        for sub in subsidiaries:
+            # Hitung proporsi
+            porsi = sub.icofr_asset_contribution / total_group_assets
+            allocated_om = total_allocatable_om * porsi
+            
+            # Pastikan tidak melebihi Group OM absolut (Hal 115 poin a)
+            final_om = min(allocated_om, self.overall_materiality_amount)
+            
+            # Cari atau buat record materiality untuk anak perusahaan
+            sub_mat = self.env['icofr.materiality'].search([
+                ('company_id', '=', sub.id),
+                ('fiscal_year', '=', self.fiscal_year),
+                ('active', '=', True)
+            ], limit=1)
+            
+            vals = {
+                'company_id': sub.id,
+                'fiscal_year': self.fiscal_year,
+                'parent_materiality_id': self.id,
+                'total_assets_amount': sub.icofr_asset_contribution,
+                'revenue_amount': sub.icofr_revenue_contribution,
+                'overall_materiality_amount': final_om,
+                'materiality_basis': 'hybrid',
+                'notes': f'Alokasi otomatis dari Grup {self.company_id.name} (Proporsi Aset: {porsi*100:.2f}%)'
+            }
+            
+            if sub_mat:
+                sub_mat.write(vals)
+            else:
+                self.env['icofr.materiality'].create(vals)
+            
+            results.append(f"{sub.name}: Rp {final_om:,.0f}")
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Alokasi Materialitas Selesai',
+                'message': f'Berhasil mengalokasikan ke {len(subsidiaries)} entitas:\n' + '\n'.join(results),
+                'type': 'success',
+            }
+        }
 
     def action_calculate_materiality(self):
         """Method untuk mengkalkulasi ulang materialitas jika ada perubahan data"""

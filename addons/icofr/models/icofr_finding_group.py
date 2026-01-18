@@ -29,12 +29,24 @@ class IcofrFindingGroup(models.Model):
     grouping_basis = fields.Selection([
         ('account', 'Akun/FSLI yang Sama'),
         ('disclosure', 'Pengungkapan yang Sama'),
+        ('assertion', 'Asersi Laporan Keuangan yang Sama'),
         ('coso', 'Komponen/Prinsip COSO yang Sama'),
         ('process', 'Proses Bisnis yang Sama'),
         ('other', 'Pertimbangan Profesional Lainnya')
     ], string='Dasar Pengelompokan', required=True, default='account')
 
     impacted_fsli_id = fields.Many2one('icofr.account.mapping', string='Akun/FSLI Terkait')
+    
+    assertion_type = fields.Selection([
+        ('existence', 'Existence/Occurrence'),
+        ('completeness', 'Completeness'),
+        ('accuracy', 'Accuracy'),
+        ('cutoff', 'Cut-Off'),
+        ('valuation', 'Valuation and Allocation'),
+        ('rights', 'Rights and Obligation'),
+        ('presentation', 'Presentation and Disclosure')
+    ], string='Asersi Terkait', help='Digunakan jika dasar pengelompokan adalah Asersi.')
+
     coso_principle_id = fields.Many2one('icofr.coso.element', string='Prinsip COSO Terkait', domain="[('is_principle', '=', True)]")
 
     company_id = fields.Many2one(
@@ -73,6 +85,17 @@ class IcofrFindingGroup(models.Model):
        store=True,
        help='Hasil klasifikasi defisiensi berdasarkan total dampak grup terhadap materialitas')
 
+    # Hal 69: Mitigasi via Compensating Control untuk Agregasi
+    compensating_control_id = fields.Many2one(
+        'icofr.control', 
+        string='Kontrol Kompensasi (Grup)',
+        help='Kontrol yang memitigasi risiko dari gabungan temuan ini.'
+    )
+    is_compensating_control_effective = fields.Boolean(
+        string='Kontrol Kompensasi Efektif?',
+        help='Apakah kontrol kompensasi untuk grup ini telah terbukti efektif?'
+    )
+
     evaluation_notes = fields.Text(
         string='Catatan Evaluasi',
         help='Catatan tambahan dari evaluator mengenai hasil agregasi'
@@ -99,7 +122,7 @@ class IcofrFindingGroup(models.Model):
                 total += impact or 0.0
             record.total_quantitative_impact = total
 
-    @api.depends('total_quantitative_impact', 'company_id', 'fiscal_year')
+    @api.depends('total_quantitative_impact', 'company_id', 'fiscal_year', 'compensating_control_id', 'is_compensating_control_effective')
     def _compute_aggregated_classification(self):
         for record in self:
             # Fetch active materiality
@@ -109,16 +132,24 @@ class IcofrFindingGroup(models.Model):
                 ('active', '=', True)
             ], limit=1)
 
-            # Use defaults if no materiality found (though unlikely in prod)
+            # Use defaults if no materiality found
             om_threshold = materiality.overall_materiality_amount if materiality else 1000000000.0
             pm_threshold = materiality.performance_materiality_amount if materiality else 500000000.0
 
+            res = 'control_deficiency'
             if record.total_quantitative_impact > om_threshold:
-                record.aggregated_deficiency_class = 'material_weakness'
+                res = 'material_weakness'
             elif record.total_quantitative_impact > pm_threshold:
-                record.aggregated_deficiency_class = 'significant_deficiency'
-            else:
-                record.aggregated_deficiency_class = 'control_deficiency'
+                res = 'significant_deficiency'
+            
+            # Downgrade logic via Compensating Control (Hal 69)
+            if record.compensating_control_id and record.is_compensating_control_effective:
+                if res == 'material_weakness':
+                    res = 'significant_deficiency'
+                elif res == 'significant_deficiency':
+                    res = 'control_deficiency'
+
+            record.aggregated_deficiency_class = res
 
     def action_confirm_evaluation(self):
         self.write({'state': 'confirmed'})

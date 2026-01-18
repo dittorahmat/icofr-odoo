@@ -241,6 +241,10 @@
         <field name="status">closed</field>
         <field name="impact_assessment">Kesalahan pembayaran yang signifikan dapat merugikan perusahaan dan karyawan</field>
         <field name="root_cause">Prosedur otorisasi tidak diikuti secara konsisten</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
     </record>
 
     <!-- Demo Action Plans (Skenario 4 & 7) -->
@@ -367,6 +371,10 @@
         <field name="status">open</field>
         <field name="impact_assessment">Risiko kehilangan aset yang signifikan akibat pengeluaran kas tanpa otorisasi yang memadai</field>
         <field name="root_cause">Ketidaktahuan staf tentang kebijakan otorisasi, sistem otorisasi tidak terintegrasi dengan sistem pengeluaran, tekanan waktu dalam proses pembayaran</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
     </record>
 
     <!-- Skenario 7: Action Plans for Negative Finding -->
@@ -504,6 +512,10 @@
         <field name="recommendation">Perkuat prosedur otorisasi untuk pembayaran gaji</field>
         <field name="created_by_id" ref="demo_user_jane_smith"/>
         <field name="notes">Temuan dari audit internal, sedang dalam proses perbaikan</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
     </record>
 
     <record id="demo_action_plan_payroll_error_scenario4" model="icofr.action.plan">
@@ -598,6 +610,10 @@
         <field name="recommendation">Integrasi sistem otorisasi dengan sistem pengeluaran</field>
         <field name="created_by_id" ref="demo_user_jane_smith"/>
         <field name="notes">Temuan negatif yang memerlukan tindakan korektif segera</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
     </record>
 
     <record id="demo_action_plan_negative_scenario7" model="icofr.action.plan">
@@ -1056,6 +1072,10 @@
         <field name="impact_assessment_method">hybrid</field>
         <field name="manual_monetary_impact_amount">2000000000.0</field>
         <field name="manual_qualitative_impact_score">4.8</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_mgmt_assessment" eval="True"/>
     </record>
 
     <!-- Significant Deficiency Example -->
@@ -1230,7 +1250,6 @@
         <field name="campaign_id" ref="demo_csa_campaign_q2_2024"/>
     </record>
 
-    <!-- Create a finding from one of the CSA results -->
     <record id="demo_finding_from_csa" model="icofr.finding">
         <field name="name">Temuan dari CSA Pengeluaran Kas Q2 2024</field>
         <field name="code">FIND-CSA-001</field>
@@ -1248,15 +1267,27 @@
         <field name="quantitative_impact_amount">50000000.0</field>
         <field name="qualitative_impact_score">3.0</field>
         <field name="deficiency_category">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="pojk_report_id" ref="demo_pojk_report_2024"/>  <!-- Link to POJK report -->
     </record>
 
-    <!-- ========================================== -->
-    <!-- ADDITIONAL DEMO DATA: Cross-Module Linkages -->
-    <!-- ========================================== -->
-
-    <!-- Link finding to POJK report -->
-    <record id="demo_finding_from_csa" model="icofr.finding">
-        <field name="pojk_report_id" ref="demo_pojk_report_2024"/>  <!-- Link to POJK report -->
+    <!-- Finding for subsidiary -->
+    <record id="demo_finding_subsidiary" model="icofr.finding">
+        <field name="name">Temuan Pengujian Subsidiary</field>
+        <field name="code">FIND-SUB-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">medium</field>
+        <field name="description">Ditemukan beberapa kekurangan dalam proses otorisasi penjualan</field>
+        <field name="control_id" ref="demo_ctrl_subsidiary"/>
+        <field name="risk_id" ref="demo_risk_subsidiary"/>
+        <field name="owner_id" ref="demo_user_subsidiary_mgr"/>
+        <field name="status">in_progress</field>
+        <field name="impact_assessment">Dampak ringan terhadap kepatuhan internal</field>
+        <field name="root_cause">Prosedur tidak diikuti secara konsisten</field>
+        <field name="company_id" ref="demo_company_subsidiary"/>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
     </record>
 
     <!-- Link action plan to certification -->
@@ -1384,6 +1415,8 @@
         <field name="impact_assessment">Dampak ringan terhadap kepatuhan internal</field>
         <field name="root_cause">Prosedur tidak diikuti secara konsisten</field>
         <field name="company_id" ref="demo_company_subsidiary"/>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
     </record>
 
     <!-- Account mapping for subsidiary -->
@@ -2833,6 +2866,8 @@
         <field name="root_cause">Ketidakkonsistenan dalam pelaksanaan prosedur otorisasi</field>
         <field name="recommended_action">Peningkatan pelatihan staf penjualan terhadap prosedur otorisasi</field>
         <field name="company_id" ref="demo_company_subsidiary_a"/>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
     </record>
 
     <!-- Action plan for subsidiary finding -->

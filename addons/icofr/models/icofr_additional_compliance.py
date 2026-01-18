@@ -16,6 +16,12 @@ class IcofrServiceOrganization(models.Model):
     soc_report_ids = fields.One2many('icofr.soc.report', 'service_org_id', string='Laporan SOC')
     control_ids = fields.One2many('icofr.control', 'service_org_id', string='Kontrol Terkait')
 
+    # Hal 30 & 40: Hak Uji Langsung (Right to Audit)
+    has_right_to_audit = fields.Boolean(
+        string='Memiliki Hak Uji Langsung?',
+        help='Apakah dalam kontrak dengan SSO/Pihak Ketiga terdapat klausul "Right to Audit" yang memungkinkan perusahaan menguji langsung?'
+    )
+
     active = fields.Boolean(default=True)
 
 class IcofrSocReport(models.Model):

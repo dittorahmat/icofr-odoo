@@ -38,4 +38,5 @@ providing a realistic demonstration of the system for training and evaluation pu
     'installable': True,
     'auto_install': False,
     'application': False,
+    'license': 'LGPL-3',
 }

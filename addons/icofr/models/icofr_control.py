@@ -104,6 +104,22 @@ class IcofrControl(models.Model):
         help='Nama sistem/aplikasi yang menunjang kontrol (Wajib untuk Otomatis/ITDM)'
     )
 
+    # FAQ 4: Dampak ITGC Tidak Efektif pada Kontrol Otomatis
+    is_itgc_reliance_failed = fields.Boolean(
+        string='Kegagalan Ketergantungan ITGC',
+        compute='_compute_itgc_reliance',
+        help='Tanda jika kontrol otomatis ini tidak dapat diandalkan karena ITGC aplikasi pendukungnya Tidak Efektif (FAQ 4).'
+    )
+
+    @api.depends('application_id', 'application_id.itgc_effectiveness', 'control_type_detailed')
+    def _compute_itgc_reliance(self):
+        for record in self:
+            failed = False
+            if record.control_type_detailed in ['automated', 'it_dependent'] and record.application_id:
+                if record.application_id.itgc_effectiveness == 'ineffective':
+                    failed = True
+            record.is_itgc_reliance_failed = failed
+
     @api.depends('application_id')
     def _compute_supporting_app(self):
         for record in self:
@@ -190,6 +206,12 @@ class IcofrControl(models.Model):
         ('comp_ops', 'Computer Operations'),
         ('access_data', 'Access to Program and Data')
     ], string='Area ITGC', help='4 Area Utama ITGC sesuai Tabel 1 Juknis BUMN')
+
+    # Hal 46: Risiko Keamanan Siber
+    is_cyber_related = fields.Boolean(
+        string='Terkait Keamanan Siber',
+        help='Centang jika kontrol ini memitigasi risiko keamanan siber (Cyber Security) sesuai Hal 46 Juknis'
+    )
 
     # Hal 46: Risiko Keamanan Siber
     is_cyber_related = fields.Boolean(

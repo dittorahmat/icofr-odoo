@@ -156,6 +156,7 @@
                                 </group>
                                 <group string="Hasil Kalkulator">
                                     <field name="sample_size_recommended" readonly="1" class="oe_inline"/>
+                                    <field name="remediation_min_period" invisible="not is_remediation_test" class="oe_inline"/>
                                     <field name="sample_size_calculated" string="Target Sampel Minimal" class="oe_highlight"/>
                                     <p class="text-muted" colspan="2">
                                         * Berdasarkan Tabel 22 (TOE standar) atau Tabel 23 (Remediasi) Juknis BUMN.

@@ -13,6 +13,6 @@ class IcofrIndustryCluster(models.Model):
     
     risk_ids = fields.One2many('icofr.risk', 'industry_cluster_id', string='Contoh Risiko Terkait')
     
-    _sql_constraints = [
-        ('code_unique', 'unique(code)', 'Kode klaster harus unik!')
-    ]
+    # _sql_constraints = [
+    #     ('code_unique', 'unique(code)', 'Kode klaster harus unik!')
+    # ]

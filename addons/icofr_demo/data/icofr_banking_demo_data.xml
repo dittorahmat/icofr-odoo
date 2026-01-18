@@ -180,6 +180,8 @@
         <field name="status">open</field>
         <field name="impact_assessment">Potensi pembukaan rekening untuk entitas tersanksi dalam jendela waktu 24 jam</field>
         <field name="root_cause">Integrasi API vendor penyedia data mengalami kendala teknis</field>
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
     </record>
 
     <!-- Banking Account Mappings -->

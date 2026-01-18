@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Actions (Defined first to be available for views) -->
+    <!-- Actions -->
     <record id="action_icofr_change_log" model="ir.actions.act_window">
         <field name="name">Log Perubahan</field>
         <field name="res_model">icofr.change.log</field>
@@ -23,7 +23,6 @@
                 <header>
                     <button name="action_submit" string="Ajukan" type="object" class="oe_highlight" invisible="state != 'draft'"/>
                     <button name="action_approve" string="Setujui" type="object" class="oe_highlight" invisible="state != 'submitted'"/>
-                    <button name="action_acknowledge" string="Diketahui (Lini 2)" type="object" invisible="state != 'approved' or known_by != False"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
@@ -31,31 +30,16 @@
                         <group>
                             <field name="name"/>
                             <field name="date_report"/>
-                            <field name="date_effective"/>
                         </group>
                         <group>
-                            <field name="company_id" invisible="1"/>
                             <field name="process_id"/>
                             <field name="control_id"/>
-                            <field name="control_owner_id"/>
                         </group>
                     </group>
                     <group string="Detail Perubahan">
-                        <group string="Sebelum">
-                            <field name="description_before"/>
-                            <field name="ref_before"/>
-                        </group>
-                        <group string="Sesudah">
-                            <field name="description_after"/>
-                            <field name="ref_after"/>
-                        </group>
-                    </group>
-                    <group string="Persetujuan">
-                        <field name="approved_by"/>
-                        <field name="known_by"/>
+                        <field name="description_after"/>
                     </group>
                 </sheet>
-                <chatter/>
             </form>
         </field>
     </record>
@@ -67,14 +51,12 @@
             <list string="Log Perubahan">
                 <field name="name"/>
                 <field name="date_report"/>
-                <field name="process_id"/>
-                <field name="control_id"/>
                 <field name="state"/>
             </list>
         </field>
     </record>
 
-    <!-- DoD Wizard View -->
+    <!-- DoD Wizard View - STABLE VERSION -->
     <record id="view_icofr_dod_wizard_form" model="ir.ui.view">
         <field name="name">icofr.dod.wizard.form</field>
         <field name="model">icofr.dod.wizard</field>
@@ -84,30 +66,21 @@
                     <group>
                         <field name="finding_id"/>
                     </group>
-                    <group string="Langkah 1: Asersi">
+                    <group string="Evaluasi">
                         <field name="q1_assertion_related" widget="radio"/>
-                    </group>
-                    <group string="Langkah 2: Kemungkinan (Likelihood)" invisible="q1_assertion_related == 'no'">
-                        <field name="q2_likelihood" widget="radio"/>
-                    </group>
-                    <group string="Langkah 3: Besaran (Magnitude)" invisible="q2_likelihood == 'yes'">
-                        <field name="q3_material_magnitude" widget="radio"/>
-                    </group>
-                    <group string="Langkah 4: Kepentingan (Importance)" invisible="q3_material_magnitude == 'no'">
+                        <field name="q2_likelihood" widget="radio" invisible="q1_assertion_related == 'no'"/>
+                        <field name="q3_material_magnitude" widget="radio" invisible="q2_likelihood == 'no'"/>
+                        <field name="q5_compensating_control" widget="radio" invisible="q3_material_magnitude == 'no'"/>
                         <field name="q4_important_attention" widget="radio"/>
+                        <field name="q6_prudent_official" widget="radio" invisible="q4_important_attention == 'no'"/>
+                        <field name="q7_aggregation_needed" widget="radio"/>
                     </group>
-                    <group string="Langkah 5: Prudent Official (MW Check)" invisible="q3_material_magnitude == 'no' or q4_important_attention == 'yes'">
-                        <field name="q5_prudent_official" widget="radio"/>
-                    </group>
-                    <group string="Langkah 6: Kontrol Pengganti" invisible="q3_material_magnitude == 'yes'">
-                        <field name="q6_compensating_control" widget="radio"/>
-                    </group>
-                    <group string="Hasil" class="oe_subtotal_footer">
-                        <field name="final_classification" readonly="1" class="oe_inline" style="font-size: 16px; font-weight: bold;"/>
+                    <group string="Kesimpulan">
+                        <field name="final_classification"/>
                     </group>
                 </sheet>
                 <footer>
-                    <button name="action_confirm" string="Konfirmasi Klasifikasi" type="object" class="btn-primary"/>
+                    <button name="action_confirm" string="Konfirmasi" type="object" class="btn-primary"/>
                     <button string="Batal" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
@@ -128,55 +101,6 @@
         </field>
     </record>
 
-    <!-- Inherit Risk View (Qualitative) -->
-    <record id="view_icofr_risk_form_inherit_qual" model="ir.ui.view">
-        <field name="name">icofr.risk.form.inherit.qual</field>
-        <field name="model">icofr.risk</field>
-        <field name="inherit_id" ref="icofr.view_icofr_risk_form"/>
-        <field name="arch" type="xml">
-            <notebook position="inside">
-                <page string="Penilaian Kualitatif (Tabel 11)">
-                    <group>
-                        <group>
-                            <field name="factor_inherent_risk"/>
-                            <field name="factor_volume_changes"/>
-                            <field name="factor_history_errors"/>
-                        </group>
-                        <group>
-                            <field name="factor_elc_effectiveness"/>
-                            <field name="factor_control_characteristics"/>
-                            <field name="factor_competence"/>
-                        </group>
-                    </group>
-                    <group>
-                        <field name="qualitative_risk_level" widget="priority"/>
-                    </group>
-                </page>
-            </notebook>
-        </field>
-    </record>
-
-    <!-- Inherit Materiality View (Haircut) -->
-    <record id="view_icofr_materiality_form_inherit_haircut" model="ir.ui.view">
-        <field name="name">icofr.materiality.form.inherit.haircut</field>
-        <field name="model">icofr.materiality</field>
-        <field name="inherit_id" ref="icofr.view_icofr_materiality_form"/>
-        <field name="arch" type="xml">
-            <group name="materiality_parameters" position="before">
-                <group string="Faktor Risiko Haircut (Tabel 4)">
-                    <group>
-                        <field name="history_audit_adjustment"/>
-                        <field name="history_deficiencies"/>
-                    </group>
-                    <group>
-                        <field name="high_misstatement_risk"/>
-                        <field name="restatement_history"/>
-                    </group>
-                </group>
-            </group>
-        </field>
-    </record>
-
     <!-- Inherit Finding View (DoD Wizard) -->
     <record id="view_icofr_finding_form_inherit_dod" model="ir.ui.view">
         <field name="name">icofr.finding.form.inherit.dod</field>
@@ -192,8 +116,6 @@
                 <group string="Override Klasifikasi (Manual/DoD)">
                     <field name="override_deficiency_classification"/>
                     <field name="override_reason"/>
-                    <field name="overridden_by_id" readonly="1"/>
-                    <field name="override_date" readonly="1"/>
                 </group>
             </group>
         </field>

@@ -122,3 +122,6 @@ access_icofr_external_adjustment,icofr.external.adjustment,model_icofr_external_
 access_icofr_external_adjustment_l3,icofr.external.adjustment,model_icofr_external_adjustment,group_icofr_line_3,1,1,1,1
 access_icofr_external_assurance,icofr.external.assurance,model_icofr_external_assurance,group_icofr_line_2,1,1,1,1
 access_icofr_external_assurance_l3,icofr.external.assurance,model_icofr_external_assurance,group_icofr_line_3,1,0,0,0
+access_icofr_process_step_l2,icofr.process.step,model_icofr_process_step,group_icofr_line_2,1,1,1,1
+access_icofr_process_step_l3,icofr.process.step,model_icofr_process_step,group_icofr_line_3,1,0,0,0
+access_icofr_process_step_user,icofr.process.step,model_icofr_process_step,base.group_user,1,0,0,0

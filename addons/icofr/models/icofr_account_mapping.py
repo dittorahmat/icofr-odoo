@@ -98,18 +98,21 @@ class IcofrAccountMapping(models.Model):
     is_held_by_third_party = fields.Boolean('Dikelola Pihak Ketiga?', help='Persediaan atau aset yang dikelola oleh pihak ketiga.')
     is_loan_covenant = fields.Boolean('Terkait Loan Covenant?', help='Akun yang dipersyaratkan dalam perjanjian pinjaman.')
     is_onerous_contract = fields.Boolean('Kontrak Memberatkan?', help='Provisi terkait Onerous Contract.')
+    is_asset_impairment = fields.Boolean('Penurunan Nilai Aset?', help='Akun yang melibatkan penilaian penurunan nilai (impairment) signifikan.')
+    is_complex_estimate = fields.Boolean('Estimasi Rumit?', help='Akun yang melibatkan estimasi atau pertimbangan akuntansi yang kompleks.')
 
     qualitative_justification = fields.Text(
         string='Justifikasi Kualitatif',
         help='Penjelasan detail mengenai faktor kualitatif yang membuat akun ini signifikan (Ref: Tabel 5)'
     )
 
-    @api.onchange('is_construction_wip', 'is_held_by_third_party', 'is_loan_covenant', 'is_onerous_contract', 'has_fraud_risk', 'is_complex_transaction', 'has_related_party')
+    @api.onchange('is_construction_wip', 'is_held_by_third_party', 'is_loan_covenant', 'is_onerous_contract', 
+                  'is_asset_impairment', 'is_complex_estimate', 'has_fraud_risk', 'is_complex_transaction', 'has_related_party')
     def _onchange_qualitative_factors(self):
         """Auto-check the overall qualitative significance if any specific factor is set"""
         if any([self.is_construction_wip, self.is_held_by_third_party, self.is_loan_covenant, 
-                self.is_onerous_contract, self.has_fraud_risk, self.is_complex_transaction, 
-                self.has_related_party]):
+                self.is_onerous_contract, self.is_asset_impairment, self.is_complex_estimate,
+                self.has_fraud_risk, self.is_complex_transaction, self.has_related_party]):
             self.is_qualitative_significant = True
 
     materiality_id = fields.Many2one(

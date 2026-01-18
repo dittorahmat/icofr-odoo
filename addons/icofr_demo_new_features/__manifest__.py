@@ -34,4 +34,5 @@ Based on the comprehensive demo scenarios, this module includes:
     'installable': True,
     'auto_install': False,
     'application': False,
+    'license': 'LGPL-3',
 }

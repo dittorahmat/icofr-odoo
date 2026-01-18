@@ -104,6 +104,12 @@ class IcofrTesting(models.Model):
         help='Rincian jika ditemukan sampel yang gagal atau tidak sesuai'
     )
 
+    # Tabel 22 Note **: Sampel harus mencakup Desember/Kuartal IV
+    has_december_sample = fields.Boolean(
+        string='Mencakup Sampel Desember/Q4?',
+        help='Centang jika pengujian telah menyertakan sampel dari bulan Desember atau Kuartal IV (Wajib untuk frekuensi Bulanan/Kuartalan).'
+    )
+
     test_date = fields.Date(
         string='Tanggal Pengujian',
         required=True,
@@ -142,10 +148,16 @@ class IcofrTesting(models.Model):
     testing_method = fields.Selection([
         ('inquiry', 'Wawancara (Inquiry)'),
         ('observation', 'Observasi (Observation)'),
-        ('inspection', 'Inspeksi (Inspection)'),
-        ('reperformance', 'Pelaksanaan Kembali (Reperformance)')
-    ], string='Metode Pengujian Utama', help='Metode yang digunakan sesuai Gambar 4 Juknis BUMN')
+        ('inspection', 'Inspeksi Dokumen/Fisik (Inspection)'),
+        ('reperformance', 'Pelaksanaan Kembali (Reperformance)'),
+        ('data_analysis', 'Analisis Data (CAATs)')
+    ], string='Metode Pengujian Utama', help='Metode yang digunakan sesuai Gambar 4 Juknis BUMN. Kombinasi metode disarankan untuk bukti yang lebih kuat.')
     
+    testing_method_detail = fields.Text(
+        string='Rincian Metode',
+        help='Jelaskan bagaimana metode diterapkan (misal: Wawancara dengan siapa, dokumen apa yang diinspeksi).'
+    )
+
     effectiveness = fields.Selection([
         ('effective', 'Efektif'),
         ('partially_effective', 'Efektif Sebagian'),
@@ -180,6 +192,13 @@ class IcofrTesting(models.Model):
         string='Pengujian Remediasi',
         default=False,
         help='Centang jika ini adalah pengujian ulang setelah perbaikan (Remediasi) sesuai Tabel 23 Juknis'
+    )
+    
+    remediation_min_period = fields.Char(
+        string='Periode Minimum (Remediasi)',
+        compute='_compute_sample_size',
+        store=True,
+        help='Periode minimum yang harus dicakup dalam pengujian remediasi sesuai Tabel 23 Juknis BUMN'
     )
     
     sample_size_recommended = fields.Char(
@@ -251,33 +270,38 @@ class IcofrTesting(models.Model):
             if record.test_type == 'design_validation':
                 record.sample_size_calculated = 1
                 record.sample_size_recommended = "1 (Test of One)"
+                record.remediation_min_period = "N/A"
                 continue
 
             if record.test_type != 'toe':
                 record.sample_size_calculated = 0
                 record.sample_size_recommended = "N/A"
+                record.remediation_min_period = "N/A"
                 continue
 
             size = 0
             recommended = ""
+            min_period = ""
 
             # TABLE 23: Remediation Testing Logic
             if record.is_remediation_test:
                 mapping = {
-                    'yearly': (1, "1"),
-                    'quarterly': (2, "2"),
-                    'monthly': (2, "2"),
-                    'weekly': (5, "5"),
-                    'daily': (15, "15"),
-                    'per_transaction': (30, "30"),
-                    'event_driven': (30, "30"),
+                    'yearly': (1, "1", "1 Tahun"),
+                    'quarterly': (2, "2", "2 Kuartal"),
+                    'monthly': (2, "2", "3 Bulan"),
+                    'weekly': (5, "5", "5 Minggu"),
+                    'daily': (15, "15", "30 Hari"),
+                    'per_transaction': (30, "30", "25 Kali (Beberapa Hari)"),
+                    'event_driven': (30, "30", "25 Kali (Beberapa Hari)"),
                 }
-                val = mapping.get(freq, (25, "25"))
+                val = mapping.get(freq, (25, "25", "Variatif"))
                 size = val[0]
                 recommended = val[1]
+                min_period = val[2]
             
             # TABLE 22: Standard TOE Logic
             else:
+                record.remediation_min_period = "N/A"
                 if record.control_id.control_type_detailed == 'automated':
                     size = 1
                     recommended = "1 (Per Skenario)"
@@ -307,6 +331,8 @@ class IcofrTesting(models.Model):
                 
             record.sample_size_calculated = size
             record.sample_size_recommended = recommended
+            if record.is_remediation_test:
+                record.remediation_min_period = min_period
     
     recommendation = fields.Text(
         string='Rekomendasi',
@@ -349,6 +375,28 @@ class IcofrTesting(models.Model):
         help='Item populasi yang dipilih sebagai sampel untuk pengujian ini'
     )
     
+    @api.constrains('control_frequency', 'has_december_sample', 'status')
+    def _check_december_sampling(self):
+        """
+        Validation according to Table 22:
+        Untuk pengendalian dengan frekuensi bulanan dan kuartalan, sampel pengujian harus mencakup Kuartal Keempat dan bulan Desember.
+        """
+        for record in self:
+            if record.status == 'completed' and record.test_type == 'toe':
+                if record.control_frequency in ['monthly', 'quarterly'] and not record.has_december_sample:
+                    raise ValidationError("Sesuai Juknis BUMN Tabel 22, pengujian untuk frekuensi Bulanan/Kuartalan WAJIB menyertakan sampel dari bulan Desember/Kuartal IV!")
+
+    @api.constrains('control_frequency', 'has_december_sample', 'status')
+    def _check_december_sampling(self):
+        """
+        Validation according to Table 22:
+        Untuk pengendalian dengan frekuensi bulanan dan kuartalan, sampel pengujian harus mencakup Kuartal Keempat dan bulan Desember.
+        """
+        for record in self:
+            if record.status == 'completed' and record.test_type == 'toe':
+                if record.control_frequency in ['monthly', 'quarterly'] and not record.has_december_sample:
+                    raise ValidationError("Sesuai Juknis BUMN Tabel 22, pengujian untuk frekuensi Bulanan/Kuartalan WAJIB menyertakan sampel dari bulan Desember/Kuartal IV!")
+
     @api.onchange('control_id')
     def _onchange_control_id(self):
         """Isi field testing_procedures dengan prosedur dari kontrol jika kosong"""
