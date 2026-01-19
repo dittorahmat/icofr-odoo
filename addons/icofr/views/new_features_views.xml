@@ -36,8 +36,20 @@
                             <field name="control_id"/>
                         </group>
                     </group>
-                    <group string="Detail Perubahan">
-                        <field name="description_after"/>
+                    <group string="Detail Perubahan (Lampiran 6)">
+                        <group string="Sebelum Perubahan">
+                            <field name="description_before"/>
+                            <field name="ref_before"/>
+                        </group>
+                        <group string="Sesudah Perubahan">
+                            <field name="description_after"/>
+                            <field name="ref_after"/>
+                        </group>
+                    </group>
+                    <group string="Administrasi &amp; Persetujuan">
+                        <field name="date_effective"/>
+                        <field name="approved_by" readonly="1"/>
+                        <field name="known_by" readonly="1"/>
                     </group>
                 </sheet>
             </form>

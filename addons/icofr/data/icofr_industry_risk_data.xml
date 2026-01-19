@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- BUMN Industry Clusters (Lampiran 2) -->
+        <record id="cluster_energy" model="icofr.industry.cluster">
+            <field name="name">Energi, Minyak dan Gas</field>
+            <field name="code">ENERGY</field>
+            <field name="sequence">1</field>
+            <field name="description">Klaster industri yang mencakup eksplorasi, produksi, dan distribusi energi, minyak, dan gas.</field>
+        </record>
+
+        <record id="cluster_pangan" model="icofr.industry.cluster">
+            <field name="name">Pangan dan Pupuk</field>
+            <field name="code">PANGAN</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="cluster_financial" model="icofr.industry.cluster">
+            <field name="name">Jasa Keuangan</field>
+            <field name="code">FINANCIAL</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="cluster_mineral" model="icofr.industry.cluster">
+            <field name="name">Mineral dan Batubara</field>
+            <field name="code">MINERAL</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="cluster_telecom" model="icofr.industry.cluster">
+            <field name="name">Telekomunikasi dan Media</field>
+            <field name="code">TELECOM</field>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="cluster_infra" model="icofr.industry.cluster">
+            <field name="name">Infrastruktur</field>
+            <field name="code">INFRA</field>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="cluster_insurance" model="icofr.industry.cluster">
+            <field name="name">Asuransi dan Dana Pensiun</field>
+            <field name="code">INSURANCE</field>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="cluster_tourism" model="icofr.industry.cluster">
+            <field name="name">Pariwisata dan Pendukung</field>
+            <field name="code">TOURISM</field>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="cluster_plantation" model="icofr.industry.cluster">
+            <field name="name">Perkebunan dan Kehutanan</field>
+            <field name="code">PLANTATION</field>
+            <field name="sequence">9</field>
+        </record>
+
+        <record id="cluster_logistics" model="icofr.industry.cluster">
+            <field name="name">Logistik</field>
+            <field name="code">LOGISTICS</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="cluster_health" model="icofr.industry.cluster">
+            <field name="name">Kesehatan</field>
+            <field name="code">HEALTH</field>
+            <field name="sequence">11</field>
+        </record>
+
+        <!-- Specific Industry Risks (Lampiran 2 Examples) -->
+        <record id="risk_energy_reserves" model="icofr.risk">
+            <field name="name">Risiko Estimasi Cadangan Minyak dan Gas</field>
+            <field name="code">RSK-SPEC-EN-001</field>
+            <field name="risk_category">financial</field>
+            <field name="risk_type">inherent</field>
+            <field name="description">Risiko terkait estimasi cadangan minyak dan gas yang memerlukan penilaian yang signifikan (Hal 74).</field>
+            <field name="industry_cluster_id" ref="cluster_energy"/>
+            <field name="likelihood">medium</field>
+            <field name="impact">high</field>
+            <field name="owner_id" ref="base.user_admin"/>
+        </record>
+
+        <record id="risk_financial_assets" model="icofr.risk">
+            <field name="name">Risiko Penilaian Aset Keuangan (Pinjaman/Derivatif)</field>
+            <field name="code">RSK-SPEC-FI-001</field>
+            <field name="risk_category">financial</field>
+            <field name="risk_type">inherent</field>
+            <field name="description">Penilaian aset keuangan memerlukan penilaian yang kompleks dan melibatkan asumsi/estimasi signifikan (Hal 75).</field>
+            <field name="industry_cluster_id" ref="cluster_financial"/>
+            <field name="likelihood">medium</field>
+            <field name="impact">high</field>
+            <field name="owner_id" ref="base.user_admin"/>
+        </record>
+
+        <record id="risk_plantation_biological" model="icofr.risk">
+            <field name="name">Risiko Penilaian Aset Biologis</field>
+            <field name="code">RSK-SPEC-PL-001</field>
+            <field name="risk_category">financial</field>
+            <field name="risk_type">inherent</field>
+            <field name="description">Risiko terkait penilaian terhadap aset biologis yang memerlukan penilaian dan estimasi yang kompleks (Hal 77).</field>
+            <field name="industry_cluster_id" ref="cluster_plantation"/>
+            <field name="likelihood">low</field>
+            <field name="impact">medium</field>
+            <field name="owner_id" ref="base.user_admin"/>
+        </record>
+    </data>
+</odoo>

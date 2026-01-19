@@ -1,68 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Demo data for New Features (Scenarios 12-16) -->
+    <data noupdate="1">
+    <!-- Demo data for New Features (Scenarios 12-20) -->
 
     <!-- ========================================== -->
-    <!-- SCENARIO 12: Kalkulasi Materialitas dan Pemetaan Akun (SK BUMN Compliance) -->
+    <!-- SCENARIO 12: Kalkulasi Materialitas dan Pemetaan Akun -->
     <!-- ========================================== -->
 
-    <!-- Sample Materiality Calculations -->
     <record id="demo_materiality_calc_2024" model="icofr.materiality">
         <field name="name">Perhitungan Materialitas Tahun 2024</field>
         <field name="fiscal_year">2024</field>
         <field name="company_id" ref="base.main_company"/>
         <field name="revenue_amount">1000000000000</field>
         <field name="total_assets_amount">1500000000000</field>
+        <field name="total_expense_amount">800000000000</field>
+        <field name="total_liability_amount">900000000000</field>
         <field name="net_income_amount">100000000000</field>
         <field name="overall_materiality_percent">0.5</field>
         <field name="performance_materiality_percent">75.0</field>
         <field name="materiality_basis">revenue</field>
         <field name="calculation_method">percent_revenue</field>
-        <field name="notes">Perhitungan materialitas sesuai POJK No. 15 Tahun 2024 dan SK BUMN</field>
         <field name="active">True</field>
     </record>
 
-    <!-- Sample Account Mappings -->
     <record id="demo_account_mapping_rev_2024" model="icofr.account.mapping">
         <field name="name">Pemetaan Pendapatan 2024</field>
         <field name="code">AM-REV-001</field>
         <field name="gl_account">41001</field>
         <field name="gl_account_description">Pendapatan Operasional</field>
-        <field name="fsl_item">Pendapatan</field>
-        <field name="account_description">Pendapatan Operasional</field>
-        <field name="fsl_description">Pendapatan dari operasional utama</field>
+        <field name="fsl_item">Revenue</field>
+        <field name="account_balance">700000000000.0</field> <!-- 700B / 1000B = 70% (Significant) -->
         <field name="significance_level">significant</field>
         <field name="materiality_id" ref="demo_materiality_calc_2024"/>
         <field name="status">active</field>
     </record>
 
-    <record id="demo_account_mapping_exp_2024" model="icofr.account.mapping">
-        <field name="name">Pemetaan Biaya Pokok 2024</field>
-        <field name="code">AM-COGS-001</field>
-        <field name="gl_account">51001</field>
-        <field name="gl_account_description">Biaya Pokok Penjualan</field>
-        <field name="fsl_item">Biaya Pokok</field>
-        <field name="account_description">Biaya Pokok Penjualan</field>
-        <field name="fsl_description">Biaya pokok dari operasional utama</field>
-        <field name="significance_level">significant</field>
-        <field name="materiality_id" ref="demo_materiality_calc_2024"/>
-        <field name="status">active</field>
-    </record>
-
-    <record id="demo_account_mapping_asset_2024" model="icofr.account.mapping">
-        <field name="name">Pemetaan Aset Tetap 2024</field>
-        <field name="code">AM-FIX-001</field>
-        <field name="gl_account">12001</field>
-        <field name="gl_account_description">Aset Tetap Berwujud</field>
-        <field name="fsl_item">Aset Tetap</field>
-        <field name="account_description">Aset Tetap Berwujud</field>
-        <field name="fsl_description">Aset tetap yang digunakan dalam operasional</field>
-        <field name="significance_level">significant</field>
-        <field name="materiality_id" ref="demo_materiality_calc_2024"/>
-        <field name="status">active</field>
-    </record>
-
-    <!-- Demo users for new roles -->
     <record id="demo_user_line1_process_owner" model="res.users">
         <field name="name">Lini 1 (Process Owner)</field>
         <field name="login">line1_owner</field>
@@ -85,356 +57,164 @@
     </record>
 
     <!-- ========================================== -->
-    <!-- SCENARIO 13: Penilaian Mandiri Kontrol (CSA) -->
+    <!-- SCENARIO 14: Temuan dan Klasifikasi (Table 24 Compliance) -->
     <!-- ========================================== -->
 
-    <!-- Demo CSA Records -->
-    <record id="demo_csa_outgoing_cash" model="icofr.csa">
-        <field name="name">CSA Pengeluaran Kas Q1 2024</field>
-        <field name="code">CSA-OUTCASH-001</field>
-        <field name="control_id" ref="icofr_demo.demo_ctrl_withdraw_001"/>
-        <field name="assessment_period">Q1 2024</field>
-        <field name="assessment_date" eval="time.strftime('%Y-%m-%d')"/>
-        <field name="control_owner_id" ref="demo_user_line1_process_owner"/>
-        <field name="reviewer_id" ref="demo_user_line2_risk_manager"/>
-        <field name="assessment_type">quarterly</field>
-        <field name="compliance_result">mostly_compliant</field>
-        <field name="effectiveness_result">effective</field>
-        <field name="design_effective">True</field>
-        <field name="operating_effective">True</field>
-        <field name="frequency_complied">True</field>
-        <field name="documentation_accurate">True</field>
-        <field name="exception_handled">False</field>
-        <field name="findings">Beberapa pengeluaran tanpa dokumentasi yang memadai</field>
-        <field name="recommendations">Perkuat dokumentasi untuk pengeluaran kecil</field>
-        <field name="sample_size">25</field>
-        <field name="status">completed</field>
-        <field name="notes">Penilaian dilakukan oleh pemilik kontrol (Lini 1) dan direview oleh tim risiko (Lini 2)</field>
-    </record>
-
-    <record id="demo_csa_cash_receipt" model="icofr.csa">
-        <field name="name">CSA Penerimaan Kas Q1 2024</field>
-        <field name="code">CSA-INCASH-001</field>
-        <field name="control_id" ref="icofr_demo.demo_ctrl_cash_001"/>
-        <field name="assessment_period">Q1 2024</field>
-        <field name="assessment_date" eval="time.strftime('%Y-%m-%d')"/>
-        <field name="control_owner_id" ref="icofr_demo.demo_user_john_doe"/>
-        <field name="reviewer_id" ref="demo_user_line2_risk_manager"/>
-        <field name="assessment_type">quarterly</field>
-        <field name="compliance_result">fully_compliant</field>
-        <field name="effectiveness_result">highly_effective</field>
-        <field name="design_effective">True</field>
-        <field name="operating_effective">True</field>
-        <field name="frequency_complied">True</field>
-        <field name="documentation_accurate">True</field>
-        <field name="exception_handled">True</field>
-        <field name="findings">Kontrol berjalan efektif</field>
-        <field name="recommendations">Pertahankan efektifitas kontrol</field>
-        <field name="sample_size">30</field>
-        <field name="status">approved</field>
-        <field name="notes">CSA disetujui oleh Lini 2 setelah review</field>
-    </record>
-
-    <!-- ========================================== -->
-    <!-- SCENARIO 14: Klasifikasi Kekurangan Otomatis dan Kuantifikasi Dampak -->
-    <!-- ========================================== -->
-
-    <!-- Demo Deficiency Classifications with Quantification -->
-    <record id="demo_finding_quantified_rev_recognition" model="icofr.finding">
-        <field name="name">Kesalahan Pengakuan Pendapatan</field>
-        <field name="code">FIND-REVREC-001</field>
+    <record id="demo_finding_significant_def" model="icofr.finding">
+        <field name="name">Kekurangan Signifikan Otorisasi</field>
+        <field name="code">FIND-SIG-001</field>
         <field name="finding_type">significant_deficiency</field>
         <field name="severity_level">high</field>
-        <field name="description">Pendapatan tidak diakui sesuai dengan prinsip akuntansi</field>
-        <field name="quantitative_impact_amount">500000000</field>
-        <field name="impact_currency_id" ref="base.IDR"/>
-        <field name="qualitative_impact_score">4.0</field>
-        <field name="deficiency_category">significant_deficiency</field>
-        <field name="reported_to_ceo" eval="True"/>
-        <field name="reported_to_board" eval="True"/>
-        <field name="reported_to_audit_committee" eval="True"/>
-        <field name="reported_to_mgmt_assessment" eval="True"/>
-        <field name="classification_reason">Dampak keuangan Rp. 500 jt, melebihi threshold materialitas 0.5% dari pendapatan</field>
-        <field name="control_id" ref="icofr_demo.demo_ctrl_cash_001"/>
-        <field name="risk_id" ref="icofr_demo.demo_risk_fraud_001"/>
-        <field name="owner_id" ref="icofr_demo.demo_user_finance_manager"/>
+        <field name="quantitative_impact_amount">600000000.0</field> <!-- > PM 500M -->
+        <field name="description">Beberapa otorisasi dilakukan oleh pihak yang tidak berwenang.</field>
+        <field name="owner_id" ref="demo_user_line1_process_owner"/>
         <field name="status">open</field>
-        <field name="impact_assessment">Pengakuan pendapatan yang tidak tepat dapat mempengaruhi laporan keuangan</field>
-        <field name="root_cause">Prosedur pengakuan pendapatan tidak diikuti dengan tepat</field>
-        <field name="recommendation">Perkuat prosedur dan pelatihan untuk pengakuan pendapatan</field>
-        <field name="corrective_action_required">True</field>
-    </record>
-
-    <record id="demo_finding_material_weakness" model="icofr.finding">
-        <field name="name">Kegagalan Kontrol Material Otorisasi Dana</field>
-        <field name="code">FIND-MAT-001</field>
-        <field name="finding_type">material_weakness</field>
-        <field name="severity_level">critical</field>
-        <field name="description">Kontrol otorisasi dana tidak berjalan efektif, menyebabkan potensi kehilangan aset</field>
-        <field name="quantitative_impact_amount">2000000000</field>
-        <field name="impact_currency_id" ref="base.IDR"/>
-        <field name="qualitative_impact_score">5.0</field>
-        <field name="deficiency_category">material_weakness</field>
+        <!-- Reporting Compliance (Table 24) -->
         <field name="reported_to_ceo" eval="True"/>
         <field name="reported_to_board" eval="True"/>
         <field name="reported_to_audit_committee" eval="True"/>
         <field name="reported_to_mgmt_assessment" eval="True"/>
-        <field name="classification_reason">Dampak keuangan Rp. 2 miliar, melebihi Overall Materiality</field>
-        <field name="control_id" ref="icofr_demo.demo_ctrl_withdraw_001"/>
-        <field name="risk_id" ref="icofr_demo.demo_risk_unauth_001"/>
-        <field name="owner_id" ref="icofr_demo.demo_user_finance_manager"/>
-        <field name="status">open</field>
-        <field name="impact_assessment">Kegagalan ini berpotensi menyebabkan kehilangan aset yang signifikan</field>
-        <field name="root_cause">Sistem otorisasi tidak diikuti secara konsisten</field>
-        <field name="recommendation">Implementasikan sistem otorisasi elektronik wajib untuk semua transaksi</field>
-        <field name="corrective_action_required">True</field>
-    </record>
-
-    <record id="demo_finding_control_deficiency_low" model="icofr.finding">
-        <field name="name">Dokumentasi Kontrol Minor</field>
-        <field name="code">FIND-MIN-001</field>
-        <field name="finding_type">control_deficiency</field>
-        <field name="severity_level">low</field>
-        <field name="description">Kurangnya dokumentasi untuk kontrol minor yang tidak berdampak langsung pada keuangan</field>
-        <field name="quantitative_impact_amount">25000000</field>
-        <field name="impact_currency_id" ref="base.IDR"/>
-        <field name="qualitative_impact_score">2.0</field>
-        <field name="deficiency_category">control_deficiency</field>
-        <field name="reported_to_ceo" eval="True"/>
-        <field name="reported_to_audit_committee" eval="True"/>
-        <field name="classification_reason">Dampak di bawah Performance Materiality</field>
-        <field name="control_id" ref="icofr_demo.demo_ctrl_withdraw_001"/>
-        <field name="risk_id" ref="icofr_demo.demo_risk_payroll_001"/>
-        <field name="owner_id" ref="icofr_demo.demo_user_hr_manager"/>
-        <field name="status">closed</field>
-        <field name="impact_assessment">Dokumentasi kurang tidak berdampak langsung pada laporan keuangan</field>
-        <field name="root_cause">Prosedur dokumentasi tidak diprioritaskan untuk kontrol minor</field>
-        <field name="recommendation">Tingkatkan dokumentasi untuk kontrol minor</field>
-        <field name="corrective_action_required">False</field>
     </record>
 
     <!-- ========================================== -->
-    <!-- SCENARIO 15: Penggunaan Fitur Copy Period untuk Efisiensi RCM -->
+    <!-- SCENARIO 20: Skenario Lanjutan -->
     <!-- ========================================== -->
 
-    <!-- Copy Period Wizard (simulated via data migration concept) -->
-    <!-- Note: Actual copy period functionality is a wizard that copies data from one period to another -->
-    <!-- The demo shows data that would result from using the copy period functionality -->
-
-    <record id="demo_proc_cashin_2023" model="icofr.process">
-        <field name="name">Pengelolaan Kas Masuk (2023)</field>
-        <field name="code">PROC-CASHIN-2023</field>
-        <field name="description">Proses pengelolaan kas masuk perusahaan (periode 2023)</field>
-        <field name="category">operational</field>
-        <field name="owner_id" ref="icofr_demo.demo_user_finance_manager"/>
-        <field name="status">inactive</field>
+    <record id="demo_service_org_sso" model="icofr.service.organization">
+        <field name="name">BUMN Shared Service Center (Finance)</field>
+        <field name="code">SSO-FIN</field>
+        <field name="has_right_to_audit" eval="True"/>
+        <field name="service_description">Layanan keuangan terpusat untuk grup BUMN.</field>
     </record>
 
-    <record id="demo_ctrl_copy_example" model="icofr.control">
-        <field name="name">Contoh Kontrol yang Disalin</field>
-        <field name="code">CTRL-COPY-001</field>
-        <field name="control_type">preventive</field>
-        <field name="description">Kontrol contoh yang akan disalin dari tahun fiskal 2023 ke 2024</field>
-        <field name="process_id" ref="demo_proc_cashin_2023"/>
-        <field name="frequency">daily</field>
-        <field name="owner_id" ref="icofr_demo.demo_user_finance_manager"/>
-        <field name="status">active</field>
+    <record id="demo_soc_report_001" model="icofr.soc.report">
+        <field name="name">SOC 1 Type 2 - FY2024</field>
+        <field name="service_org_id" ref="demo_service_org_sso"/>
+        <field name="report_type">soc1_t2</field>
+        <field name="period_start">2024-01-01</field>
+        <field name="period_end">2024-10-31</field>
+        <field name="conclusion">unqualified</field>
+        <field name="has_bridge_letter" eval="True"/>
+        <field name="gap_analysis_notes">Cakupan Bridge Letter s/d 31 Des 2024.</field>
     </record>
 
-    <!-- ========================================== -->
-    <!-- SCENARIO 16: Implementasi Tiga Lini Pertahanan -->
-    <!-- ========================================== -->
-
-    <!-- Assignments showing the Three Lines of Defense concept -->
-    <record id="demo_control_line1_assignment" model="icofr.control">
-        <field name="name">Otorisasi Pencairan Dana - Lini 1</field>
-        <field name="code">CTRL-LINE1-001</field>
-        <field name="control_type">preventive</field>
-        <field name="description">Kontrol yang dimiliki dan dijalankan oleh Lini 1 (Process Owners)</field>
-        <field name="process_id" ref="icofr_demo.demo_proc_cashout_001"/>
-        <field name="risk_ids" eval="[(4, ref('icofr_demo.demo_risk_unauth_001'))]"/>
-        <field name="frequency">daily</field>
-        <field name="owner_id" ref="demo_user_line1_process_owner"/>
-        <field name="status">active</field>
-    </record>
-
-    <record id="demo_csa_for_line3_audit" model="icofr.csa">
-        <field name="name">CSA untuk Review Audit Internal</field>
-        <field name="code">CSA-AUDIT-001</field>
-        <field name="control_id" ref="demo_control_line1_assignment"/>
-        <field name="assessment_period">Q2 2024</field>
-        <field name="assessment_date" eval="time.strftime('%Y-%m-%d')"/>
-        <field name="control_owner_id" ref="demo_user_line1_process_owner"/>
-        <field name="reviewer_id" ref="demo_user_line3_internal_auditor"/>
-        <field name="assessment_type">semiannual</field>
-        <field name="status">approved</field>
-        <field name="notes">Ditinjau oleh Lini 3 (Audit Internal) sebagai bagian dari Three Lines of Defense</field>
-    </record>
-
-    <!-- Demo POJK Reports showing Three Lines of Defense data -->
-    <record id="demo_pojk_report_with_lines" model="icofr.pojk.report">
-        <field name="name">Laporan POJK 15/2024 dengan Lini Pertahanan</field>
-        <field name="fiscal_year">2024</field>
-        <field name="reporting_period">Annual</field>
-        <field name="report_date" eval="time.strftime('%Y-%m-%d')"/>
-        <field name="prepared_by_id" ref="demo_user_line1_process_owner"/>
-        <field name="reviewed_by_id" ref="demo_user_line2_risk_manager"/>
-        <field name="approved_by_id" ref="demo_user_line3_internal_auditor"/>
-        <field name="status">submitted</field>
-        <field name="framework_description">Kerangka kerja COSO 2013</field>
-        <field name="material_weaknesses_detail">0 kelemahan material ditemukan</field>
-        <field name="significant_deficiencies_detail">2 kekurangan signifikan ditemukan dan sedang ditindaklanjuti</field>
-        <field name="control_environment_assessment">Lini 1: Pemilik proses, Lini 2: Review risiko, Lini 3: Audit internal</field>
-        <field name="compliance_status">compliant</field>
-        <field name="compliance_notes">Laporan POJK dengan keterlibatan tiga lini pertahanan</field>
-    </record>
-
-    <!-- ========================================== -->
-    <!-- SCENARIO 17: Evaluasi Agregat dan Kontrol Pengganti (New Features) -->
-    <!-- ========================================== -->
-
-    <!-- Small findings for aggregation -->
-    <record id="demo_finding_small_1" model="icofr.finding">
-        <field name="name">Dokumentasi Vendor A Kurang Lengkap</field>
-        <field name="code">FIND-VEND-001</field>
-        <field name="finding_type">control_deficiency</field>
-        <field name="severity_level">low</field>
-        <field name="quantitative_impact_amount">300000000</field>
-        <field name="reported_to_ceo" eval="True"/>
-        <field name="reported_to_audit_committee" eval="True"/>
-        <field name="impact_assessment_method">automatic</field>
-        <field name="control_id" ref="icofr_demo.demo_ctrl_withdraw_001"/>
-        <field name="owner_id" ref="demo_user_line1_process_owner"/>
-        <field name="company_id" ref="base.main_company"/>
-    </record>
-
-    <record id="demo_finding_small_2" model="icofr.finding">
-        <field name="name">Dokumentasi Vendor B Kurang Lengkap</field>
-        <field name="code">FIND-VEND-002</field>
-        <field name="finding_type">control_deficiency</field>
-        <field name="severity_level">low</field>
-        <field name="quantitative_impact_amount">400000000</field>
-        <field name="reported_to_ceo" eval="True"/>
-        <field name="reported_to_audit_committee" eval="True"/>
-        <field name="impact_assessment_method">automatic</field>
-        <field name="control_id" ref="icofr_demo.demo_ctrl_withdraw_001"/>
-        <field name="owner_id" ref="demo_user_line1_process_owner"/>
-        <field name="company_id" ref="base.main_company"/>
-    </record>
-
-    <!-- Aggregated Evaluation -->
-    <record id="demo_finding_group_vendor" model="icofr.finding.group">
-        <field name="name">Evaluasi Agregat Dokumentasi Vendor 2024</field>
+    <record id="demo_materiality_subsidiary_final" model="icofr.materiality">
+        <field name="name">Materialitas PT Anak Perusahaan B (Final Demo)</field>
         <field name="fiscal_year">2024</field>
         <field name="company_id" ref="base.main_company"/>
-        <field name="finding_ids" eval="[(4, ref('demo_finding_small_1')), (4, ref('demo_finding_small_2'))]"/>
-        <field name="description">Gabungan temuan dokumentasi vendor yang tidak lengkap. Meskipun secara individual kecil, secara total berdampak signifikan terhadap materialitas.</field>
-        <field name="evaluation_notes">Total dampak Rp 700 jt melebihi Performance Materiality (Rp 500 jt), sehingga diklasifikasikan sebagai Significant Deficiency secara agregat.</field>
-    </record>
-
-    <!-- Compensating Control Example -->
-    <record id="demo_ctrl_compensating_recon" model="icofr.control">
-        <field name="name">Rekonsiliasi Independen Akhir Hari</field>
-        <field name="code">CTRL-COMP-001</field>
-        <field name="control_type">detective</field>
-        <field name="description">Kontrol detektif yang memverifikasi semua transaksi harian secara independen.</field>
-        <field name="process_id" ref="icofr_demo.demo_proc_cashin_001"/>
-        <field name="frequency">daily</field>
-        <field name="owner_id" ref="demo_user_line2_risk_manager"/>
-        <field name="status">active</field>
-    </record>
-
-    <record id="demo_finding_with_mitigation" model="icofr.finding">
-        <field name="name">Kelemahan Otorisasi Kasir (Mitigated)</field>
-        <field name="code">FIND-CASH-MIT-001</field>
-        <field name="finding_type">significant_deficiency</field>
-        <field name="severity_level">high</field>
-        <field name="quantitative_impact_amount">1200000000</field> <!-- Over OM threshold -->
-        <field name="reported_to_ceo" eval="True"/>
-        <field name="reported_to_board" eval="True"/>
-        <field name="reported_to_audit_committee" eval="True"/>
-        <field name="reported_to_mgmt_assessment" eval="True"/>
-        <field name="impact_assessment_method">automatic</field>
-        <field name="control_id" ref="icofr_demo.demo_ctrl_cash_001"/>
-        <field name="compensating_control_id" ref="demo_ctrl_compensating_recon"/>
-        <field name="is_compensating_control_effective">True</field>
-        <field name="owner_id" ref="demo_user_line1_process_owner"/>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="description">Temuan ini seharusnya MW karena nilai > Rp 1 Miliar, namun diturunkan menjadi SD karena adanya rekonsiliasi independen yang efektif.</field>
-    </record>
-
-    <!-- ========================================== -->
-    <!-- SCENARIO 18: Remediasi dan Pengujian Ulang -->
-    <!-- ========================================== -->
-
-    <record id="demo_finding_remediation" model="icofr.finding">
-        <field name="name">Akses Sistem Tidak Terrevokasi</field>
-        <field name="code">FIND-IT-ACCESS-001</field>
-        <field name="finding_type">control_deficiency</field>
-        <field name="severity_level">medium</field>
-        <field name="deficiency_category">control_deficiency</field>
-        <field name="reported_to_ceo" eval="True"/>
-        <field name="reported_to_audit_committee" eval="True"/>
-        <field name="description">User yang resign masih memiliki akses aktif di sistem.</field>
-        <field name="owner_id" ref="demo_user_line1_process_owner"/>
-        <field name="company_id" ref="base.main_company"/>
-        <field name="status">in_progress</field>
-    </record>
-
-    <record id="demo_action_plan_remediation" model="icofr.action.plan">
-        <field name="name">Implementasi Review Akses Bulanan Otomatis</field>
-        <field name="finding_id" ref="demo_finding_remediation"/>
-        <field name="description">Membuat skrip otomatis untuk menonaktifkan user berdasarkan status HR.</field>
-        <field name="action_owner_id" ref="demo_user_line1_process_owner"/>
-        <field name="target_completion_date" eval="(datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
-        <field name="status">completed</field>
-        <field name="actual_completion_date" eval="time.strftime('%Y-%m-%d')"/>
-        <field name="notes">Skrip telah dideploy dan diuji.</field>
-    </record>
-
-    <record id="demo_change_log_remediation" model="icofr.change.log">
-        <field name="name">LOG-2024-001</field>
-        <field name="process_id" ref="icofr_demo.demo_proc_it_change_mgt"/>
-        <field name="description_before">Review akses dilakukan manual per kuartal.</field>
-        <field name="description_after">Review akses dilakukan otomatis setiap bulan terintegrasi dengan HRIS.</field>
-        <field name="control_owner_id" ref="demo_user_line1_process_owner"/>
-        <field name="approved_by" ref="demo_user_line2_risk_manager"/>
-        <field name="state">approved</field>
-        <field name="date_report" eval="time.strftime('%Y-%m-%d')"/>
-        <field name="date_effective" eval="time.strftime('%Y-%m-%d')"/>
-    </record>
-
-    <!-- ========================================== -->
-    <!-- SCENARIO 19: Multi-Company (Holding & Subsidiary) -->
-    <!-- ========================================== -->
-
-    <record id="demo_company_subsidiary" model="res.company">
-        <field name="name">PT Anak Usaha Sejahtera (Demo)</field>
-        <field name="currency_id" ref="base.IDR"/>
-    </record>
-
-    <record id="demo_materiality_subsidiary" model="icofr.materiality">
-        <field name="name">Materialitas Anak Usaha 2024</field>
-        <field name="fiscal_year">2024</field>
-        <field name="company_id" ref="demo_company_subsidiary"/>
-        <field name="overall_materiality_percent">0.5</field>
-        <field name="performance_materiality_percent">60.0</field> <!-- Higher risk -->
-        <field name="risk_factor_level">high</field> <!-- High Risk Haircut -->
-        <field name="revenue_amount">200000000000</field> <!-- 200M -->
-        <field name="total_assets_amount">150000000000</field>
+        <field name="parent_materiality_id" ref="demo_materiality_calc_2024"/>
+        <field name="revenue_amount">200000000000</field> 
+        <field name="total_assets_amount">300000000000</field>
+        <field name="total_expense_amount">150000000000</field>
+        <field name="total_liability_amount">180000000000</field>
+        <field name="overall_materiality_percent">1.0</field> <!-- 2B -->
+        <field name="performance_materiality_percent">75.0</field>
         <field name="materiality_basis">revenue</field>
-        <field name="notes">Alokasi Materialitas Grup dengan Multiplier 2.5 (Tabel 25)</field>
     </record>
 
-    <record id="demo_control_subsidiary" model="icofr.control">
-        <field name="name">Rekonsiliasi Bank Anak Usaha</field>
-        <field name="code">CTRL-SUB-BANK-001</field>
+    <record id="demo_ctrl_mrc_failed" model="icofr.control">
+        <field name="name">Review Estimasi Cadangan (MRC)</field>
+        <field name="code">CTRL-MRC-DEMO-001</field>
+        <field name="control_specific_type">mrc</field>
+        <field name="mrc_precision_threshold">Selisih > 5%</field>
+        <field name="owner_id" ref="base.user_admin"/>
         <field name="control_type">detective</field>
         <field name="frequency">monthly</field>
-        <field name="owner_id" ref="base.user_admin"/>
-        <field name="company_id" ref="demo_company_subsidiary"/>
         <field name="status">active</field>
-        <field name="significance_level">high</field>
     </record>
 
+    <record id="demo_testing_mrc_failed" model="icofr.testing">
+        <field name="name">Uji MRC - Des 2024</field>
+        <field name="control_id" ref="demo_ctrl_mrc_failed"/>
+        <field name="test_type">toe</field>
+        <field name="tester_id" ref="base.user_admin"/>
+        <field name="test_date">2024-12-15</field>
+        <field name="effectiveness">ineffective</field>
+        <field name="test_results">Gagal presisi review (Tabel 21).</field>
+    </record>
+
+    <record id="demo_account_qualitative_covenant" model="icofr.account.mapping">
+        <field name="name">Hutang Bank (Covenant)</field>
+        <field name="code">AM-LIAB-COV-001</field>
+        <field name="gl_account">21005</field>
+        <field name="fsl_item">Liabilities</field>
+        <field name="account_balance">500000000.0</field>
+        <field name="is_loan_covenant" eval="True"/>
+        <field name="is_qualitative_significant" eval="True"/>
+        <field name="qualitative_justification">Loan Covenant constraint.</field>
+        <field name="materiality_id" ref="demo_materiality_calc_2024"/>
+        <field name="status">active</field>
+    </record>
+
+    <record id="demo_testing_interim_2024" model="icofr.testing">
+        <field name="name">Pengujian Interim 2024</field>
+        <field name="control_id" ref="icofr_demo.demo_ctrl_withdraw_001"/>
+        <field name="test_type">toe</field>
+        <field name="tester_id" ref="base.user_admin"/>
+        <field name="test_date">2024-08-15</field>
+        <field name="is_interim_test" eval="True"/>
+        <field name="effectiveness">effective</field>
+        <field name="roll_forward_procedures">Inquiry and observation.</field>
+        <field name="roll_forward_conclusion">effective</field>
+    </record>
+
+    <record id="demo_risk_moc" model="icofr.risk">
+        <field name="name">Risiko MOC - Jurnal Manual</field>
+        <field name="code">RSK-MOC-001</field>
+        <field name="risk_category">financial</field>
+        <field name="risk_type">inherent</field>
+        <field name="is_fraud_risk" eval="True"/>
+        <field name="description">Management override risks.</field>
+        <field name="likelihood">low</field>
+        <field name="impact">very_high</field>
+        <field name="owner_id" ref="base.user_admin"/>
+    </record>
+
+    <record id="demo_action_plan_moc" model="icofr.action.plan">
+        <field name="name">Remediasi Kontrol MOC</field>
+        <field name="description">Action plan for MOC.</field>
+        <field name="action_owner_id" ref="base.user_admin"/>
+        <field name="target_completion_date">2024-11-01</field>
+        <field name="actual_completion_date">2024-11-05</field>
+        <field name="status">completed</field>
+    </record>
+
+    <record id="demo_testing_remediation_valid" model="icofr.testing">
+        <field name="name">Retest MOC - Dec 2024</field>
+        <field name="control_id" ref="icofr_demo.demo_ctrl_withdraw_001"/>
+        <field name="test_type">toe</field>
+        <field name="tester_id" ref="base.user_admin"/>
+        <field name="is_remediation_test" eval="True"/>
+        <field name="action_plan_id" ref="demo_action_plan_moc"/>
+        <field name="test_date">2024-12-20</field> 
+        <field name="effectiveness">effective</field>
+        <field name="test_results">Remediation valid per Tabel 23.</field>
+    </record>
+
+    <record id="demo_account_wip_infra" model="icofr.account.mapping">
+        <field name="name">WIP BUMN Konstruksi</field>
+        <field name="code">AM-WIP-001</field>
+        <field name="gl_account">13005</field>
+        <field name="fsl_item">Asset</field>
+        <field name="account_balance">4500000000.0</field>
+        <field name="is_construction_wip" eval="True"/>
+        <field name="is_qualitative_significant" eval="True"/>
+        <field name="materiality_id" ref="demo_materiality_calc_2024"/>
+        <field name="status">active</field>
+    </record>
+
+    <record id="demo_finding_sad_log" model="icofr.finding">
+        <field name="name">Selisih Kurs (Log SAD)</field>
+        <field name="code">FIND-SAD-001</field>
+        <field name="finding_type">control_deficiency</field>
+        <field name="severity_level">low</field>
+        <field name="quantitative_impact_amount">200000000.0</field> 
+        <field name="owner_id" ref="base.user_admin"/>
+        <field name="status">closed</field>
+        <!-- Reporting for CD (CEO and Audit Committee) -->
+        <field name="reported_to_ceo" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+    </record>
+
+    </data>
 </odoo>

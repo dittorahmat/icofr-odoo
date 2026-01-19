@@ -82,10 +82,11 @@
                             <field name="impacted_fsli_ids" widget="many2many_tags"/>
                             <field name="euc_complexity" invisible="control_specific_type != 'euc'"/>
                             <group colspan="2" invisible="control_specific_type != 'euc'">
-                                <field name="euc_has_version_ctrl"/>
                                 <field name="euc_has_access_ctrl"/>
-                                <field name="euc_has_change_ctrl"/>
                                 <field name="euc_has_integrity_ctrl"/>
+                                <field name="euc_has_backup_ctrl"/>
+                                <field name="euc_has_documentation"/>
+                                <field name="euc_has_review_approval"/>
                             </group>
 
                             <field name="ipe_type" invisible="control_specific_type != 'ipe'"/>

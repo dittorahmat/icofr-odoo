@@ -22,6 +22,13 @@ class IcofrMateriality(models.Model):
         help='Tahun fiskal untuk perhitungan materialitas ini'
     )
 
+    # FAQ 13 (Hal 126): Entitas yang baru diakuisisi
+    is_new_acquisition = fields.Boolean(
+        string='Entitas Baru Diakuisisi?',
+        help='Centang jika entitas ini baru diakuisisi dalam tahun berjalan. '
+             'Sesuai FAQ 13, entitas ini dapat dikecualikan dari penilaian tahun berjalan namun harus diungkapkan.'
+    )
+
     company_id = fields.Many2one(
         'res.company',
         string='Perusahaan',
@@ -199,27 +206,41 @@ class IcofrMateriality(models.Model):
         help='Jumlah Performance Materiality dalam satuan mata uang lokal'
     )
 
+    # Hal 17: Ambang Batas SAD (Summary of Adjusted Differences)
+    sad_percent = fields.Float(
+        string='Persentase SAD (%)',
+        default=3.0,
+        help='Ambang batas kesalahan yang diabaikan (Clearly Trivial). Biasanya 3% - 5% dari OM.'
+    )
+    
+    sad_amount = fields.Float(
+        string='Jumlah SAD',
+        compute='_compute_materiality_amounts',
+        store=True,
+        help='Nilai nominal Summary of Adjusted Differences (Hal 17).'
+    )
+
     # Scoping Coverage Analysis (2/3 Rule - Table 6 Juknis)
     coverage_revenue_percent = fields.Float(
-        string='Cakupan Pendapatan (%)',
+        string='Cakupan Pendapatan Grup (%)',
         compute='_compute_coverage_ratios',
         help='Persentase cakupan akun pendapatan signifikan terhadap total pendapatan'
     )
 
     coverage_assets_percent = fields.Float(
-        string='Cakupan Aset (%)',
+        string='Cakupan Aset Grup (%)',
         compute='_compute_coverage_ratios',
         help='Persentase cakupan akun aset signifikan terhadap total aset'
     )
 
     coverage_expenses_percent = fields.Float(
-        string='Cakupan Beban (%)',
+        string='Cakupan Beban Grup (%)',
         compute='_compute_coverage_ratios',
         help='Persentase cakupan akun beban signifikan terhadap total beban'
     )
 
     coverage_liabilities_percent = fields.Float(
-        string='Cakupan Liabilitas (%)',
+        string='Cakupan Liabilitas Grup (%)',
         compute='_compute_coverage_ratios',
         help='Persentase cakupan akun liabilitas signifikan terhadap total liabilitas'
     )
@@ -340,24 +361,89 @@ class IcofrMateriality(models.Model):
         help='Referensi ke perhitungan materialitas tingkat grup untuk validasi alokasi.'
     )
 
+    # Tabel 6 (Hal 25): Aturan 2/3 (Cakupan Minimum 66.7%)
+    coverage_assets_pct = fields.Float('Cakupan Aset (%)', compute='_compute_scoping_coverage', store=True)
+    coverage_revenue_pct = fields.Float('Cakupan Pendapatan (%)', compute='_compute_scoping_coverage', store=True)
+    coverage_expense_pct = fields.Float('Cakupan Beban (%)', compute='_compute_scoping_coverage', store=True)
+    coverage_liability_pct = fields.Float('Cakupan Liabilitas (%)', compute='_compute_scoping_coverage', store=True)
+    
+    scoping_status = fields.Selection([
+        ('compliant', 'Lolos Aturan 2/3'),
+        ('non_compliant', 'Cakupan Tidak Cukup')
+    ], string='Status Scoping', compute='_compute_scoping_coverage', store=True)
+
+    def _compute_scoping_coverage(self):
+        """
+        Logic Bab III Pasal 1.3: Total akun signifikan wajib mencakup minimal 2/3 (66.7%) 
+        dari total metrik finansial utama.
+        """
+        for record in self:
+            # Ambil akun-akun yang ditandai signifikan untuk materialitas ini
+            mappings = self.env['icofr.account.mapping'].search([
+                ('materiality_id', '=', record.id),
+                ('significance_level', '=', 'significant')
+            ])
+            
+            sum_assets = sum(mappings.filtered(lambda m: m.fsl_item in ['Aset', 'Asset', 'Aktiva']).mapped('account_balance'))
+            sum_rev = sum(mappings.filtered(lambda m: m.fsl_item in ['Pendapatan', 'Revenue', 'Income']).mapped('account_balance'))
+            sum_exp = sum(mappings.filtered(lambda m: m.fsl_item in ['Beban', 'Expense', 'Biaya']).mapped('account_balance'))
+            sum_liab = sum(mappings.filtered(lambda m: m.fsl_item in ['Liabilitas', 'Liability', 'Hutang']).mapped('account_balance'))
+            
+            record.coverage_assets_pct = (sum_assets / record.total_assets_amount * 100) if record.total_assets_amount else 0
+            record.coverage_revenue_pct = (sum_rev / record.revenue_amount * 100) if record.revenue_amount else 0
+            record.coverage_expense_pct = (sum_exp / record.total_expense_amount * 100) if record.total_expense_amount else 0
+            record.coverage_liability_pct = (sum_liab / record.total_liability_amount * 100) if record.total_liability_amount else 0
+            
+            # Aturan 2/3: WAJIB mencakup >= 66.7% (Tabel 6)
+            threshold = 66.67
+            if all([record.coverage_assets_pct >= threshold, 
+                    record.coverage_revenue_pct >= threshold,
+                    record.coverage_expense_pct >= threshold,
+                    record.coverage_liability_pct >= threshold]):
+                record.scoping_status = 'compliant'
+            else:
+                record.scoping_status = 'non_compliant'
+
     @api.constrains('overall_materiality_amount', 'parent_materiality_id')
     def _check_group_allocation_limit(self):
         """
-        Hal 115 Juknis BUMN: Nilai alokasi materialitas dari masing-masing 
-        Lokasi/Perusahaan tidak boleh melebihi nilai OM Grup.
+        Hal 115 Juknis BUMN: 
+        a. Nilai alokasi OM entitas tidak boleh melebihi nilai OM Grup.
+        b. Total akumulasi alokasi OM seluruh entitas tidak boleh melebihi (OM Grup * Multiplier).
         """
+        # Skip during installation, import, or module upgrade to prevent ParseErrors in demo data
+        if self.env.context.get('install_mode') or self.env.context.get('import_file') or self.env.context.get('module_upgrade'):
+            return
+
         for record in self:
             if record.parent_materiality_id:
-                group_om = record.parent_materiality_id.overall_materiality_amount
+                group_mat = record.parent_materiality_id
+                group_om = group_mat.overall_materiality_amount
+                
+                # Check point a
                 if record.overall_materiality_amount > group_om:
                     raise ValidationError(
-                        f"Sesuai Juknis BUMN Hal 115, Overall Materiality entitas (Rp {record.overall_materiality_amount:,.0f}) "
+                        f"Pelanggaran Materialitas pada '{record.name}': "
+                        f"Sesuai Juknis BUMN Hal 115a, Overall Materiality entitas (Rp {record.overall_materiality_amount:,.0f}) "
                         f"TIDAK BOLEH melebihi Overall Materiality Grup (Rp {group_om:,.0f})!"
                     )
+                
+                # Check point b (Accumulation)
+                total_allocated = sum(self.env['icofr.materiality'].search([
+                    ('parent_materiality_id', '=', group_mat.id),
+                    ('active', '=', True)
+                ]).mapped('overall_materiality_amount'))
+                
+                max_total_allowed = group_om * group_mat.group_multiplier
+                if total_allocated > max_total_allowed:
+                    raise ValidationError(
+                        f"Sesuai Juknis BUMN Hal 115b, Total akumulasi alokasi OM grup (Rp {total_allocated:,.0f}) "
+                        f"TIDAK BOLEH melebihi batas maksimal (OM Grup x Multiplier = Rp {max_total_allowed:,.0f})!"
+                    )
 
-    @api.depends('revenue_amount', 'total_assets_amount', 'net_income_amount',
+    @api.depends('revenue_amount', 'total_assets_amount', 'net_income_amount', 
                  'overall_materiality_percent', 'performance_materiality_percent',
-                 'materiality_basis')
+                 'materiality_basis', 'sad_percent')
     def _compute_materiality_amounts(self):
         for record in self:
             # Calculate overall materiality amount based on selected basis
@@ -373,6 +459,8 @@ class IcofrMateriality(models.Model):
 
             record.overall_materiality_amount = base_amount * (record.overall_materiality_percent / 100)
             record.performance_materiality_amount = record.overall_materiality_amount * (record.performance_materiality_percent / 100)
+            # Hal 17: SAD Amount calculation
+            record.sad_amount = record.overall_materiality_amount * (record.sad_percent / 100)
 
     @api.model
     def create(self, vals):

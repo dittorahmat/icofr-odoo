@@ -24,9 +24,9 @@
                     </div>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="fiscal_year"/>
                             <field name="company_id"/>
+                            <field name="is_new_acquisition"/>
+                            <field name="fiscal_year"/>
                         </group>
                         <group string="Konfigurasi Grup (Tabel 25)">
                             <field name="is_group_consolidation"/>
@@ -52,6 +52,8 @@
                         <group>
                             <field name="overall_materiality_percent"/>
                             <field name="overall_materiality_amount" widget="monetary"/>
+                            <field name="sad_percent"/>
+                            <field name="sad_amount" widget="monetary"/>
                         </group>
                         <group>
                             <field name="risk_factor_level" widget="radio"/>

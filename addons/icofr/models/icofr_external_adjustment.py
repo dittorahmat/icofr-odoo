@@ -21,6 +21,11 @@ class IcofrExternalAdjustment(models.Model):
     amount = fields.Float('Nilai Adjustment (Rp)', required=True)
     fsl_item = fields.Char('Item Laporan Keuangan (FSLI)')
     
+    description = fields.Text(
+        string='Rincian Prosedur / Mitigasi',
+        help='Detail prosedur tambahan yang dilakukan manajemen (Hal 71) atau rincian penyesuaian audit.'
+    )
+
     is_material = fields.Boolean('Kategori Material?', compute='_compute_is_material', store=True)
     
     related_control_ids = fields.Many2many('icofr.control', string='Kontrol Terkait', 

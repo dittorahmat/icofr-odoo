@@ -73,3 +73,15 @@ class IcofrFaq(models.Model):
         ('testing', 'Pengujian'),
         ('reporting', 'Pelaporan')
     ], string='Kategori', default='general')
+
+class IcofrDisclosure(models.Model):
+    _name = 'icofr.disclosure'
+    _description = 'Pengungkapan Laporan Keuangan (Disclosures)'
+    _order = 'name'
+
+    name = fields.Char('Nama Pengungkapan', required=True, help='Contoh: Catatan atas Laporan Keuangan - Aset Tetap')
+    code = fields.Char('Kode Referensi')
+    description = fields.Text('Deskripsi Pengungkapan')
+    
+    company_id = fields.Many2one('res.company', string='Perusahaan', default=lambda self: self.env.company)
+    active = fields.Boolean(default=True)

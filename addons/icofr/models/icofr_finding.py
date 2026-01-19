@@ -164,9 +164,32 @@ class IcofrFinding(models.Model):
        help='Klasifikasi temuan ke dalam kategori kekurangan')
 
     quantitative_impact_amount = fields.Float(
-        string='Dampak Kuantitatif (Rp)',
-        help='Estimasi dampak kuantitatif dalam rupiah'
+        string='Estimasi Dampak Kuantitatif (Rp)',
+        help='Estimasi nilai moneter dari dampak temuan'
     )
+
+    # Hal 17: Summary of Adjusted Differences (SAD)
+    is_above_sad = fields.Boolean(
+        string='Di Atas Ambang SAD?',
+        compute='_compute_sad_status',
+        store=True,
+        help='Menandakan temuan di atas batas de minimis (SAD) yang wajib dicatat di log penyesuaian (Hal 17).'
+    )
+
+    @api.depends('quantitative_impact_amount', 'company_id', 'create_date')
+    def _compute_sad_status(self):
+        for record in self:
+            # Cari materialitas aktif untuk tahun temuan
+            year = str(record.create_date.year) if record.create_date else str(fields.Date.today().year)
+            materiality = self.env['icofr.materiality'].search([
+                ('company_id', '=', record.company_id.id),
+                ('fiscal_year', '=', year),
+                ('active', '=', True)
+            ], limit=1)
+            
+            sad_threshold = materiality.sad_amount if materiality else 0
+            record.is_above_sad = record.quantitative_impact_amount > sad_threshold if sad_threshold > 0 else True
+
 
     impact_currency_id = fields.Many2one(
         'res.currency',
@@ -318,19 +341,21 @@ class IcofrFinding(models.Model):
         Validation according to Table 24: Ilustrasi – Penyampaian Defisiensi oleh Lini Ketiga
         Enforced when status is moved towards closing.
         """
+        # Skip during installation, import or module upgrade
+        if self.env.context.get('install_mode') or self.env.context.get('import_file') or self.env.context.get('module_upgrade'):
+            return
+
         for record in self:
             # Skip if record is in draft or classification is missing
             if record.status in ['draft', 'planned'] or not record.deficiency_classified:
                 continue
                 
             if record.deficiency_classified in ['material_weakness', 'significant_deficiency']:
-                # SD & MW must be reported to all 4
                 if not all([record.reported_to_ceo, record.reported_to_board, 
                            record.reported_to_audit_committee, record.reported_to_mgmt_assessment]):
                     raise ValidationError(f"Sesuai Juknis BUMN Tabel 24, temuan kategori '{dict(record._fields['deficiency_classified'].selection).get(record.deficiency_classified)}' WAJIB dilaporkan ke CEO, Dewan Pengawas, Komite Audit, dan tercantum dalam Asesmen Manajemen sebelum dapat dilanjutkan!")
             
             elif record.deficiency_classified == 'control_deficiency':
-                # CD must be reported to CEO and Audit Committee
                 if not all([record.reported_to_ceo, record.reported_to_audit_committee]):
                     raise ValidationError("Sesuai Juknis BUMN Tabel 24, temuan kategori 'Kekurangan Kontrol' WAJIB dilaporkan minimal ke CEO dan Komite Audit sebelum dapat dilanjutkan!")
 

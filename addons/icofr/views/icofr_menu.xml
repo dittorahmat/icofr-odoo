@@ -96,6 +96,14 @@
               action="action_icofr_bpm_document"
               groups="group_icofr_line_2"/>
 
+    <!-- Menu untuk Pengungkapan (Disclosures) -->
+    <menuitem id="menu_icofr_disclosure"
+              name="Daftar Pengungkapan"
+              sequence="58"
+              parent="menu_icofr_master"
+              action="action_icofr_disclosure"
+              groups="group_icofr_line_2"/>
+
     <!-- Menu untuk Asesmen Risiko Kualitatif -->
     <menuitem id="menu_icofr_qualitative_assessment"
               name="Asesmen Kualitatif"

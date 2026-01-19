@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_icofr_disclosure_list" model="ir.ui.view">
+        <field name="name">icofr.disclosure.list</field>
+        <field name="model">icofr.disclosure</field>
+        <field name="arch" type="xml">
+            <list string="Pengungkapan Laporan Keuangan">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="company_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_icofr_disclosure_form" model="ir.ui.view">
+        <field name="name">icofr.disclosure.form</field>
+        <field name="model">icofr.disclosure</field>
+        <field name="arch" type="xml">
+            <form string="Pengungkapan Laporan Keuangan">
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="misal: Catatan 12 - Aset Tetap"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Deskripsi">
+                            <field name="description" placeholder="Detail pengungkapan atau referensi standar akuntansi..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_icofr_disclosure" model="ir.actions.act_window">
+        <field name="name">Pengungkapan (Disclosures)</field>
+        <field name="res_model">icofr.disclosure</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada data pengungkapan.
+            </p><p>
+                Gunakan menu ini untuk mencatat daftar pengungkapan (disclosures) laporan keuangan sebagai basis agregasi temuan sesuai Hal 69 Juknis BUMN.
+            </p>
+        </field>
+    </record>
+</odoo>

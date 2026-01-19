@@ -23,6 +23,7 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "data/icofr_coso_data.xml",
         "data/icofr_cobit_data.xml",
         "data/icofr_industry_data.xml",
+        "data/icofr_industry_risk_data.xml",
         "data/icofr_faq_data.xml",
 
         # Security
@@ -48,6 +49,7 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
 
         # Views
         "views/audit_population_views.xml",
+        "views/disclosure_views.xml",
         "views/icofr_menu.xml",
         "views/control_views.xml",
         "views/application_views.xml",

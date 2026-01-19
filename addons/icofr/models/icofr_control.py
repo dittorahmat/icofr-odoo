@@ -213,6 +213,13 @@ class IcofrControl(models.Model):
         help='Centang jika kontrol ini memitigasi risiko keamanan siber (Cyber Security) sesuai Hal 46 Juknis'
     )
 
+    cyber_security_phase = fields.Selection([
+        ('protect', 'Menjaga (Protect)'),
+        ('detect', 'Mendeteksi (Detect)'),
+        ('respond', 'Merespon (Respond)'),
+        ('recover', 'Memulihkan (Recover)')
+    ], string='Fase Keamanan Siber', help='Kategori mitigasi serangan siber sesuai Hal 46 Juknis BUMN')
+
     # Hal 46: Risiko Keamanan Siber
     is_cyber_related = fields.Boolean(
         string='Terkait Keamanan Siber',
@@ -226,13 +233,14 @@ class IcofrControl(models.Model):
         ('high', 'Tinggi')
     ], string='Kompleksitas EUC', help='Tingkat kompleksitas Spreadsheet/EUC')
     
-    euc_has_version_ctrl = fields.Boolean('Version Control')
-    euc_has_access_ctrl = fields.Boolean('Access Control')
-    euc_has_change_ctrl = fields.Boolean('Change Control')
-    euc_has_integrity_ctrl = fields.Boolean('Data Integrity')
-    euc_has_availability_ctrl = fields.Boolean('Availability Control', help='Checklist availability sesuai Tabel 14')
+    # Tabel 14: 5 Mandatory Controls for High Complexity
+    euc_has_access_ctrl = fields.Boolean('EUC: Kontrol Akses (Password/Restricted)', help='Membatasi akses hanya kepada personel yang berwenang.')
+    euc_has_integrity_ctrl = fields.Boolean('EUC: Integritas Data (Cell Locking/Validation)', help='Memastikan rumus dan data tidak dapat diubah tanpa otorisasi.')
+    euc_has_backup_ctrl = fields.Boolean('EUC: Backup & Recovery', help='Penyimpanan file secara teratur di lokasi yang aman.')
+    euc_has_documentation = fields.Boolean('EUC: Dokumentasi (Flow/Logic)', help='Dokumentasi yang menjelaskan logika, input, dan output spreadsheet.')
+    euc_has_review_approval = fields.Boolean('EUC: Review & Approval (Independence)', help='Review berkala oleh pihak independen atas akurasi logika spreadsheet.')
 
-    @api.constrains('control_specific_type', 'euc_complexity', 'euc_has_version_ctrl', 'euc_has_access_ctrl', 'euc_has_change_ctrl', 'euc_has_integrity_ctrl', 'euc_has_availability_ctrl')
+    @api.constrains('control_specific_type', 'euc_complexity', 'euc_has_access_ctrl', 'euc_has_integrity_ctrl', 'euc_has_backup_ctrl', 'euc_has_documentation', 'euc_has_review_approval')
     def _check_euc_minimum_controls(self):
         """
         Validation according to Table 14: Ilustrasi – Pengendalian Sesuai dengan Tingkat Kompleksitasnya.
@@ -240,10 +248,10 @@ class IcofrControl(models.Model):
         """
         for record in self:
             if record.control_specific_type == 'euc' and record.euc_complexity == 'high':
-                if not all([record.euc_has_version_ctrl, record.euc_has_access_ctrl, 
-                           record.euc_has_change_ctrl, record.euc_has_integrity_ctrl, 
-                           record.euc_has_availability_ctrl]):
-                    raise ValidationError("Sesuai Juknis BUMN Tabel 14, EUC Kompleksitas Tinggi WAJIB memiliki seluruh kontrol: Version, Access, Change, Integrity, dan Availability!")
+                if not all([record.euc_has_access_ctrl, record.euc_has_integrity_ctrl, 
+                           record.euc_has_backup_ctrl, record.euc_has_documentation, 
+                           record.euc_has_review_approval]):
+                    raise ValidationError("Sesuai Juknis BUMN Tabel 14 (Hal 44), EUC Kompleksitas Tinggi WAJIB memenuhi ke-5 kriteria kontrol: Akses, Integritas, Backup, Dokumentasi, dan Review!")
 
     # IPE Attributes (SK BUMN Tabel 15)
     ipe_type = fields.Selection([

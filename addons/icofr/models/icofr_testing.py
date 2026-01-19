@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from datetime import date
 from odoo.exceptions import ValidationError
+from datetime import timedelta
 
 
 class IcofrTesting(models.Model):
@@ -194,11 +194,64 @@ class IcofrTesting(models.Model):
         help='Centang jika ini adalah pengujian ulang setelah perbaikan (Remediasi) sesuai Tabel 23 Juknis'
     )
     
+    action_plan_id = fields.Many2one(
+        'icofr.action.plan',
+        string='Rencana Aksi Terkait',
+        help='Rencana aksi yang diperbaiki dan sekarang sedang diuji ulang (Wajib untuk remediasi)'
+    )
+    
     remediation_min_period = fields.Char(
         string='Periode Minimum (Remediasi)',
         compute='_compute_sample_size',
         store=True,
-        help='Periode minimum yang harus dicakup dalam pengujian remediasi sesuai Tabel 23 Juknis BUMN'
+        help='Periode pengoperasian baru sebelum boleh diuji ulang sesuai Tabel 23.'
+    )
+
+    @api.constrains('is_remediation_test', 'test_date', 'action_plan_id')
+    def _check_remediation_wait_period(self):
+        """
+        Tabel 23 (Hal 98): Kontrol yang diremediasi wajib beroperasi minimal selama 
+        periode tertentu sebelum boleh di-retest.
+        Contoh: Harian (30 hari), Mingguan (5 minggu), Bulanan (3 bulan).
+        """
+        # Skip during installation, import or module upgrade
+        # Skip during installation, import or module upgrade
+        if self.env.context.get('install_mode') or self.env.context.get('import_file') or self.env.context.get('module_upgrade'):
+            return
+
+        for record in self:
+            if record.is_remediation_test and record.action_plan_id:
+                if not record.action_plan_id.actual_completion_date:
+                    raise ValidationError("Rencana aksi harus memiliki 'Tanggal Penyelesaian Aktual' sebelum dapat diuji ulang!")
+                
+                # Hitung selisih hari
+                completion_date = record.action_plan_id.actual_completion_date
+                test_date = record.test_date
+                days_passed = (test_date - completion_date).days
+                
+                # Map wait days according to Table 23
+                freq = record.control_id.frequency
+                wait_days_map = {
+                    'daily': 30,
+                    'weekly': 35, # 5 weeks
+                    'monthly': 90, # 3 months
+                    'quarterly': 180, # 2 quarters
+                    'yearly': 365,
+                }
+                min_days = wait_days_map.get(freq, 25) # Default 25 transactions for others
+                
+                if days_passed < min_days:
+                    raise ValidationError(
+                        f"Pelanggaran Tabel 23: Kontrol {freq} wajib beroperasi minimal {min_days} hari "
+                        f"sejak remediasi selesai ({completion_date}) sebelum diuji ulang. "
+                        f"Baru berjalan {days_passed} hari. Retest paling cepat tanggal {completion_date + timedelta(days=min_days)}."
+                    )
+
+    remediation_min_period = fields.Char(
+        string='Periode Minimum (Remediasi)',
+        compute='_compute_sample_size',
+        store=True,
+        help='Periode pengoperasian baru sebelum boleh diuji ulang sesuai Tabel 23.'
     )
     
     sample_size_recommended = fields.Char(
@@ -319,11 +372,22 @@ class IcofrTesting(models.Model):
                         size = 15 if risk == 'high' else 5
                         recommended = "5 - 15"
                     elif freq == 'daily':
-                        size = 40 if risk == 'high' else 15
-                        recommended = "15 - 40"
+                        size = 40 if risk == 'high' else 25
+                        recommended = "25 - 40"
                     else: # > Daily / Per Transaction / Every Change / Event Driven
-                        size = 60 if risk == 'high' else 30
-                        recommended = "30 - 60"
+                        # Table 22 (Hal 97) Rules for Populations:
+                        pop_size = record.population_size
+                        if pop_size > 0:
+                            if pop_size <= 50:
+                                size = pop_size if risk == 'high' else max(2, int(pop_size * 0.1))
+                            elif pop_size <= 250:
+                                size = min(25, max(10, int(pop_size * 0.1)))
+                            else:
+                                size = 25
+                            recommended = f"Formula Tabel 22 (Populasi: {pop_size})"
+                        else:
+                            size = 60 if risk == 'high' else 25
+                            recommended = "25 - 60 (Populasi Belum Diketahui)"
 
             # Cap at population size if known
             if record.population_size > 0:
@@ -396,6 +460,79 @@ class IcofrTesting(models.Model):
             if record.status == 'completed' and record.test_type == 'toe':
                 if record.control_frequency in ['monthly', 'quarterly'] and not record.has_december_sample:
                     raise ValidationError("Sesuai Juknis BUMN Tabel 22, pengujian untuk frekuensi Bulanan/Kuartalan WAJIB menyertakan sampel dari bulan Desember/Kuartal IV!")
+
+    # Hal 51: Prosedur Roll-forward untuk Pengujian Interim
+    is_interim_test = fields.Boolean(
+        string='Pengujian Interim?',
+        help='Centang jika pengujian dilakukan sebelum akhir tahun (misal: s/d Sept) dan memerlukan roll-forward.'
+    )
+    
+    roll_forward_required = fields.Boolean(
+        string='Wajib Roll-forward?',
+        compute='_compute_roll_forward_required',
+        store=True,
+        help='Otomatis True jika pengujian interim dilakukan jauh sebelum tanggal tutup buku.'
+    )
+    
+    roll_forward_procedures = fields.Text(
+        string='Prosedur Roll-forward',
+        help='Prosedur tambahan (Inquiry/Observation) untuk memastikan kontrol tetap efektif dari tanggal interim s/d akhir tahun.'
+    )
+    
+    roll_forward_conclusion = fields.Selection([
+        ('effective', 'Tetap Efektif'),
+        ('ineffective', 'Menjadi Tidak Efektif'),
+        ('not_done', 'Belum Dilaksanakan')
+    ], string='Kesimpulan Roll-forward', default='not_done')
+
+    @api.depends('is_interim_test', 'test_date')
+    def _compute_roll_forward_required(self):
+        for record in self:
+            # Jika interim dan dilakukan sebelum November, wajib roll-forward (Hal 51)
+            if record.is_interim_test and record.test_date and record.test_date.month < 11:
+                record.roll_forward_required = True
+            else:
+                record.roll_forward_required = False
+
+    @api.constrains('tester_id', 'control_id', 'test_date')
+    def _check_auditor_cooling_off(self):
+        """
+        Hal 19 Juknis BUMN: Auditor Internal (Lini 3) tidak boleh menguji aktivitas 
+        yang pernah menjadi tanggung jawabnya dalam 12 bulan terakhir.
+        """
+        # Skip validation during installation, import or module upgrade
+        # Skip during installation, import or module upgrade
+        if self.env.context.get('install_mode') or self.env.context.get('import_file') or self.env.context.get('module_upgrade'):
+            return
+
+        for record in self:
+            if not record.tester_id or not record.control_id or not record.test_date:
+                continue
+            
+            twelve_months_ago = record.test_date - timedelta(days=365)
+            
+            # 1. Check if tester was the owner (Lini 1)
+            if record.control_id.owner_id == record.tester_id:
+                raise ValidationError(
+                    f"Pelanggaran Cooling-off (Hal 19): {record.tester_id.name} adalah pemilik kontrol ini. "
+                    "Auditor tidak boleh menguji kontrol yang dikelolanya sendiri."
+                )
+            
+            # 2. Check if tester performed Lini 2 validation in the last 12 months
+            previous_l2_checks = self.env['icofr.testing'].search([
+                ('control_id', '=', record.control_id.id),
+                ('tester_id', '=', record.tester_id.id),
+                ('test_type', '=', 'design_validation'),
+                ('test_date', '>', twelve_months_ago),
+                ('id', '!=', record.id)
+            ])
+            
+            if previous_l2_checks:
+                raise ValidationError(
+                    f"Pelanggaran Cooling-off (Hal 19): {record.tester_id.name} pernah melakukan validasi desain (Lini 2) "
+                    f"untuk kontrol ini pada {previous_l2_checks[0].test_date}. "
+                    "Wajib ada masa jeda 12 bulan sebelum dapat melakukan pengujian Lini 3."
+                )
 
     @api.onchange('control_id')
     def _onchange_control_id(self):

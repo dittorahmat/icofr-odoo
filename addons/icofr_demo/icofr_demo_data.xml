@@ -232,7 +232,7 @@
     <record id="demo_finding_pay_001" model="icofr.finding">
         <field name="name">Kesalahan Pembayaran Gaji</field>
         <field name="code">FIND-PAY-001</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">high</field>
         <field name="description">Beberapa pembayaran gaji tidak melalui otorisasi yang tepat</field>
         <field name="risk_id" ref="demo_risk_payroll_001"/>
@@ -362,7 +362,7 @@
     <record id="demo_finding_outcash_001" model="icofr.finding">
         <field name="name">Kegagalan Kontrol Otorisasi Pengeluaran Kas</field>
         <field name="code">FIND-OUTCASH-001</field>
-        <field name="finding_type">material_weakness</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">material_weakness</field>
         <field name="severity_level">high</field>
         <field name="description">Ditemukan 47 transaksi pengeluaran kas di atas Rp. 50,000,000 tanpa otorisasi manajer</field>
         <field name="risk_id" ref="demo_risk_unauth_001"/>
@@ -500,7 +500,7 @@
     <record id="demo_finding_payroll_error_scenario4" model="icofr.finding">
         <field name="name">Kesalahan Pembayaran Gaji</field>
         <field name="code">FIND-PAY-002</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">high</field>
         <field name="description">Beberapa pembayaran gaji tidak melalui otorisasi yang tepat</field>
         <field name="control_id" ref="demo_ctrl_withdraw_001"/>
@@ -598,7 +598,7 @@
     <record id="demo_finding_negative_scenario7" model="icofr.finding">
         <field name="name">Kegagalan Kontrol Otorisasi Pengeluaran Kas</field>
         <field name="code">FIND-OUTCASH-001</field>
-        <field name="finding_type">material_weakness</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">material_weakness</field>
         <field name="severity_level">critical</field>
         <field name="description">Ditemukan 47 transaksi pengeluaran kas di atas Rp. 50,000,000 tanpa otorisasi manajer</field>
         <field name="control_id" ref="demo_ctrl_withdraw_001"/>
@@ -1055,7 +1055,7 @@
     <record id="demo_finding_material_weakness" model="icofr.finding">
         <field name="name">Kelemahan Material dalam Pengendalian Kas</field>
         <field name="code">FIND-MATW-001</field>
-        <field name="finding_type">material_weakness</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">material_weakness</field>
         <field name="severity_level">critical</field>
         <field name="description">Ditemukan kelemahan material dalam pengendalian kas keluar perusahaan terkait dengan otorisasi ganda</field>
         <field name="impact_assessment">Risiko kerugian finansial yang signifikan akibat pengeluaran tidak sah</field>
@@ -1082,7 +1082,7 @@
     <record id="demo_finding_signif_deficiency" model="icofr.finding">
         <field name="name">Kekurangan Signifikan dalam Proses Rekonsiliasi Bank</field>
         <field name="code">FIND-SIGD-001</field>
-        <field name="finding_type">significant_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">significant_deficiency</field>
         <field name="severity_level">high</field>
         <field name="description">Proses rekonsiliasi bank tidak dilakukan secara tepat waktu dan tidak terdokumentasi dengan baik</field>
         <field name="impact_assessment">Potensi kesalahan dalam pencatatan keuangan dan risiko tidak terdeteksinya ketidaksesuaian</field>
@@ -1105,9 +1105,11 @@
 
     <!-- Control Deficiency Example -->
     <record id="demo_finding_control_deficiency" model="icofr.finding">
+        <field name="reported_to_mgmt_assessment" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
         <field name="name">Kekurangan Kontrol dalam Verifikasi Vendor Baru</field>
         <field name="code">FIND-CONTD-001</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">medium</field>
         <field name="description">Proses verifikasi vendor baru tidak memiliki otorisasi ganda sebelum setup</field>
         <field name="impact_assessment">Risiko terhadap pembayaran ke vendor fiktif</field>
@@ -1130,7 +1132,7 @@
     <record id="demo_finding_with_override" model="icofr.finding">
         <field name="name">Kesalahan dalam Prosedur Penagihan</field>
         <field name="code">FIND-OVERRIDE-001</field>
-        <field name="finding_type">process_inefficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">process_inefficiency</field>
         <field name="severity_level">high</field>
         <field name="description">Ditemukan keterlambatan dalam proses penagihan yang menyebabkan cash flow negatif</field>
         <field name="impact_assessment">Pengaruh langsung terhadap cash flow perusahaan</field>
@@ -1251,9 +1253,11 @@
     </record>
 
     <record id="demo_finding_from_csa" model="icofr.finding">
+        <field name="reported_to_mgmt_assessment" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
         <field name="name">Temuan dari CSA Pengeluaran Kas Q2 2024</field>
         <field name="code">FIND-CSA-001</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">medium</field>
         <field name="description">Ditemukan kekurangan dalam dokumentasi otorisasi pengeluaran kas selama CSA Q2 2024</field>
         <field name="control_id" ref="demo_ctrl_withdraw_001"/>
@@ -1274,9 +1278,11 @@
 
     <!-- Finding for subsidiary -->
     <record id="demo_finding_subsidiary" model="icofr.finding">
+        <field name="reported_to_mgmt_assessment" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
         <field name="name">Temuan Pengujian Subsidiary</field>
         <field name="code">FIND-SUB-001</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">medium</field>
         <field name="description">Ditemukan beberapa kekurangan dalam proses otorisasi penjualan</field>
         <field name="control_id" ref="demo_ctrl_subsidiary"/>
@@ -1297,14 +1303,26 @@
 
     <!-- Link additional findings to POJK report -->
     <record id="demo_finding_pay_001" model="icofr.finding">
+        <field name="reported_to_mgmt_assessment" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_ceo" eval="True"/>
         <field name="pojk_report_id" ref="demo_pojk_report_2024"/>  <!-- Link to POJK report -->
     </record>
 
     <record id="demo_finding_outcash_001" model="icofr.finding">
+        <field name="reported_to_mgmt_assessment" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_ceo" eval="True"/>
         <field name="pojk_report_id" ref="demo_pojk_report_2024"/>  <!-- Link to POJK report -->
     </record>
 
     <record id="demo_finding_negative_scenario7" model="icofr.finding">
+        <field name="reported_to_mgmt_assessment" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
+        <field name="reported_to_audit_committee" eval="True"/>
+        <field name="reported_to_ceo" eval="True"/>
         <field name="pojk_report_id" ref="demo_pojk_report_2024"/>  <!-- Link to POJK report -->
     </record>
 
@@ -1403,9 +1421,11 @@
 
     <!-- Finding for subsidiary -->
     <record id="demo_finding_subsidiary" model="icofr.finding">
+        <field name="reported_to_mgmt_assessment" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
         <field name="name">Temuan Pengujian Subsidiary</field>
         <field name="code">FIND-SUB-001</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">medium</field>
         <field name="description">Ditemukan beberapa kekurangan dalam proses otorisasi penjualan</field>
         <field name="control_id" ref="demo_ctrl_subsidiary"/>
@@ -2182,7 +2202,7 @@
     <record id="demo_lini3_finding_001" model="icofr.finding">
         <field name="name">Temuan dari Pengujian Lini 3 - Otorisasi Pencairan Dana</field>
         <field name="code">FIND-L3-001</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">high</field>
         <field name="description">Internal audit menemukan 5 dari 15 transaksi tanpa otorisasi ganda yang memadai</field>
         <field name="control_id" ref="demo_ctrl_withdraw_001"/>
@@ -2226,7 +2246,7 @@
     <record id="demo_auto_deficiency_classified" model="icofr.finding">
         <field name="name">Temuan Automatis - Pengeluaran Tanpa Otorisasi</field>
         <field name="code">FIND-AUTO-001</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">high</field>
         <field name="description">Sistem secara otomatis mendeteksi kelemahan dalam kontrol otorisasi pengeluaran kas</field>
         <field name="control_id" ref="demo_ctrl_withdraw_001"/>
@@ -2252,7 +2272,7 @@
     <record id="demo_management_override_finding" model="icofr.finding">
         <field name="name">Temuan dengan Override - Estimasi Piutang</field>
         <field name="code">FIND-OVR-001</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">high</field>
         <field name="description">Temuan kontrol dalam proses estimasi piutang tak tertagih</field>
         <field name="control_id" ref="demo_ctrl_ar_001"/>
@@ -2279,9 +2299,11 @@
 
     <!-- Finding with manual classification -->
     <record id="demo_manual_classification_finding" model="icofr.finding">
+        <field name="reported_to_mgmt_assessment" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
         <field name="name">Temuan Klasifikasi Manual - Komunikasi Kebijakan</field>
         <field name="code">FIND-MANUAL-001</field>
-        <field name="finding_type">process_inefficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">process_inefficiency</field>
         <field name="severity_level">medium</field>
         <field name="description">Ketidakcukupan komunikasi kebijakan kontrol internal ke seluruh unit</field>
         <field name="control_id" ref="demo_ctrl_policy_001"/>
@@ -2303,9 +2325,11 @@
 
     <!-- Deficiency classification with hybrid approach (automatic + manual justification) -->
     <record id="demo_hybrid_classification_finding" model="icofr.finding">
+        <field name="reported_to_mgmt_assessment" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
         <field name="name">Temuan Klasifikasi Hybrid - Rekonsiliasi Bank</field>
         <field name="code">FIND-HYBRID-001</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">medium</field>
         <field name="description">Delay dalam rekonsiliasi bank bulanan</field>
         <field name="control_id" ref="demo_ctrl_recon_001"/>
@@ -2402,7 +2426,7 @@
     <record id="demo_cross_module_finding" model="icofr.finding">
         <field name="name">Temuan Kontrol Penerimaan Kas - Kurang Otorisasi</field>
         <field name="code">FIND-CROSS-001</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">high</field>
         <field name="description">Ditemukan kelemahan dalam proses otorisasi penerimaan kas harian</field>
         <field name="control_id" ref="demo_cross_module_control"/>  <!-- Link to control -->
@@ -2854,9 +2878,11 @@
 
     <!-- Finding for subsidiary -->
     <record id="demo_finding_subsidiary_a" model="icofr.finding">
+        <field name="reported_to_mgmt_assessment" eval="True"/>
+        <field name="reported_to_board" eval="True"/>
         <field name="name">Temuan dari Pengujian Subsidiary A</field>
         <field name="code">FIND-SUBA-001</field>
-        <field name="finding_type">control_deficiency</field>
+        <field name="reported_to_ceo" eval="True"/><field name="reported_to_audit_committee" eval="True"/><field name="finding_type">control_deficiency</field>
         <field name="severity_level">medium</field>
         <field name="description">Ditemukan beberapa ketidaksesuaian minor dalam proses otorisasi penjualan di Subsidiary A</field>
         <field name="control_id" ref="demo_ctrl_subsidiary_a"/>

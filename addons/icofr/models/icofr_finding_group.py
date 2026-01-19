@@ -37,6 +37,8 @@ class IcofrFindingGroup(models.Model):
 
     impacted_fsli_id = fields.Many2one('icofr.account.mapping', string='Akun/FSLI Terkait')
     
+    disclosure_id = fields.Many2one('icofr.disclosure', string='Pengungkapan Terkait', help='Digunakan jika dasar pengelompokan adalah Pengungkapan.')
+
     assertion_type = fields.Selection([
         ('existence', 'Existence/Occurrence'),
         ('completeness', 'Completeness'),
