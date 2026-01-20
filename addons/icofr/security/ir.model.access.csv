@@ -125,3 +125,5 @@ access_icofr_external_assurance_l3,icofr.external.assurance,model_icofr_external
 access_icofr_process_step_l2,icofr.process.step,model_icofr_process_step,group_icofr_line_2,1,1,1,1
 access_icofr_process_step_l3,icofr.process.step,model_icofr_process_step,group_icofr_line_3,1,0,0,0
 access_icofr_process_step_user,icofr.process.step,model_icofr_process_step,base.group_user,1,0,0,0
+access_icofr_elc_assessment,icofr.elc.assessment,model_icofr_elc_assessment,group_icofr_line_2,1,1,1,1
+access_icofr_audit_dossier_wizard,icofr.audit.dossier.wizard,model_icofr_audit_dossier_wizard,base.group_user,1,1,1,1

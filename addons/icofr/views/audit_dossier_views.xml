@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_icofr_audit_dossier_wizard_form" model="ir.ui.view">
+        <field name="name">icofr.audit.dossier.wizard.form</field>
+        <field name="model">icofr.audit.dossier.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bundel Dokumen Audit (Audit Dossier)">
+                <p class="oe_grey">
+                    Fitur ini akan mengumpulkan seluruh dokumen kepatuhan ICOFR tahun berjalan ke dalam satu paket terstruktur sesuai Lampiran 12 Juknis BUMN.
+                </p>
+                <group>
+                    <group>
+                        <field name="fiscal_year"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </group>
+                <group string="Pilihan Dokumen">
+                    <group>
+                        <field name="include_rcm"/>
+                        <field name="include_flowcharts"/>
+                        <field name="include_testing_results"/>
+                    </group>
+                    <group>
+                        <field name="include_dod_working_paper"/>
+                        <field name="include_certification"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_generate_dossier" string="Generate Dossier (ZIP)" type="object" class="btn-primary"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_icofr_audit_dossier_wizard" model="ir.actions.act_window">
+        <field name="name">Bundel Dokumen Audit (Lampiran 12)</field>
+        <field name="res_model">icofr.audit.dossier.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_icofr_audit_dossier"
+              name="Dossier Audit (Bundle)"
+              parent="menu_icofr_reporting"
+              action="action_icofr_audit_dossier_wizard"
+              sequence="100"/>
+</odoo>

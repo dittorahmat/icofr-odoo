@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- DoD Report Action -->
+    <record id="action_report_dod_working_paper" model="ir.actions.report">
+        <field name="name">Kertas Kerja Penentuan DoD (Lampiran 10)</field>
+        <field name="model">icofr.finding.group</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">icofr.report_dod_working_paper</field>
+        <field name="report_file">icofr.report_dod_working_paper</field>
+        <field name="print_report_name">'Kertas_Kerja_DoD_%s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_icofr_finding_group"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- DoD Report Template -->
+    <template id="report_dod_working_paper">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-center mb-4">
+                            <h3>KERTAS KERJA PENENTUAN DEGREE OF DEFICIENCY (DoD)</h3>
+                            <h4>LAMPIRAN 10 - JUKNIS ICOFR BUMN</h4>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <strong>Nama Perusahaan:</strong> <span t-field="doc.company_id.name"/><br/>
+                                <strong>Periode:</strong> <span t-field="doc.fiscal_year"/>
+                            </div>
+                            <div class="col-6 text-right">
+                                <strong>Grup Evaluasi:</strong> <span t-field="doc.name"/>
+                            </div>
+                        </div>
+
+                        <table class="table table-bordered table-sm" style="font-size: 10px;">
+                            <thead class="thead-light text-center">
+                                <tr>
+                                    <th style="width: 5%">Ref</th>
+                                    <th style="width: 25%">Deskripsi Defisiensi</th>
+                                    <th style="width: 8%">Remediasi (Y/T)</th>
+                                    <th style="width: 10%">Periode Tidak Efektif</th>
+                                    <th style="width: 12%">Nilai Eksposur (Rp)</th>
+                                    <th style="width: 10%">Kesimpulan Individu</th>
+                                    <th style="width: 10%">Akun/FSLI Terdampak</th>
+                                    <th style="width: 20%">Klasifikasi Agregasi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.finding_ids" t-as="finding">
+                                    <tr>
+                                        <td><span t-field="finding.code"/></td>
+                                        <td><span t-field="finding.description"/></td>
+                                        <td class="text-center">
+                                            <span t-if="finding.remediation_status == 'completed'">Y</span>
+                                            <span t-else="">T</span>
+                                        </td>
+                                        <td>
+                                            <span t-if="finding.date_detected" t-field="finding.date_detected"/> 
+                                            - 
+                                            <span t-if="finding.remediation_date" t-field="finding.remediation_date"/>
+                                            <span t-else="">Sekarang</span>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="finding.quantitative_impact_amount" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="finding.severity_level"/>
+                                        </td>
+                                        <td>
+                                            <t t-foreach="finding.control_id.impacted_fsli_ids" t-as="fsli">
+                                                <span t-field="fsli.name"/><br/>
+                                            </t>
+                                        </td>
+                                        <!-- Kotak Klasifikasi Agregasi (Simulation) -->
+                                        <td class="text-center">
+                                            <t t-if="doc.aggregated_deficiency_class == 'material_weakness'">
+                                                <strong>Material Weakness</strong>
+                                            </t>
+                                            <t t-elif="doc.aggregated_deficiency_class == 'significant_deficiency'">
+                                                Significant Deficiency
+                                            </t>
+                                            <t t-else="">
+                                                Control Deficiency
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <!-- Total Row -->
+                                <tr class="font-weight-bold" style="background-color: #f0f0f0;">
+                                    <td colspan="4" class="text-right">TOTAL EKSPOSUR AGREGAT:</td>
+                                    <td class="text-right">
+                                        <span t-field="doc.total_quantitative_impact" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/>
+                                    </td>
+                                    <td colspan="3">
+                                        Kesimpulan Akhir: <span t-field="doc.aggregated_deficiency_class"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="mt-4">
+                            <h5>Catatan Evaluasi:</h5>
+                            <p t-field="doc.evaluation_notes"/>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-4 text-center">
+                                <p>Disiapkan Oleh:</p>
+                                <br/><br/>
+                                <p>(__________________)</p>
+                                <p>Fungsi ICORF (Lini 2)</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p>Direview Oleh:</p>
+                                <br/><br/>
+                                <p>(__________________)</p>
+                                <p>Internal Audit (Lini 3)</p>
+                            </div>
+                            <div class="col-4 text-center">
+                                <p>Disetujui Oleh:</p>
+                                <br/><br/>
+                                <p>(__________________)</p>
+                                <p>CFO / Komite Audit</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

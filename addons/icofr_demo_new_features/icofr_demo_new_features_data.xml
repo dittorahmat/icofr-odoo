@@ -116,11 +116,12 @@
         <field name="name">Review Estimasi Cadangan (MRC)</field>
         <field name="code">CTRL-MRC-DEMO-001</field>
         <field name="control_specific_type">mrc</field>
-        <field name="mrc_precision_threshold">Selisih > 5%</field>
+        <field name="mrc_precision_threshold">Selisih > 5% atau > Rp 100 Juta</field>
         <field name="owner_id" ref="base.user_admin"/>
         <field name="control_type">detective</field>
         <field name="frequency">monthly</field>
         <field name="status">active</field>
+        <field name="notes">Tabel 21 Compliance: Memerlukan bukti investigasi jika threshold terlewati.</field>
     </record>
 
     <record id="demo_testing_mrc_failed" model="icofr.testing">
@@ -130,7 +131,10 @@
         <field name="tester_id" ref="base.user_admin"/>
         <field name="test_date">2024-12-15</field>
         <field name="effectiveness">ineffective</field>
-        <field name="test_results">Gagal presisi review (Tabel 21).</field>
+        <field name="has_december_sample" eval="True"/>
+        <field name="mrc_threshold_appropriate">fail</field>
+        <field name="mrc_investigation_proven">fail</field>
+        <field name="test_results">Gagal presisi review (Tabel 21). Ambang batas tidak dipatuhi dan tidak ada investigasi atas anomali.</field>
     </record>
 
     <record id="demo_account_qualitative_covenant" model="icofr.account.mapping">
@@ -192,13 +196,14 @@
     </record>
 
     <record id="demo_account_wip_infra" model="icofr.account.mapping">
-        <field name="name">WIP BUMN Konstruksi</field>
+        <field name="name">WIP BUMN Konstruksi (Proyek Strategis)</field>
         <field name="code">AM-WIP-001</field>
         <field name="gl_account">13005</field>
         <field name="fsl_item">Asset</field>
         <field name="account_balance">4500000000.0</field>
         <field name="is_construction_wip" eval="True"/>
         <field name="is_qualitative_significant" eval="True"/>
+        <field name="qualitative_justification">Proyek infrastruktur jangka panjang dengan risiko estimasi pengakuan pendapatan yang tinggi.</field>
         <field name="materiality_id" ref="demo_materiality_calc_2024"/>
         <field name="status">active</field>
     </record>

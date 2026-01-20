@@ -5,24 +5,23 @@ This project is an Odoo 19.0 module designed for **Internal Controls Over Financ
 
 The system implements the **Three Lines of Defense** model with hard-coded regulatory constraints and audit-ready simulations.
 
-### Key Compliance Features
-- **Dynamic Materiality Calculator:** Computes OM/PM with **Haircut Logic**. Includes **Proportional Allocation** (Hal 115) and validation of **Accumulated Group Limit**.
+### Key Compliance Features (Perfect Gold Standard)
+- **ELC Assessment (17 COSO Principles):** Structured kuesioner for qualitative evaluation of the entity-level control environment (Bab III).
+- **ITGC Maturity Scoring (COBIT 2019):** Maturity level 0-5 tracking for significant applications.
+- **Audit Dossier Wizard (Lampiran 12):** One-click assembly of structured audit evidence (RCM, Flowcharts, TOD/TOE, DoD, Certifications).
+- **Service Org & Bridge Letters:** Full tracking of SOC reports with gap analysis and Bridge Letter verification (Hal 56).
+- **Industry Cluster Coverage:** Expanded Risk Control Matrix (RCM) including **Energy, Minerba, Pangan, Infra, Telco, Insurance, and Logistics**.
 - **Aturan 2/3 Scoping Coverage:** Automated verification that significant accounts cover >= 66.7% of **Assets, Revenue, Expenses, and Liabilities** (Tabel 6).
-- **Roll-forward Methodology:** Tracking for interim tests with mandatory roll-forward procedures and conclusions (Hal 51).
-- **Remediation Lock (Tabel 23):** Hard validation preventing re-testing of fixed controls until the mandatory minimum operating period has passed (e.g., 30 days for daily controls).
+- **Remediation Lock (Tabel 23):** Hard validation preventing re-testing until mandatory minimum operating periods have passed.
 - **Audit Sampling Calculator:** Precision logic based on population size (Tabel 22) with **Mandatory December Sample** enforcement.
-- **DoD Wizard (Degree of Deficiency):** Decisions follow the **7-Box Logic (Lampiran 10)** with qualitative overrides.
-- **Aggregated Evaluation:** Multi-basis grouping by **Account, Process, Assertion, or COSO Principle (1-17)** with compensating control logic (Hal 69).
-- **EUC Technical Enforcement:** High-complexity spreadsheets must pass all **5 mandatory criteria** (Tabel 14).
-- **Auditor Integrity:** Hard-stop **Cooling-off Period** (12 months) preventing auditors from testing their own previous L1/L2 responsibilities (Hal 19).
-- **Management Override (MOC):** Specialized risk and control attributes to detect and prevent senior management intervention (FAQ 14).
 
 ### Key Models
-- `icofr.control`: Master controls with EUC checklists, ITGC phases, and IPO attributes.
+- `icofr.control`: Master controls with EUC/IPE checklists and ITGC attributes.
+- `icofr.elc.assessment`: Structured evaluation of the 17 COSO principles.
 - `icofr.testing`: Precision sampling, **Roll-forward**, and **Remediation Lock** logic.
-- `icofr.materiality`: Scoping dashboard with **Aturan 2/3** coverage metrics.
-- `icofr.finding.group`: Aggregated evaluation by assertion or **COSO Principle**.
-- `icofr.service.organization`: Monitoring of SOC Reports with **Bridge Letter** validation.
+- `icofr.application`: IT system management with **ITGC Maturity Scores**.
+- `icofr.materiality`: Scoping dashboard with **Aturan 2/3** and **SAD** threshold.
+- `icofr.finding.group`: Aggregated evaluation with **DoD Report** integration.
 
 ### Coding Standards
 *   **Remediation Rule**: Prevents retest if `test_date - action_completion_date < min_days` (Tabel 23).

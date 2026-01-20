@@ -450,17 +450,6 @@ class IcofrTesting(models.Model):
                 if record.control_frequency in ['monthly', 'quarterly'] and not record.has_december_sample:
                     raise ValidationError("Sesuai Juknis BUMN Tabel 22, pengujian untuk frekuensi Bulanan/Kuartalan WAJIB menyertakan sampel dari bulan Desember/Kuartal IV!")
 
-    @api.constrains('control_frequency', 'has_december_sample', 'status')
-    def _check_december_sampling(self):
-        """
-        Validation according to Table 22:
-        Untuk pengendalian dengan frekuensi bulanan dan kuartalan, sampel pengujian harus mencakup Kuartal Keempat dan bulan Desember.
-        """
-        for record in self:
-            if record.status == 'completed' and record.test_type == 'toe':
-                if record.control_frequency in ['monthly', 'quarterly'] and not record.has_december_sample:
-                    raise ValidationError("Sesuai Juknis BUMN Tabel 22, pengujian untuk frekuensi Bulanan/Kuartalan WAJIB menyertakan sampel dari bulan Desember/Kuartal IV!")
-
     # Hal 51: Prosedur Roll-forward untuk Pengujian Interim
     is_interim_test = fields.Boolean(
         string='Pengujian Interim?',

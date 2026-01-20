@@ -39,6 +39,16 @@ class IcofrApplication(models.Model):
     ], string='Efektivitas ITGC', default='not_assessed', tracking=True,
        help='Status efektivitas ITGC aplikasi ini. Jika Tidak Efektif, maka kontrol otomatis di dalamnya dianggap tidak dapat diandalkan (FAQ 4).')
     
+    # Kematangan IT (COBIT 2019 Integration)
+    itgc_maturity_score = fields.Selection([
+        ('0', '0 - Non-Existent'),
+        ('1', '1 - Initial / Ad-Hoc'),
+        ('2', '2 - Repeatable but Intuitive'),
+        ('3', '3 - Defined Process'),
+        ('4', '4 - Managed and Measurable'),
+        ('5', '5 - Optimized')
+    ], string='Maturity Level ITGC', default='1', help='Tingkat kematangan kontrol IT sesuai framework COBIT.')
+    
     last_itgc_assessment_date = fields.Date('Tanggal Penilaian ITGC Terakhir')
 
     company_id = fields.Many2one('res.company', string='Perusahaan', default=lambda self: self.env.company)

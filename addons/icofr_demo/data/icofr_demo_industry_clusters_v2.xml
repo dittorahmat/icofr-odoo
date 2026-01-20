@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ========================================== -->
+        <!-- 6. KLASTER MINERAL & BATUBARA (MINERBA) -->
+        <!-- ========================================== -->
+        <record id="process_minerba_royalty" model="icofr.process">
+            <field name="name">Manajemen Royalti &amp; PNBP Minerba</field>
+            <field name="code">P-MIN-001</field>
+            <field name="category">financial</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Perhitungan kewajiban royalti batubara/mineral kepada negara (PNBP) berdasarkan volume penjualan dan kadar.</field>
+        </record>
+
+        <record id="risk_royalty_calculation" model="icofr.risk">
+            <field name="name">Kesalahan Perhitungan Royalti Batubara</field>
+            <field name="code">R-MIN-001</field>
+            <field name="process_id" ref="process_minerba_royalty"/>
+            <field name="risk_category">financial</field>
+            <field name="risk_type">inherent</field>
+            <field name="likelihood">medium</field>
+            <field name="impact">high</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Data kalori batubara yang digunakan sebagai basis royalti tidak akurat, berdampak pada kurang/lebih bayar PNBP.</field>
+        </record>
+
+        <record id="control_lab_reconcile" model="icofr.control">
+            <field name="name">Rekonsiliasi Sertifikat Lab (COA) vs Laporan Royalti</field>
+            <field name="code">C-MIN-001</field>
+            <field name="process_id" ref="process_minerba_royalty"/>
+            <field name="control_type">detective</field>
+            <field name="frequency">monthly</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="risk_ids" eval="[(6, 0, [ref('risk_royalty_calculation')])]"/>
+            <field name="description">Verifikasi silang antara Certificate of Analysis (COA) dari surveyor independen dengan input data kualitas pada sistem perhitungan royalti.</field>
+        </record>
+
+        <!-- ========================================== -->
+        <!-- 7. KLASTER ASURANSI & DANA PENSIUN -->
+        <!-- ========================================== -->
+        <record id="process_insurance_reserve" model="icofr.process">
+            <field name="name">Estimasi Cadangan Teknis Asuransi</field>
+            <field name="code">P-INS-001</field>
+            <field name="category">financial</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Proses estimasi kewajiban masa depan (IBNR, Premium Reserve) sesuai PSAK 74.</field>
+        </record>
+
+        <record id="risk_actuarial_assumption" model="icofr.risk">
+            <field name="name">Kesalahan Asumsi Aktuaria</field>
+            <field name="code">R-INS-001</field>
+            <field name="process_id" ref="process_insurance_reserve"/>
+            <field name="risk_category">financial</field>
+            <field name="risk_type">inherent</field>
+            <field name="likelihood">medium</field>
+            <field name="impact">high</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Penggunaan tabel mortalitas atau tingkat diskonto yang tidak tepat menyebabkan salah saji cadangan premi.</field>
+        </record>
+
+        <record id="control_actuarial_peer_review" model="icofr.control">
+            <field name="name">Peer Review Laporan Aktuaria</field>
+            <field name="code">C-INS-001</field>
+            <field name="process_id" ref="process_insurance_reserve"/>
+            <field name="control_type">preventive</field>
+            <field name="frequency">yearly</field>
+            <field name="involves_specialist">True</field>
+            <field name="specialist_name">Konsultan Aktuaria Independen</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="risk_ids" eval="[(6, 0, [ref('risk_actuarial_assumption')])]"/>
+            <field name="description">Evaluasi asumsi dan metodologi aktuaria oleh pihak ketiga independen setiap akhir tahun.</field>
+        </record>
+
+        <!-- ========================================== -->
+        <!-- 8. KLASTER PARIWISATA & LOGISTIK -->
+        <!-- ========================================== -->
+        <record id="process_logistics_revenue" model="icofr.process">
+            <field name="name">Pengakuan Pendapatan Jasa Logistik</field>
+            <field name="code">P-LOG-001</field>
+            <field name="category">financial</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Pengakuan pendapatan berdasarkan status pengiriman barang (POD).</field>
+        </record>
+
+        <record id="risk_cut_off_revenue" model="icofr.risk">
+            <field name="name">Kesalahan Cut-off Pendapatan (In-Transit)</field>
+            <field name="code">R-LOG-001</field>
+            <field name="process_id" ref="process_logistics_revenue"/>
+            <field name="risk_category">financial</field>
+            <field name="risk_type">inherent</field>
+            <field name="likelihood">high</field>
+            <field name="impact">medium</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Pendapatan diakui saat barang dikirim, padahal kontrak mensyaratkan saat barang diterima (POD).</field>
+        </record>
+
+        <record id="control_pod_validation" model="icofr.control">
+            <field name="name">Validasi Bukti Penerimaan (Proof of Delivery)</field>
+            <field name="code">C-LOG-001</field>
+            <field name="process_id" ref="process_logistics_revenue"/>
+            <field name="control_type">preventive</field>
+            <field name="frequency">daily</field>
+            <field name="control_type_detailed">automated</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="risk_ids" eval="[(6, 0, [ref('risk_cut_off_revenue')])]"/>
+            <field name="description">Sistem ERP memblokir pengakuan invoice hingga status POD di-update sebagai 'Delivered' di mobile apps kurir.</field>
+        </record>
+
+    </data>
+</odoo>

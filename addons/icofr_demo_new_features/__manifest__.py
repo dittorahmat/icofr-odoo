@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'ICORF Demo New Features',
-    'version': '1.0',
+    'version': '1.1.0',
     'category': 'Accounting',
     'summary': 'Demo data for new features in ICORF (Internal Controls Over Financial Reporting) module',
     'description': """

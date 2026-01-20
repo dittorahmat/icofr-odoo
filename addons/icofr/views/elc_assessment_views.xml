@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_icofr_elc_assessment_list" model="ir.ui.view">
+        <field name="name">icofr.elc.assessment.list</field>
+        <field name="model">icofr.elc.assessment</field>
+        <field name="arch" type="xml">
+            <list string="Evaluasi ELC (COSO 17)">
+                <field name="name"/>
+                <field name="fiscal_year"/>
+                <field name="evaluator_id"/>
+                <field name="overall_conclusion" widget="badge" decoration-success="overall_conclusion == 'effective'" decoration-danger="overall_conclusion == 'material_weakness'"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_icofr_elc_assessment_form" model="ir.ui.view">
+        <field name="name">icofr.elc.assessment.form</field>
+        <field name="model">icofr.elc.assessment</field>
+        <field name="arch" type="xml">
+            <form string="Evaluasi ELC (Entity Level Control)">
+                <header>
+                    <button name="action_start" type="object" string="Mulai Evaluasi" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_done" type="object" string="Selesaikan" class="btn-success" invisible="state != 'in_progress'"/>
+                    <button name="action_draft" type="object" string="Kembali ke Draft" invisible="state not in ('done', 'in_progress')"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Evaluasi ELC Tahun 202X"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="fiscal_year"/>
+                            <field name="evaluator_id"/>
+                        </group>
+                        <group>
+                            <field name="date_assessment"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="17 Prinsip COSO" name="coso_principles">
+                            <group string="Lingkungan Pengendalian (Control Environment)">
+                                <field name="p1_integrity"/>
+                                <field name="p2_oversight"/>
+                                <field name="p3_structure"/>
+                                <field name="p4_competence"/>
+                                <field name="p5_accountability"/>
+                            </group>
+                            <group string="Penilaian Risiko (Risk Assessment)">
+                                <field name="p6_objectives"/>
+                                <field name="p7_risk_id"/>
+                                <field name="p8_fraud_risk"/>
+                                <field name="p9_change_id"/>
+                            </group>
+                            <group string="Aktivitas Pengendalian (Control Activities)">
+                                <field name="p10_select_controls"/>
+                                <field name="p11_it_controls"/>
+                                <field name="p12_policies"/>
+                            </group>
+                            <group string="Informasi &amp; Komunikasi">
+                                <field name="p13_info_quality"/>
+                                <field name="p14_internal_comm"/>
+                                <field name="p15_external_comm"/>
+                            </group>
+                            <group string="Kegiatan Pemantauan (Monitoring Activities)">
+                                <field name="p16_ongoing_eval"/>
+                                <field name="p17_eval_deficiencies"/>
+                            </group>
+                        </page>
+                        <page string="Kesimpulan Akhir" name="conclusion">
+                            <group>
+                                <field name="overall_conclusion" readonly="1"/>
+                                <field name="summary_notes" placeholder="Berikan ringkasan justifikasi atas efektivitas ELC..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_icofr_elc_assessment" model="ir.actions.act_window">
+        <field name="name">Evaluasi ELC (COSO 17)</field>
+        <field name="res_model">icofr.elc.assessment</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Mulai Evaluasi Entity Level Control pertama anda.
+            </p>
+            <p>
+                Evaluasi ini mencakup 17 Prinsip COSO 2013 yang wajib dipenuhi oleh setiap BUMN (Bab III).
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_icofr_elc_assessment"
+              name="Evaluasi ELC (COSO 17)"
+              parent="menu_icofr_operational"
+              action="action_icofr_elc_assessment"
+              sequence="15"/>
+</odoo>

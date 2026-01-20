@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ========================================== -->
+        <!-- 1. KLASTER ENERGI (MINYAK & GAS) -->
+        <!-- ========================================== -->
+        <record id="process_oil_production" model="icofr.process">
+            <field name="name">Produksi &amp; Lifting Migas</field>
+            <field name="code">P-OG-001</field>
+            <field name="category">operational</field>
+            <field name="process_type">operational_process</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Proses pencatatan produksi harian, lifting, dan perhitungan bagi hasil (PSC).</field>
+        </record>
+
+        <record id="risk_reserve_estimation" model="icofr.risk">
+            <field name="name">Kesalahan Estimasi Cadangan Terbukti</field>
+            <field name="code">R-OG-001</field>
+            <field name="process_id" ref="process_oil_production"/>
+            <field name="risk_category">financial</field>
+            <field name="risk_type">inherent</field>
+            <field name="likelihood">medium</field>
+            <field name="impact">high</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Estimasi cadangan tidak sesuai standar PRMS/SPE yang berdampak pada amortisasi aset migas.</field>
+        </record>
+
+        <record id="control_reserve_certification" model="icofr.control">
+            <field name="name">Sertifikasi Cadangan oleh Pihak Independen</field>
+            <field name="code">C-OG-001</field>
+            <field name="process_id" ref="process_oil_production"/>
+            <field name="control_type">detective</field>
+            <field name="frequency">yearly</field>
+            <field name="control_level">tlc</field>
+            <field name="control_specific_type">service_org</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="risk_ids" eval="[(6, 0, [ref('risk_reserve_estimation')])]"/>
+            <field name="description">Cadangan migas disertifikasi oleh konsultan independen (Lemigas/Gaffney Cline) setiap akhir tahun.</field>
+        </record>
+
+        <!-- ========================================== -->
+        <!-- 2. KLASTER PANGAN & PUPUK -->
+        <!-- ========================================== -->
+        <record id="process_fertilizer_distribution" model="icofr.process">
+            <field name="name">Distribusi Pupuk Bersubsidi</field>
+            <field name="code">P-AG-001</field>
+            <field name="category">operational</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Penyaluran pupuk PSO ke petani dan klaim subsidi ke pemerintah.</field>
+        </record>
+
+        <record id="risk_subsidy_claim" model="icofr.risk">
+            <field name="name">Klaim Subsidi Ditolak (Dispute)</field>
+            <field name="code">R-AG-001</field>
+            <field name="process_id" ref="process_fertilizer_distribution"/>
+            <field name="risk_category">financial</field>
+            <field name="risk_type">inherent</field>
+            <field name="likelihood">medium</field>
+            <field name="impact">high</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Dokumen penyaluran (RDKK) tidak lengkap menyebabkan piutang subsidi tidak dapat ditagih.</field>
+        </record>
+
+        <record id="control_rdkk_verification" model="icofr.control">
+            <field name="name">Verifikasi Berjenjang Dokumen Penyaluran (Verval)</field>
+            <field name="code">C-AG-001</field>
+            <field name="process_id" ref="process_fertilizer_distribution"/>
+            <field name="control_type">preventive</field>
+            <field name="frequency">monthly</field>
+            <field name="control_level">tlc</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="risk_ids" eval="[(6, 0, [ref('risk_subsidy_claim')])]"/>
+            <field name="description">Verifikasi data penyaluran pupuk dengan data RDKK sebelum pengajuan tagihan subsidi.</field>
+        </record>
+
+        <!-- ========================================== -->
+        <!-- 3. KLASTER INFRASTRUKTUR & KONSTRUKSI -->
+        <!-- ========================================== -->
+        <record id="process_construction_project" model="icofr.process">
+            <field name="name">Manajemen Proyek Konstruksi</field>
+            <field name="code">P-INF-001</field>
+            <field name="category">operational</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Pengelolaan proyek turnkey, progress fisik, dan pengakuan pendapatan POC.</field>
+        </record>
+
+        <record id="risk_poc_recognition" model="icofr.risk">
+            <field name="name">Kesalahan Pengakuan Persentase Penyelesaian (POC)</field>
+            <field name="code">R-INF-001</field>
+            <field name="process_id" ref="process_construction_project"/>
+            <field name="risk_category">financial</field>
+            <field name="risk_type">inherent</field>
+            <field name="likelihood">medium</field>
+            <field name="impact">high</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Progress fisik diakui melebihi realisasi lapangan untuk mendongkrak pendapatan (Window Dressing).</field>
+        </record>
+
+        <record id="control_site_survey" model="icofr.control">
+            <field name="name">Opname Fisik Bersama (Joint Survey)</field>
+            <field name="code">C-INF-001</field>
+            <field name="process_id" ref="process_construction_project"/>
+            <field name="control_type">detective</field>
+            <field name="frequency">monthly</field>
+            <field name="control_level">tlc</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="risk_ids" eval="[(6, 0, [ref('risk_poc_recognition')])]"/>
+            <field name="description">Berita Acara Opname Fisik wajib ditandatangani oleh MK (Manajemen Konstruksi), Owner, dan Kontraktor.</field>
+        </record>
+
+        <!-- ========================================== -->
+        <!-- 4. KLASTER TELEKOMUNIKASI -->
+        <!-- ========================================== -->
+        <record id="process_revenue_assurance" model="icofr.process">
+            <field name="name">Revenue Assurance</field>
+            <field name="code">P-TEL-001</field>
+            <field name="category">financial</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Validasi billing, mediasi CDR (Call Detail Record), dan rekonsiliasi interkoneksi.</field>
+        </record>
+
+        <record id="risk_billing_leakage" model="icofr.risk">
+            <field name="name">Kebocoran Pendapatan (Revenue Leakage)</field>
+            <field name="code">R-TEL-001</field>
+            <field name="process_id" ref="process_revenue_assurance"/>
+            <field name="risk_category">financial</field>
+            <field name="risk_type">inherent</field>
+            <field name="likelihood">medium</field>
+            <field name="impact">high</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Kegagalan sistem billing dalam menangkap CDR traffic yang valid.</field>
+        </record>
+
+        <record id="control_traffic_reconcile" model="icofr.control">
+            <field name="name">Rekonsiliasi Traffic Switch vs Billing</field>
+            <field name="code">C-TEL-001</field>
+            <field name="process_id" ref="process_revenue_assurance"/>
+            <field name="control_type">detective</field>
+            <field name="frequency">daily</field>
+            <field name="control_level">tlc</field>
+            <field name="control_type_detailed">automated</field>
+            <field name="automated_control_type">auto_calc</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="risk_ids" eval="[(6, 0, [ref('risk_billing_leakage')])]"/>
+            <field name="description">Sistem RA secara otomatis membandingkan total durasi di MSC/Switch dengan total durasi yang ter-rating di Billing System.</field>
+        </record>
+
+        <!-- ========================================== -->
+        <!-- 5. KLASTER PERKEBUNAN -->
+        <!-- ========================================== -->
+        <record id="process_biological_asset" model="icofr.process">
+            <field name="name">Penilaian Aset Biologis</field>
+            <field name="code">P-PLT-001</field>
+            <field name="category">financial</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Valuasi tanaman menghasilkan (TM) dan belum menghasilkan (TBM) sesuai IAS 41/PSAK 69.</field>
+        </record>
+
+        <record id="risk_biological_valuation" model="icofr.risk">
+            <field name="name">Ketidakwajaran Nilai Wajar Aset Biologis</field>
+            <field name="code">R-PLT-001</field>
+            <field name="process_id" ref="process_biological_asset"/>
+            <field name="risk_category">financial</field>
+            <field name="risk_type">inherent</field>
+            <field name="likelihood">medium</field>
+            <field name="impact">medium</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="description">Asumsi harga TBS dan yield tidak mencerminkan kondisi pasar yang wajar.</field>
+        </record>
+
+        <record id="control_valuation_review" model="icofr.control">
+            <field name="name">Review Asumsi Valuasi Aset Biologis</field>
+            <field name="code">C-PLT-001</field>
+            <field name="process_id" ref="process_biological_asset"/>
+            <field name="control_type">preventive</field>
+            <field name="frequency">yearly</field>
+            <field name="control_level">tlc</field>
+            <field name="control_specific_type">mrc</field>
+            <field name="owner_id" ref="base.user_admin"/>
+            <field name="risk_ids" eval="[(6, 0, [ref('risk_biological_valuation')])]"/>
+            <field name="description">Komite Penilaian mereview asumsi diskonto, harga jual, dan produktivitas sebelum digunakan dalam model valuasi.</field>
+        </record>
+
+    </data>
+</odoo>

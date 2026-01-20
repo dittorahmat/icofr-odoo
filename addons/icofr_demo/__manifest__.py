@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'ICORF Demo Data',
-    'version': '1.0',
+    'version': '1.1.0',
     'category': 'Accounting',
     'summary': 'Demo data for ICORF (Internal Controls Over Financial Reporting) module',
     'description': """
@@ -30,10 +30,14 @@ providing a realistic demonstration of the system for training and evaluation pu
         'icofr_demo_data.xml',
         'data/icofr_demo_workflow.xml',
         'data/icofr_banking_demo_data.xml',
+        'data/icofr_missing_features_demo.xml',
+        'data/icofr_demo_industry_clusters.xml',
+        'data/icofr_demo_industry_clusters_v2.xml',
     ],
     'demo': [
         'icofr_demo_data.xml',
         'data/icofr_coso_demo_mapping.xml',
+        'data/icofr_missing_features_demo.xml',
     ],
     'installable': True,
     'auto_install': False,

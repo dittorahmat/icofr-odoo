@@ -9,6 +9,7 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="control_type"/>
+                <field name="frequency"/>
                 <field name="owner_id"/>
                 <field name="status"/>
             </list>

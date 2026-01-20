@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- EUC Register Action -->
+    <record id="action_icofr_euc_register" model="ir.actions.act_window">
+        <field name="name">Register EUC (End User Computing)</field>
+        <field name="res_model">icofr.control</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('control_specific_type', '=', 'euc')]</field>
+        <field name="context">{'default_control_specific_type': 'euc', 'default_control_level': 'tlc'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada data EUC.
+            </p>
+            <p>
+                Gunakan menu ini untuk menginventarisasi seluruh Spreadsheet/Tools yang digunakan dalam pelaporan keuangan (Tabel 14).
+            </p>
+        </field>
+    </record>
+
+    <!-- IPE Register Action -->
+    <record id="action_icofr_ipe_register" model="ir.actions.act_window">
+        <field name="name">Register IPE (Information Produced by Entity)</field>
+        <field name="res_model">icofr.control</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('control_specific_type', '=', 'ipe')]</field>
+        <field name="context">{'default_control_specific_type': 'ipe', 'default_control_level': 'tlc'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada data IPE.
+            </p>
+            <p>
+                Gunakan menu ini untuk menginventarisasi laporan sistem (Standard/Custom/Query) yang digunakan sebagai bukti audit (Tabel 15).
+            </p>
+        </field>
+    </record>
+
+    <!-- EUC Tree View -->
+    <record id="view_icofr_euc_tree" model="ir.ui.view">
+        <field name="name">icofr.control.euc.tree</field>
+        <field name="model">icofr.control</field>
+        <field name="inherit_id" ref="icofr.view_icofr_control_list"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='control_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='frequency']" position="after">
+                <field name="euc_complexity" widget="badge" decoration-danger="euc_complexity == 'high'" decoration-warning="euc_complexity == 'medium'" decoration-success="euc_complexity == 'low'"/>
+                <field name="euc_has_access_ctrl" string="Akses"/>
+                <field name="euc_has_integrity_ctrl" string="Integritas"/>
+                <field name="euc_has_backup_ctrl" string="Backup"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- IPE Tree View -->
+    <record id="view_icofr_ipe_tree" model="ir.ui.view">
+        <field name="name">icofr.control.ipe.tree</field>
+        <field name="model">icofr.control</field>
+        <field name="inherit_id" ref="icofr.view_icofr_control_list"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='control_type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='frequency']" position="after">
+                <field name="ipe_type"/>
+                <field name="application_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Link Views to Actions -->
+    <record id="action_icofr_euc_register_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_icofr_euc_tree"/>
+        <field name="act_window_id" ref="action_icofr_euc_register"/>
+    </record>
+
+    <record id="action_icofr_ipe_register_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">list</field>
+        <field name="view_id" ref="view_icofr_ipe_tree"/>
+        <field name="act_window_id" ref="action_icofr_ipe_register"/>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_icofr_registers" 
+              name="Register Pendukung" 
+              parent="icofr.menu_icofr_root" 
+              sequence="25"/>
+
+    <menuitem id="menu_icofr_euc_register" 
+              name="Register EUC" 
+              parent="menu_icofr_registers" 
+              action="action_icofr_euc_register" 
+              sequence="10"/>
+
+    <menuitem id="menu_icofr_ipe_register" 
+              name="Register IPE" 
+              parent="menu_icofr_registers" 
+              action="action_icofr_ipe_register" 
+              sequence="20"/>
+</odoo>
