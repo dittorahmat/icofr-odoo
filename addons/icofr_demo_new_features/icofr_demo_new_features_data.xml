@@ -30,7 +30,7 @@
         <field name="gl_account_description">Pendapatan Operasional</field>
         <field name="fsl_item">Revenue</field>
         <field name="account_balance">700000000000.0</field> <!-- 700B / 1000B = 70% (Significant) -->
-        <field name="significance_level">significant</field>
+        
         <field name="materiality_id" ref="demo_materiality_calc_2024"/>
         <field name="status">active</field>
     </record>

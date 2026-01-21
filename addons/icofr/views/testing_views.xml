@@ -143,6 +143,29 @@
                                 </group>
                             </group>
                         </page>
+                        <page string="Personil &amp; Skenario ITAC (Lampiran 7)">
+                            <group string="Kontak Personil Pelaksana (Lini 1)">
+                                <field name="line1_contact_ids" nolabel="1">
+                                    <list editable="bottom">
+                                        <field name="name"/>
+                                        <field name="position"/>
+                                        <field name="email"/>
+                                        <field name="department"/>
+                                    </list>
+                                </field>
+                            </group>
+                            <group string="Skenario Pengujian Otomatis (ITAC)" invisible="control_id.control_type_detailed != 'automated'">
+                                <field name="itac_scenario_ids" nolabel="1">
+                                    <list editable="bottom">
+                                        <field name="scenario_name"/>
+                                        <field name="expected_result"/>
+                                        <field name="actual_result"/>
+                                        <field name="is_deficient" widget="boolean_toggle"/>
+                                        <field name="notes" optional="hide"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
                         <page string="Detail Prosedur &amp; Hasil">
                             <field name="testing_procedures"/>
                             <field name="test_results"/>

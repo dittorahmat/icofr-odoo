@@ -288,7 +288,7 @@
         <field name="assertion_valuation" eval="True"/>
         <field name="control_type_detailed">manual</field>
         <field name="frequency_detailed">quarterly</field>
-        <field name="significance_level">significant</field>
+        
         <field name="testing_frequency">quarterly</field>
         <field name="testing_procedures">Verifikasi distribusi kebijakan dan kehadiran pelatihan terkait kontrol internal</field>
         <field name="evidence_required">Dokumen distribusi kebijakan, daftar kehadiran pelatihan, sertifikat pelatihan</field>
@@ -313,7 +313,7 @@
         <field name="assertion_valuation" eval="True"/>
         <field name="control_type_detailed">manual</field>
         <field name="frequency_detailed">monthly</field>
-        <field name="significance_level">significant</field>
+        
         <field name="testing_frequency">monthly</field>
         <field name="testing_procedures">Verifikasi dokumen rekonsiliasi dan validasi perhitungan</field>
         <field name="evidence_required">Dokumen rekonsiliasi, supporting calculation sheets, approval signatures</field>
@@ -338,7 +338,7 @@
         <field name="assertion_valuation" eval="True"/>
         <field name="control_type_detailed">manual</field>
         <field name="frequency_detailed">monthly</field>
-        <field name="significance_level">significant</field>
+        
         <field name="testing_frequency">quarterly</field>
         <field name="testing_procedures">Review estimasi piutang tak tertagih dan dokumentasi pendukungnya</field>
         <field name="evidence_required">Dokumen estimasi, analisis historis, justifikasi manajemen</field>
@@ -700,7 +700,7 @@
         <field name="has_fraud_risk" eval="False"/>
         <field name="is_complex_transaction" eval="False"/>
         <field name="has_related_party" eval="False"/>
-        <field name="significance_level">significant</field>
+        
     </record>
 
     <record id="demo_account_mapping_ar" model="icofr.account.mapping">
@@ -712,7 +712,7 @@
         <field name="has_fraud_risk" eval="True"/>
         <field name="is_complex_transaction" eval="False"/>
         <field name="has_related_party" eval="True"/>
-        <field name="significance_level">significant</field>
+        
     </record>
 
     <record id="demo_account_mapping_inventory" model="icofr.account.mapping">
@@ -724,7 +724,7 @@
         <field name="has_fraud_risk" eval="True"/>
         <field name="is_complex_transaction" eval="True"/>
         <field name="has_related_party" eval="False"/>
-        <field name="significance_level">significant</field>
+        
     </record>
 
     <!-- Qualitative Assessment Questions and Answers for Cash Account -->
@@ -1449,7 +1449,7 @@
         <field name="has_fraud_risk" eval="False"/>
         <field name="is_complex_transaction" eval="False"/>
         <field name="has_related_party" eval="True"/>
-        <field name="significance_level">significant</field>
+        
     </record>
 
     <!-- CSA for subsidiary -->
@@ -1840,7 +1840,7 @@
         <field name="control_type_detailed">it_dependent</field>
         <field name="frequency_detailed">event_driven</field>
         <field name="cobit_element_ids" eval="[(4, ref('demo_cobit_bai03_01'))]"/>  <!-- Link to ITGC element -->
-        <field name="significance_level">significant</field>
+        
         <field name="testing_frequency">quarterly</field>
         <field name="testing_procedures">Verifikasi dokumentasi change request dan approval sebelum implementasi perubahan</field>
         <field name="evidence_required">Dokumen change request, approval matrix, dokumentasi implementasi</field>
@@ -1865,7 +1865,7 @@
         <field name="control_type_detailed">it_dependent</field>
         <field name="frequency_detailed">monthly</field>
         <field name="cobit_element_ids" eval="[(4, ref('demo_cobit_apo13_01'))]"/>  <!-- Link to ITGC element -->
-        <field name="significance_level">significant</field>
+        
         <field name="testing_frequency">monthly</field>
         <field name="testing_procedures">Revieuw access logs, verifikasi approval matrix, dan user access certifications</field>
         <field name="evidence_required">Access logs, user certifications, approval documents</field>
@@ -1890,7 +1890,7 @@
         <field name="control_type_detailed">it_dependent</field>
         <field name="frequency_detailed">daily</field>
         <field name="cobit_element_ids" eval="[(4, ref('demo_cobit_dss05_01'))]"/>  <!-- Link to ITGC element -->
-        <field name="significance_level">significant</field>
+        
         <field name="testing_frequency">quarterly</field>
         <field name="testing_procedures">Verifikasi enkripsi data, access controls, dan backup procedures</field>
         <field name="evidence_required">Dokumentasi kebijakan keamanan, hasil pengecekan enkripsi, backup logs</field>
@@ -2478,7 +2478,7 @@
         <field name="has_fraud_risk" eval="True"/>
         <field name="is_complex_transaction" eval="False"/>
         <field name="has_related_party" eval="False"/>
-        <field name="significance_level">significant</field>
+        
         <field name="materiality_id" ref="demo_materiality_calc_2024"/>
         <field name="company_id" ref="base.main_company"/>
     </record>
@@ -2851,7 +2851,7 @@
         <field name="has_fraud_risk" eval="False"/>
         <field name="is_complex_transaction" eval="False"/>
         <field name="has_related_party" eval="True"/>
-        <field name="significance_level">significant</field>
+        
         <field name="materiality_id" ref="demo_materiality_calc_2024"/>
         <field name="company_id" ref="demo_company_subsidiary_a"/>
     </record>
@@ -3074,7 +3074,7 @@
         <field name="status">active</field>
         <field name="control_owner_line">line_1</field>
         <field name="control_risk_level">high</field>
-        <field name="significance_level">significant</field>
+        
         <field name="company_id" ref="base.main_company"/>
         <field name="assertion_existence" eval="True"/>
         <field name="assertion_completeness" eval="True"/>
@@ -3095,7 +3095,7 @@
         <field name="status">active</field>
         <field name="control_owner_line">line_1</field>
         <field name="control_risk_level">low</field>
-        <field name="significance_level">medium</field>
+        
         <field name="company_id" ref="base.main_company"/>
         <field name="assertion_accuracy" eval="True"/>
         <field name="assertion_valuation" eval="True"/>

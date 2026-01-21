@@ -254,6 +254,39 @@ class IcofrFinding(models.Model):
     box_6_prudent_official = fields.Boolean('Kotak 6: Auditor menyimpulkan sebagai Kelemahan Material?')
     box_7_aggregate = fields.Boolean('Kotak 7: Terdapat defisiensi lain yang memengaruhi akun yang sama?')
 
+    # --- DoD Logical Flow (Gambar 5 Hal 73) ---
+    box_visibility_logic = fields.Char(compute='_compute_box_visibility')
+
+    @api.depends('box_1_direct_relation', 'box_2_likelihood', 'box_3_magnitude', 'box_4_important', 'box_5_compensating', 'box_6_prudent_official')
+    def _compute_box_visibility(self):
+        """Logic to determine which boxes should be filled next based on previous answers"""
+        for record in self:
+            # This is a helper for UI hints or automated classification
+            record.box_visibility_logic = "" # Placeholder
+            
+    @api.onchange('box_1_direct_relation', 'box_2_likelihood', 'box_3_magnitude', 'box_4_important', 'box_5_compensating', 'box_6_prudent_official')
+    def _onchange_dod_boxes(self):
+        """Automated classification based on Image 5 Decision Tree"""
+        if not self.box_1_direct_relation:
+            # Box 1 No -> Box 4
+            pass 
+        
+        # MW Condition 1: Box 1(Y) -> Box 2(Y) -> Box 3(Y) -> Box 5(N)
+        if self.box_1_direct_relation and self.box_2_likelihood and self.box_3_magnitude and not self.box_5_compensating:
+            self.override_deficiency_classification = 'material_weakness'
+        
+        # MW Condition 2: Box 4(Y) -> Box 6(Y)
+        elif self.box_4_important and self.box_6_prudent_official:
+            self.override_deficiency_classification = 'material_weakness'
+            
+        # SD Condition: Box 4(Y) -> Box 6(N)
+        elif self.box_4_important and not self.box_6_prudent_official:
+            self.override_deficiency_classification = 'significant_deficiency'
+            
+        # CD Condition: Box 4(N)
+        elif not self.box_4_important and (not self.box_1_direct_relation or not self.box_2_likelihood or not self.box_3_magnitude or self.box_5_compensating):
+            self.override_deficiency_classification = 'control_deficiency'
+
     # Tabel 24: Distribusi Pelaporan (Pihak-pihak yang telah diinformasikan)
     reported_to_ceo = fields.Boolean('Dilaporkan ke CEO & Direksi Terkait', help='Wajib untuk CD, SD, MW')
     reported_to_board = fields.Boolean('Dilaporkan ke Dewan Komisaris/Pengawas', help='Wajib untuk SD, MW')

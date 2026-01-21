@@ -26,15 +26,29 @@ Modul ini memastikan organisasi mematuhi standar **Internal Control over Financi
 *   **Menu:** `ICORF > Operasional > Evaluasi ELC (COSO 17)`
 *   **Tujuan:** Menilai 17 prinsip COSO secara kualitatif. Jika terdapat prinsip yang "Tidak Efektif", status ELC secara keseluruhan akan menjadi *Material Weakness*.
 
-### 2.2 Dokumentasi BPM/SOP
+### 2.2 Pemetaan Akun GL-FSLI (Template Laporan)
+*   **Menu:** `ICORF > Master Data > Pemetaan Akun GL-FSLI`
+*   **Upload Excel:** Klik tombol **"Import Template Laporan (Excel)"** di bagian atas daftar (List View). Gunakan file `Input_Data-Template Laporan` untuk membangun struktur FSLI per entitas.
+*   **Field Penting:** Kode BSPL, Kategori (Neraca/Laba Rugi), Sub-Kategori (Aset/Kewajiban/dll), dan Kode Entity (Induk/Anak).
+
+### 2.3 Dokumentasi BPM/SOP
 *   **Menu:** `ICORF > Master Data > Proses Bisnis`
 *   Unggah Flowchart BPM sesuai Lampiran 4.
 
 ---
 
 ## 3. Fase 2: Scoping & Materialitas
-### 3.1 Aturan 2/3 (Scoping Coverage)
-*   **Status "LULUS":** Hanya tercapai jika cakupan akun signifikan >= 66.7% pada 4 metrik finansial utama (Aset, Pendapatan, Beban, Liabilitas).
+### 3.1 Kalkulator Materialitas (OM, PM, SAD)
+*   **Menu:** `ICORF > Master Data > Kalkulator Materialitas`
+*   **Import Saldo GL:** Klik tombol **"Import General Ledger (Excel)"** di bagian atas daftar (List View). Pilih file `Input_Data-General_Ledger`. Sistem akan mencocokkan saldo ke FSLI berdasarkan `Kode_Entity` + `Kode_FSLI`.
+*   **Overall Materiality (OM):** Tentukan basis (Pendapatan/Aset). Persentase standar 0.5% - 5% (Tabel 3).
+*   **Performance Materiality (PM):** Ditentukan oleh **Haircut Logic** (Tabel 4). Risiko Rendah (Haircut 20% -> PM 80% OM), Risiko Tinggi (Haircut 55% -> PM 45% OM).
+*   **Ambang Batas SAD (Clearly Trivial):** Otomatis dihitung 3% dari OM (Hal 17) untuk mengabaikan kesalahan kecil.
+*   **Multiplier Grup (Tabel 25):** Untuk entitas konsolidasi, multiplier (1.0x - 9.0x) digunakan untuk alokasi OM ke anak perusahaan.
+
+### 3.2 Aturan 2/3 (Scoping Coverage Analysis)
+*   **Status "LULUS":** Hanya tercapai jika cakupan akun signifikan >= 66.7% pada 4 metrik finansial utama (Aset, Pendapatan, Beban, Liabilitas) sesuai Tabel 6.
+*   **Analisis Lokasi:** Sistem juga memverifikasi cakupan 2/3 pada tingkat entitas/anak perusahaan signifikan.
 
 ---
 
@@ -57,11 +71,15 @@ Modul ini memastikan organisasi mematuhi standar **Internal Control over Financi
 ---
 
 ## 6. Fase 5: Operasional Pengujian (Testing)
-### 6.1 Mandatory December Sample
-*   Sistem mewajibkan sampel dari bulan Desember untuk pengujian frekuensi bulanan/kuartalan (Tabel 22).
+### 6.1 Metode & Sampling
+*   **Metode Pengujian (Gambar 4):** Pilih antara *Inquiry, Observation, Inspection,* atau *Reperformance*.
+*   **Kontak Personil (Lampiran 7):** Auditor wajib mendokumentasikan personil Lini 1 yang terlibat dalam sampel pengujian pada tab "Personil & Skenario ITAC".
+*   **Mandatory December Sample:** Sistem akan memblokir penyelesaian pengujian jika tidak ada sampel Desember (Tabel 22).
 
-### 6.2 Prosedur Roll-forward
-*   Wajib dilakukan untuk pengujian interim agar hasil valid hingga 31 Desember.
+### 6.2 Pengujian Otomatis (ITAC)
+*   Untuk kontrol otomatis, gunakan tabel **"Skenario ITAC"** untuk mencatat pengujian negatif/positif, hasil yang diharapkan, dan hasil aktual sesuai Lampiran 7 (Hal 101).
+
+### 6.3 Prosedur Roll-forward
 
 ---
 

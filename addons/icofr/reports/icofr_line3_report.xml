@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Line 3 Annual Audit Report -->
+    <record id="action_report_line3_annual_audit" model="ir.actions.report">
+        <field name="name">Laporan Hasil Evaluasi Efektivitas ICOFR (Lini 3)</field>
+        <field name="model">icofr.line3.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">icofr.report_line3_annual_template</field>
+        <field name="report_file">icofr.report_line3_annual_template</field>
+        <field name="print_report_name">'Laporan_Audit_ICOFR_%s' % (object.fiscal_year)</field>
+        <field name="binding_model_id" ref="model_icofr_line3_report"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_line3_annual_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="text-center mb-4">
+                            <h2 style="text-transform: uppercase;">LAPORAN HASIL EVALUASI EFEKTIVITAS ICOFR</h2>
+                            <h3>TAHUN BUKU <span t-field="doc.fiscal_year"/></h3>
+                            <p>(Lampiran 9 &amp; 10 - SK-5/DKU.MBU/11/2024)</p>
+                        </div>
+
+                        <!-- 1. Ringkasan Eksekutif -->
+                        <div class="mb-4">
+                            <h4 style="border-bottom: 2px solid black;">I. RINGKASAN EKSEKUTIF</h4>
+                            <table class="table table-sm no-border">
+                                <tr>
+                                    <td style="width: 30%;">Total Pengujian Dilakukan</td>
+                                    <td>: <span t-field="doc.testing_performed"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Kontrol Risiko Tinggi Diuji</td>
+                                    <td>: <span t-field="doc.high_risk_controls_tested"/></td>
+                                </tr>
+                                <tr>
+                                    <td>Total Defisiensi Ditemukan</td>
+                                    <td>: <span t-field="doc.findings_identified"/></td>
+                                </tr>
+                            </table>
+                            <div class="mt-2" t-field="doc.executive_summary"/>
+                        </div>
+
+                        <!-- 2. Daftar Temuan (Lampiran 9) -->
+                        <div class="mb-4">
+                            <h4 style="border-bottom: 2px solid black;">II. DAFTAR TEMUAN DEFISIENSI (Lampiran 9)</h4>
+                            <table class="table table-bordered table-sm" style="font-size: 10px;">
+                                <thead class="thead-light text-center">
+                                    <tr>
+                                        <th>Ref</th>
+                                        <th>Proses Bisnis</th>
+                                        <th>Aktivitas Pengendalian</th>
+                                        <th>Judul Observasi</th>
+                                        <th>Tipe Defisiensi</th>
+                                        <th>Rencana Remediasi</th>
+                                        <th>Target</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.finding_ids" t-as="f">
+                                        <tr>
+                                            <td><span t-field="f.code"/></td>
+                                            <td><span t-field="f.control_id.process_id.name"/></td>
+                                            <td><span t-field="f.control_id.name"/></td>
+                                            <td><span t-field="f.name"/></td>
+                                            <td><span t-field="f.classification_method"/></td>
+                                            <td><span t-field="f.recommended_action"/></td>
+                                            <td><span t-field="f.due_date"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- 3. Kertas Kerja Penentuan DoD (Lampiran 10) -->
+                        <div class="mb-4">
+                            <h4 style="border-bottom: 2px solid black;">III. KERTAS KERJA PENENTUAN DoD (Lampiran 10)</h4>
+                            <table class="table table-bordered table-sm" style="font-size: 9px;">
+                                <thead class="thead-light text-center">
+                                    <tr>
+                                        <th>Ref</th>
+                                        <th>Kesimpulan Akhir</th>
+                                        <th>K1</th>
+                                        <th>K2</th>
+                                        <th>K3</th>
+                                        <th>K4</th>
+                                        <th>K5</th>
+                                        <th>K6</th>
+                                        <th>K7</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.finding_ids" t-as="f">
+                                        <tr class="text-center">
+                                            <td><span t-field="f.code"/></td>
+                                            <td><strong><span t-field="f.deficiency_classified"/></strong></td>
+                                            <td><span t-esc="'Y' if f.box_1_direct_relation else 'T'"/></td>
+                                            <td><span t-esc="'Y' if f.box_2_likelihood else 'T'"/></td>
+                                            <td><span t-esc="'Y' if f.box_3_magnitude else 'T'"/></td>
+                                            <td><span t-esc="'Y' if f.box_4_important else 'T'"/></td>
+                                            <td><span t-esc="'Y' if f.box_5_compensating else 'T'"/></td>
+                                            <td><span t-esc="'Y' if f.box_6_prudent_official else 'T'"/></td>
+                                            <td><span t-esc="'Y' if f.box_7_aggregate else 'T'"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            <p class="mt-2" style="font-size: 9px; font-style: italic;">
+                                *K1-K7 mengacu pada Pohon Keputusan Degree of Deficiency (Gambar 5 Juknis).
+                            </p>
+                        </div>
+
+                        <!-- Tanda Tangan -->
+                        <div class="row mt-5">
+                            <div class="col-6 text-center">
+                                <p>Mengetahui,</p>
+                                <p><strong>Audit Committee Chair</strong></p>
+                                <br/><br/><br/>
+                                <p>(_________________________)</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p>Dibuat Oleh,</p>
+                                <p><strong>Kepala Satuan Pengawasan Intern</strong></p>
+                                <br/><br/><br/>
+                                <p>(<span t-field="doc.user_id.name"/>)</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

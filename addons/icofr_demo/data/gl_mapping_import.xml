@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Update existing companies or create new ones with entity codes -->
+        <record id="base.main_company" model="res.company">
+            <field name="entity_code">0101</field>
+        </record>
+
+        <record id="demo_company_103" model="res.company">
+            <field name="name">PT Bank Parent (103)</field>
+            <field name="entity_code">103</field>
+            <field name="is_significant_location" eval="True"/>
+        </record>
+
+        <record id="demo_company_114" model="res.company">
+            <field name="name">PT Bank Subsidiary (114)</field>
+            <field name="entity_code">114</field>
+            <field name="is_significant_location" eval="True"/>
+        </record>
+
+        <!-- GL to FSLI Mappings for Entity 103 -->
+        <record id="mapping_103_cash" model="icofr.account.mapping">
+            <field name="name">Cash at Private Agency -> Kas</field>
+            <field name="entity_code">103</field>
+            <field name="gl_account">10008-000318</field>
+            <field name="gl_account_description">Cash at Private Agency-No Product Required</field>
+            <field name="fsl_item">01.01.00.00.00.00</field>
+            <field name="fsl_description">Kas</field>
+            <field name="account_balance">6450000.00</field>
+            <field name="company_id" ref="demo_company_103"/>
+        </record>
+
+        <record id="mapping_103_savings" model="icofr.account.mapping">
+            <field name="name">Savings Deposits -> Tabungan</field>
+            <field name="entity_code">103</field>
+            <field name="gl_account">20015-000242</field>
+            <field name="gl_account_description">Savings Deposits - system-Savings Investment Accounts</field>
+            <field name="fsl_item">02.02.01.00.00.00</field>
+            <field name="fsl_description">a. Tabungan Berdasarkan Prinsip Konvensional</field>
+            <field name="account_balance">303829201.67</field>
+            <field name="company_id" ref="demo_company_103"/>
+        </record>
+
+        <record id="mapping_103_exch" model="icofr.account.mapping">
+            <field name="name">ExchgSettlemnt -> Aset Keuangan Lainnya</field>
+            <field name="entity_code">103</field>
+            <field name="gl_account">10001-000020</field>
+            <field name="gl_account_description">ExchgSettlemnt CentralBnk-Banking Services</field>
+            <field name="fsl_item">01.11.00.00.00.00</field>
+            <field name="fsl_description">Aset Keuangan Lainnya</field>
+            <field name="account_balance">1458596010223.16</field>
+            <field name="company_id" ref="demo_company_103"/>
+        </record>
+
+        <!-- GL to FSLI Mappings for Entity 114 -->
+        <record id="mapping_114_loans" model="icofr.account.mapping">
+            <field name="name">Business Loans -> Kredit</field>
+            <field name="entity_code">114</field>
+            <field name="gl_account">12001-000040</field>
+            <field name="gl_account_description">LARIntBearingAsset-Business Loans</field>
+            <field name="fsl_item">01.09.01.00.00.00</field>
+            <field name="fsl_description">a. Kredit</field>
+            <field name="account_balance">10732674084.62</field>
+            <field name="company_id" ref="demo_company_114"/>
+        </record>
+
+        <record id="mapping_114_home_loans" model="icofr.account.mapping">
+            <field name="name">Home Loans -> Kredit</field>
+            <field name="entity_code">114</field>
+            <field name="gl_account">18001-000155</field>
+            <field name="gl_account_description">Accrued Int LAR-Home Loans Owner Occupied</field>
+            <field name="fsl_item">01.09.01.00.00.00</field>
+            <field name="fsl_description">a. Kredit</field>
+            <field name="account_balance">1601309408.65</field>
+            <field name="company_id" ref="demo_company_114"/>
+        </record>
+
+    </data>
+</odoo>

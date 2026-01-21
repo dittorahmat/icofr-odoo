@@ -27,6 +27,11 @@ class ResCompany(models.Model):
         help='Nilai total aset entitas ini untuk kalkulasi Aturan 2/3 di tingkat grup.'
     )
 
+    entity_code = fields.Char(
+        string='Kode Entitas',
+        help='Kode unik entitas dari sistem eksternal (misal: 103, 114, 0101)'
+    )
+
     bumn_cluster_id = fields.Many2one(
         'icofr.industry.cluster',
         string='Klaster Industri BUMN',

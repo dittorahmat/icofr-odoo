@@ -611,3 +611,41 @@ class IcofrTesting(models.Model):
                     new_vals['name'] = f'Pengujian {control.name or "Kontrol"} - {fields.Date.to_string(fields.Date.today())}'
                 # If control_id is not resolved, skip name generation for now
             return super(IcofrTesting, self).create(new_vals)
+
+    # --- New Relations for Lampiran 7 Compliance ---
+    line1_contact_ids = fields.One2many(
+        'icofr.testing.line1.contact', 
+        'testing_id', 
+        string='Personil Pelaksana Pengendalian (Lini 1)',
+        help='Daftar personil yang menjalankan aktivitas pengendalian sesuai Lampiran 7.'
+    )
+
+    itac_scenario_ids = fields.One2many(
+        'icofr.testing.itac.scenario',
+        'testing_id',
+        string='Detail Skenario ITAC',
+        help='Dokumentasi skenario pengujian kontrol otomatis sesuai Lampiran 7 Hal 101.'
+    )
+
+class IcofrTestingLine1Contact(models.Model):
+    """Lampiran 7 Hal 99: Kontak Informasi Pelaksana Pengendalian"""
+    _name = 'icofr.testing.line1.contact'
+    _description = 'Kontak Personil Pelaksana Lini 1'
+
+    testing_id = fields.Many2one('icofr.testing', string='Pengujian', ondelete='cascade')
+    name = fields.Char('Nama Personel', required=True)
+    position = fields.Char('Jabatan/Posisi', required=True)
+    email = fields.Char('Email')
+    department = fields.Char('Unit Kerja')
+
+class IcofrTestingItacScenario(models.Model):
+    """Lampiran 7 Hal 101: Format Hasil Pengujian ITAC"""
+    _name = 'icofr.testing.itac.scenario'
+    _description = 'Skenario Pengujian ITAC'
+
+    testing_id = fields.Many2one('icofr.testing', string='Pengujian', ondelete='cascade')
+    scenario_name = fields.Char('Skenario ITAC', required=True, help='Contoh: Input nilai minus, Transaksi > limit, dll.')
+    expected_result = fields.Text('Hasil yang Diharapkan')
+    actual_result = fields.Text('Hasil Aktual/Hasil Pengujian')
+    is_deficient = fields.Boolean('Defisiensi?', help='Centang jika hasil aktual tidak sesuai harapan.')
+    notes = fields.Text('Keterangan')

@@ -127,3 +127,7 @@ access_icofr_process_step_l3,icofr.process.step,model_icofr_process_step,group_i
 access_icofr_process_step_user,icofr.process.step,model_icofr_process_step,base.group_user,1,0,0,0
 access_icofr_elc_assessment,icofr.elc.assessment,model_icofr_elc_assessment,group_icofr_line_2,1,1,1,1
 access_icofr_audit_dossier_wizard,icofr.audit.dossier.wizard,model_icofr_audit_dossier_wizard,base.group_user,1,1,1,1
+access_icofr_testing_line1_contact,icofr.testing.line1.contact,model_icofr_testing_line1_contact,group_icofr_line_2,1,1,1,1
+access_icofr_testing_itac_scenario,icofr.testing.itac.scenario,model_icofr_testing_itac_scenario,group_icofr_line_2,1,1,1,1
+access_icofr_testing_line1_contact_l3,icofr.testing.line1.contact,model_icofr_testing_line1_contact,group_icofr_line_3,1,1,1,1
+access_icofr_testing_itac_scenario_l3,icofr.testing.itac.scenario,model_icofr_testing_itac_scenario,group_icofr_line_3,1,1,1,1

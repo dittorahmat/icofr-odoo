@@ -443,6 +443,21 @@ class IcofrLine3Report(models.Model):
         help='Perusahaan yang terkait dengan laporan'
     )
 
+    fiscal_year = fields.Char(
+        string='Tahun Fiskal',
+        compute='_compute_fiscal_year',
+        store=True,
+        help='Tahun fiskal laporan (diambil dari tahun periode akhir)'
+    )
+
+    @api.depends('period_end')
+    def _compute_fiscal_year(self):
+        for record in self:
+            if record.period_end:
+                record.fiscal_year = str(record.period_end.year)
+            else:
+                record.fiscal_year = str(fields.Date.today().year)
+
     testing_performed = fields.Integer(
         string='Pengujian Dilakukan',
         compute='_compute_line3_data',
@@ -605,5 +620,5 @@ class IcofrLine3Report(models.Model):
     def print_report(self):
         """Print laporan Lini 3"""
         self.ensure_one()
-        # Ini adalah contoh sederhana, bisa dikembangkan lebih lanjut
-        return self.env.ref('icofr.action_icofr_line3_report').report_action(self)
+        # Menggunakan template laporan tahunan audit internal (Lampiran 9 & 10)
+        return self.env.ref('icofr.action_report_line3_annual_audit').report_action(self)

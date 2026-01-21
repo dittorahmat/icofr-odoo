@@ -79,14 +79,13 @@
                         <page string="Pemetaan Akun">
                             <field name="account_mapping_ids">
                                 <list editable="top">
-                                    <field name="name"/>
+                                    <field name="entity_code"/>
                                     <field name="gl_account"/>
-                                    <field name="account_gl_id"/>
                                     <field name="account_balance" sum="Total Saldo"/>
-                                    <field name="fsl_item"/>
-                                    <field name="significance_level"/>
-                                    <field name="is_significant_account"/>
-                                    <field name="qualitative_justification" optional="hide"/>
+                                    <field name="fsl_item" string="FSLI"/>
+                                    <field name="is_quantitative_significant" string="Quant" readonly="1"/>
+                                    <field name="is_qualitative_significant" string="Qual" readonly="1"/>
+                                    <field name="is_in_scope" string="In Scope" readonly="1"/>
                                     <field name="status"/>
                                 </list>
                             </field>
@@ -104,6 +103,9 @@
         <field name="model">icofr.materiality</field>
         <field name="arch" type="xml">
             <list string="Kalkulator Materialitas">
+                <header>
+                    <button name="%(action_icofr_financial_data_import_wizard)d" type="action" string="Import General Ledger (Excel)" class="btn-primary" icon="fa-upload"/>
+                </header>
                 <field name="name"/>
                 <field name="fiscal_year"/>
                 <field name="company_id"/>
@@ -133,7 +135,7 @@
         <field name="name">Kalkulator Materialitas</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">icofr.materiality</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode" >list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Tambahkan kalkulasi materialitas pertama Anda!
@@ -173,11 +175,11 @@
                         <group>
                             <field name="status"/>
                             <field name="account_balance"/>
-                            <field name="is_significant_account" readonly="1"/>
                         </group>
                     </group>
                     <group>
                         <group string="Detail Akun">
+                            <field name="entity_code"/>
                             <field name="gl_account"/>
                             <field name="account_gl_id"/>
                             <field name="gl_account_description"/>
@@ -188,20 +190,42 @@
                             <field name="fsl_description"/>
                         </group>
                     </group>
-                    <group string="Penilaian Kualitatif Risiko (Cepat)">
-                        <group>
-                            <field name="has_fraud_risk"/>
-                            <field name="is_complex_transaction"/>
+                    
+                    <group string="Matriks Signifikansi (Dokumen 4)">
+                        <group string="Signifikansi Kuantitatif">
+                            <field name="is_quantitative_significant" readonly="1"/>
+                            <field name="account_balance"/>
                         </group>
-                        <group>
-                            <field name="has_related_party"/>
-                            <field name="qualitative_justification"/>
+                        <group string="Signifikansi Kualitatif (5 Pilar)">
+                            <field name="has_fraud_risk" string="Kecurangan (Fraud)"/>
+                            <field name="is_volume_high" string="Volume Transaksi"/>
+                            <field name="is_complex_transaction" string="Kompleksitas"/>
+                            <field name="is_characteristic_specific" string="Karakteristik Risiko"/>
+                            <field name="is_volatile" string="Volatilitas"/>
+                            <field name="is_qualitative_significant" readonly="1"/>
                         </group>
                     </group>
-                    <group>
-                        <field name="significance_level"/>
-                        <field name="qualitative_total_score" readonly="1"/>
+                    <group string="Hasil Scoping">
+                        <group>
+                            <field name="is_in_scope" widget="boolean_toggle" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="qualitative_justification" invisible="not is_qualitative_significant"/>
+                        </group>
                     </group>
+                    <group string="Faktor Kualitatif Lainnya (Tabel 5)" optional="hide" collapsed="1">
+                        <group>
+                            <field name="is_construction_wip"/>
+                            <field name="is_held_by_third_party"/>
+                            <field name="is_loan_covenant"/>
+                        </group>
+                        <group>
+                            <field name="is_onerous_contract"/>
+                            <field name="is_asset_impairment"/>
+                            <field name="is_complex_estimate"/>
+                        </group>
+                    </group>
+
                     <notebook>
                         <page string="Asesmen Kualitatif (Detail)">
                             <field name="qualitative_assessment_ids">
@@ -238,15 +262,23 @@
         <field name="model">icofr.account.mapping</field>
         <field name="arch" type="xml">
             <list string="Pemetaan Akun GL ke FSLI">
-                <field name="name"/>
-                <field name="code"/>
+                <header>
+                    <button name="%(action_icofr_account_mapping_upload_wizard)d" type="action" string="Import Template Laporan (Excel)" class="btn-primary" icon="fa-table"/>
+                </header>
+                <field name="entity_code"/>
                 <field name="gl_account"/>
-                <field name="account_gl_id"/>
-                <field name="account_balance" sum="Total Saldo"/>
-                <field name="fsl_item"/>
-                <field name="significance_level"/>
-                <field name="status"/>
-                <field name="is_significant_account"/>
+                <field name="name" optional="hide"/>
+                <field name="fsl_item" string="Kode FSLI"/>
+                <field name="account_balance" sum="Total Saldo" widget="monetary"/>
+                <field name="is_quantitative_significant" string="Kuantitatif" widget="boolean_toggle"/>
+                <field name="has_fraud_risk" string="Fraud" optional="show"/>
+                <field name="is_volume_high" string="Volume" optional="show"/>
+                <field name="is_complex_transaction" string="Kompleksitas" optional="show"/>
+                <field name="is_characteristic_specific" string="Karakteristik" optional="show"/>
+                <field name="is_volatile" string="Volatilitas" optional="show"/>
+                <field name="is_qualitative_significant" string="Kualitatif" widget="boolean_toggle"/>
+                <field name="is_in_scope" string="In-Scope" widget="boolean_toggle" decoration-success="is_in_scope" decoration-muted="not is_in_scope"/>
+                <field name="status" widget="badge" optional="hide"/>
             </list>
         </field>
     </record>
@@ -261,9 +293,8 @@
                 <field name="code"/>
                 <field name="gl_account"/>
                 <field name="fsl_item"/>
-                <field name="significance_level"/>
                 <field name="status"/>
-                <field name="is_significant_account"/>
+                <field name="is_in_scope"/>
             </search>
         </field>
     </record>

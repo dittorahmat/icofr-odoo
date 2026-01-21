@@ -49,16 +49,23 @@ class IcofrAccountMapping(models.Model):
             record.qualitative_total_score = sum(record.qualitative_assessment_ids.mapped('score'))
 
     @api.depends('account_balance', 'materiality_id.performance_materiality_amount', 
-                 'has_fraud_risk', 'is_complex_transaction', 'has_related_party', 'qualitative_total_score')
-    def _compute_significance_level(self):
-        # First call super to get base calculation
-        super(IcofrAccountMapping, self)._compute_significance_level()
+                 'has_fraud_risk', 'is_complex_transaction', 'has_related_party', 
+                 'is_volume_high', 'is_characteristic_specific', 'is_volatile',
+                 'is_construction_wip', 'is_held_by_third_party', 'is_loan_covenant', 
+                 'is_onerous_contract', 'is_asset_impairment', 'is_complex_estimate',
+                 'qualitative_total_score')
+    def _compute_scoping_flags(self):
+        # Call super to get base calculation
+        super(IcofrAccountMapping, self)._compute_scoping_flags()
         for record in self:
-            # Override with qualitative score triggers
+            # Override with qualitative score triggers (Hal 24: Kriteria Kualitatif)
             if record.qualitative_total_score >= 5:
-                record.significance_level = 'significant'
-            elif record.qualitative_total_score >= 3 and record.significance_level == 'minor':
-                record.significance_level = 'moderate'
+                record.is_qualitative_significant = True
+                record.is_in_scope = True
+            elif record.qualitative_total_score >= 3:
+                # Moderate risk still considered qualitative significant for scoping purposes in many BUMNs
+                record.is_qualitative_significant = True
+                record.is_in_scope = True
 
     def action_generate_questions(self):
         """Generate default qualitative questions as per PwC suggestions"""

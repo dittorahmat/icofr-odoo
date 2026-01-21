@@ -191,7 +191,7 @@
         <field name="account_description">Pinjaman yang diberikan kepada nasabah ritel dan korporasi</field>
         <field name="fsl_item">Loans and Advances</field>
         <field name="account_balance">150000000000.0</field> <!-- 150 Billion -->
-        <field name="significance_level">significant</field>
+        
         <field name="has_fraud_risk" eval="True"/>
         <field name="is_complex_transaction" eval="True"/>
     </record>
@@ -202,7 +202,7 @@
         <field name="account_description">Dana pihak ketiga (Tabungan, Giro, Deposito)</field>
         <field name="fsl_item">Customer Deposits</field>
         <field name="account_balance">120000000000.0</field> <!-- 120 Billion -->
-        <field name="significance_level">significant</field>
+        
     </record>
 
     <!-- Banking Financial Data for Materiality -->

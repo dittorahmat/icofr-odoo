@@ -85,7 +85,8 @@ class IcofrAccountMappingUploadWizard(models.TransientModel):
 
     def _import_account_mapping(self, decoded_file):
         """
-        Method untuk memproses upload dan import data Excel ke pemetaan akun
+        Method untuk memproses upload dan import data Excel ke pemetaan akun (Template Laporan)
+        Format: Kode_BSPL, FSLI, Kategori, Sub_Kategori, No_Urut, Kode_Entity
         """
         self.ensure_one()
 
@@ -96,101 +97,93 @@ class IcofrAccountMappingUploadWizard(models.TransientModel):
         # Baca header dari baris pertama
         headers = [str(worksheet.cell_value(0, col)).strip() for col in range(worksheet.ncols)]
 
-        # Validasi header
-        required_headers = ['Kode Akun GL', 'Nama Akun GL', 'FSLI', 'Deskripsi FSLI', 'Tingkat Signifikansi']
-        for header in required_headers:
-            if header not in headers:
-                raise ValidationError(f'Header "{header}" tidak ditemukan dalam file Excel. '
-                                      f'Header yang diperlukan: {", ".join(required_headers)}')
+        # Validasi header (Support both exact match and likely matches)
+        required_mapping = {
+            'Kode_BSPL': ['Kode_BSPL', 'Kode BSPL', 'FSLI Code'],
+            'FSLI': ['FSLI', 'Account Item'],
+            'Kode_Entity': ['Kode_Entity', 'Kode Entity', 'Entity Code']
+        }
+        
+        header_map = {}
+        for key, possible_names in required_mapping.items():
+            found = False
+            for name in possible_names:
+                if name in headers:
+                    header_map[key] = headers.index(name)
+                    found = True
+                    break
+            if not found:
+                raise ValidationError(f'Header untuk "{key}" tidak ditemukan. Pastikan file sesuai format Template Laporan.')
 
-        # Proses baris data (mulai dari baris ke-1 karena baris ke-0 adalah header)
-        created_records = []
-        updated_records = []
+        # Optional headers
+        optional_mapping = {
+            'Kategori': ['Kategori', 'Category'],
+            'Sub_Kategori': ['Sub_Kategori', 'Sub Kategori', 'Sub Category'],
+            'No_Urut': ['No_Urut', 'No Urut', 'Sequence']
+        }
+        for key, possible_names in optional_mapping.items():
+            for name in possible_names:
+                if name in headers:
+                    header_map[key] = headers.index(name)
+                    break
+
+        created_records = 0
+        updated_records = 0
         error_messages = []
 
         for row_idx in range(1, worksheet.nrows):
             try:
-                row_data = [worksheet.cell_value(row_idx, col) for col in range(worksheet.ncols)]
+                # Ambil data berdasarkan map header
+                bspl_code = str(worksheet.cell_value(row_idx, header_map['Kode_BSPL'])).strip()
+                fsli_name = str(worksheet.cell_value(row_idx, header_map['FSLI'])).strip()
+                entity_code = str(worksheet.cell_value(row_idx, header_map['Kode_Entity'])).split('.')[0].strip() # Clean numeric codes
 
-                # Konversi ke dictionary
-                row_dict = dict(zip(headers, row_data))
-
-                # Validasi data
-                if not str(row_dict.get('Kode Akun GL', '')).strip():
-                    error_messages.append(f'Baris {row_idx + 1}: Kode Akun GL tidak boleh kosong.')
-                    continue
-
-                # Cek apakah akun GL dengan kode tersebut ada di sistem Odoo
-                gl_account_code = str(row_dict.get('Kode Akun GL', '')).strip()
-                gl_account = self.env['account.account'].search([('code', '=', gl_account_code)], limit=1)
-
-                if not gl_account:
-                    # Jika tidak ditemukan, gunakan field manual
-                    gl_account_manual = f"{gl_account_code} - {str(row_dict.get('Nama Akun GL', '')).strip()}"
-                    gl_account_id = False
-                else:
-                    # Gunakan akun GL dari sistem
-                    gl_account_id = gl_account.id
-                    gl_account_manual = False
+                if not bspl_code or bspl_code == '0.0': continue
 
                 # Siapkan data untuk pembuatan record
                 mapping_data = {
-                    'gl_account_id': gl_account_id,
-                    'gl_account_manual': gl_account_manual,
-                    'fsl_item': str(row_dict.get('FSLI', '')).strip(),
-                    'fsl_description': str(row_dict.get('Deskripsi FSLI', '')).strip(),
+                    'fsl_item': bspl_code,
+                    'fsl_description': fsli_name,
+                    'entity_code': entity_code,
                     'materiality_id': self.materiality_id.id,
-                    'significance_level': str(row_dict.get('Tingkat Signifikansi', 'moderate')).strip().lower(),
-                    'notes': f'Diimport dari file: {self.file_name} pada baris {row_idx + 1}',
+                    'gl_account': 'PENDING', # Placeholder until GL is imported
+                    'kategori': str(worksheet.cell_value(row_idx, header_map.get('Kategori'))) if 'Kategori' in header_map else '',
+                    'sub_kategori': str(worksheet.cell_value(row_idx, header_map.get('Sub_Kategori'))) if 'Sub_Kategori' in header_map else '',
+                    'sequence': int(worksheet.cell_value(row_idx, header_map.get('No_Urut'))) if 'No_Urut' in header_map else 10,
                 }
 
-                # Cek apakah sudah ada record dengan kombinasi yang sama
+                # Cek apakah sudah ada record dengan FSLI & Entity yang sama di materiality ini
                 existing_record = self.env['icofr.account.mapping'].search([
-                    '|',
-                    ('gl_account_id', '=', gl_account_id if gl_account_id else -1),
-                    ('gl_account_manual', '=', gl_account_manual if gl_account_manual else ''),
-                    ('fsl_item', '=', mapping_data['fsl_item']),
+                    ('fsl_item', '=', bspl_code),
+                    ('entity_code', '=', entity_code),
                     ('materiality_id', '=', self.materiality_id.id)
                 ], limit=1)
 
                 if existing_record:
-                    # Update record yang sudah ada
                     existing_record.write(mapping_data)
-                    updated_records.append(existing_record.name)
+                    updated_records += 1
                 else:
-                    # Buat record baru
-                    new_record = self.env['icofr.account.mapping'].create(mapping_data)
-                    created_records.append(new_record.name)
+                    self.env['icofr.account.mapping'].create(mapping_data)
+                    created_records += 1
 
             except Exception as e:
-                error_messages.append(f'Baris {row_idx + 1}: Error saat memproses data - {str(e)}')
+                error_messages.append(f'Baris {row_idx + 1}: {str(e)}')
 
-        # Buat pesan hasil import
-        result_message = f"Import selesai:\n"
-        result_message += f"- Jumlah record baru: {len(created_records)}\n"
-        result_message += f"- Jumlah record diperbarui: {len(updated_records)}\n"
-
+        result_message = f"Import Template Laporan selesai:\n"
+        result_message += f"- Record baru: {created_records}\n"
+        result_message += f"- Record diperbarui: {updated_records}\n"
         if error_messages:
-            result_message += f"- Jumlah error: {len(error_messages)}\n"
-            result_message += "Daftar error:\n" + "\n".join(f"  - {err}" for err in error_messages)
-        else:
-            result_message += "Tidak ada error ditemukan."
+            result_message += "Daftar error:\n" + "\n".join(error_messages[:10])
 
-        # Update hasil import
         self.write({'import_result': result_message})
-
-        # Return action untuk menampilkan hasil
-        action = {
+        return {
             'type': 'ir.actions.act_window',
-            'name': 'Hasil Import Excel',
+            'name': 'Hasil Import Template',
             'res_model': 'icofr.account.mapping.upload.wizard',
             'view_mode': 'form',
             'res_id': self.id,
             'target': 'new',
-            'context': self.env.context
         }
-
-        return action
 
     def _import_financial_data(self, decoded_file):
         """

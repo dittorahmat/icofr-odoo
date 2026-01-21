@@ -86,6 +86,7 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
 
         # Reports
         "reports/icofr_dod_report.xml",
+        "reports/icofr_line3_report.xml",
 
         # Data
         "data/account_mapping_upload_data.xml",

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+import base64
+import xlrd
+from io import BytesIO
 
 
 class IcofrMateriality(models.Model):
@@ -381,7 +384,7 @@ class IcofrMateriality(models.Model):
             # Ambil akun-akun yang ditandai signifikan untuk materialitas ini
             mappings = self.env['icofr.account.mapping'].search([
                 ('materiality_id', '=', record.id),
-                ('significance_level', '=', 'significant')
+                ('is_in_scope', '=', True)
             ])
             
             sum_assets = sum(mappings.filtered(lambda m: m.fsl_item in ['Aset', 'Asset', 'Aktiva']).mapped('account_balance'))
@@ -686,104 +689,112 @@ class IcofrMateriality(models.Model):
 
     def action_import_financial_data_from_excel(self, excel_file, file_name):
         """
-        Import financial data from Excel file
+        Import financial data from General Ledger Excel format.
+        Format: YMD, Kode_Entity, No_GL, GL_Desc, Kode_Valuta, GL_Balance, Kode_FSLI
         """
         self.ensure_one()
 
         if not excel_file:
             raise ValidationError("Silakan pilih file Excel terlebih dahulu.")
 
-        if not file_name.lower().endswith(('.xlsx', '.xls')):
-            raise ValidationError("Hanya file Excel (.xlsx atau .xls) yang diperbolehkan.")
-
         try:
-            # Decode file Excel
             decoded_file = base64.b64decode(excel_file)
-            import xlrd
-            from io import BytesIO
             workbook = xlrd.open_workbook(file_contents=decoded_file)
             worksheet = workbook.sheet_by_index(0)
 
-            # Baca header dari baris pertama
             headers = [str(worksheet.cell_value(0, col)).strip() for col in range(worksheet.ncols)]
-
-            # Validasi header
-            required_headers = ['Tahun Fiskal', 'Pendapatan', 'Total Aset']
-            for header in required_headers:
-                if header not in headers:
-                    raise ValidationError(f'Header "{header}" tidak ditemukan dalam file Excel. '
-                                          f'Header yang diperlukan: {", ".join(required_headers)}')
-
-            # Proses baris data (mulai dari baris ke-1 karena baris ke-0 adalah header)
-            import_result = {
-                'created': 0,
-                'updated': 0,
-                'errors': []
+            
+            # Map required columns
+            req = {
+                'entity': ['Kode_Entity', 'Kode Entity', 'Entity'],
+                'gl_no': ['No_GL', 'No GL', 'Account Number'],
+                'gl_desc': ['GL_Desc', 'GL Desc', 'Description'],
+                'balance': ['GL_Balance', 'GL Balance', 'Balance'],
+                'fsli_code': ['Kode_FSLI', 'Kode FSLI', 'FSLI Code']
             }
+            
+            h_map = {}
+            for key, options in req.items():
+                for opt in options:
+                    if opt in headers:
+                        h_map[key] = headers.index(opt)
+                        break
+                if key not in h_map:
+                    raise ValidationError(f'Header "{key}" tidak ditemukan dalam General Ledger.')
 
-            # Hanya proses baris pertama setelah header
-            for row_idx in range(1, min(worksheet.nrows, 2)):  # Batasi hanya 1 baris data
+            updated_count = 0
+            error_count = 0
+            
+            for row_idx in range(1, worksheet.nrows):
                 try:
-                    row_data = [worksheet.cell_value(row_idx, col) for col in range(worksheet.ncols)]
+                    entity = str(worksheet.cell_value(row_idx, h_map['entity'])).split('.')[0].strip()
+                    gl_no = str(worksheet.cell_value(row_idx, h_map['gl_no'])).strip()
+                    gl_desc = str(worksheet.cell_value(row_idx, h_map['gl_desc'])).strip()
+                    balance_val = worksheet.cell_value(row_idx, h_map['balance'])
+                    fsli_code = str(worksheet.cell_value(row_idx, h_map['fsli_code'])).strip()
 
-                    # Konversi ke dictionary
-                    row_dict = dict(zip(headers, row_data))
+                    # Convert balance (handle "(value)" format if string)
+                    balance = 0.0
+                    if isinstance(balance_val, (int, float)):
+                        balance = float(balance_val)
+                    else:
+                        clean_val = str(balance_val).replace(',', '').replace(' ', '')
+                        if '(' in clean_val:
+                            balance = -float(clean_val.replace('(', '').replace(')', ''))
+                        else:
+                            balance = float(clean_val)
 
-                    # Ambil data dari Excel
-                    fiscal_year = str(int(row_dict.get('Tahun Fiskal', ''))).strip()
-                    revenue = float(row_dict.get('Pendapatan', 0))
-                    total_assets = float(row_dict.get('Total Aset', 0))
-                    net_income = float(row_dict.get('Laba Bersih', 0)) if row_dict.get('Laba Bersih') else 0.0
+                    # Find the mapping record
+                    mapping = self.env['icofr.account.mapping'].search([
+                        ('materiality_id', '=', self.id),
+                        ('entity_code', '=', entity),
+                        ('fsl_item', '=', fsli_code)
+                    ], limit=1)
 
-                    # Ambil parameter tambahan jika tersedia
-                    om_percent = float(row_dict.get('Persentase Overall Materiality', 0.5)) if row_dict.get('Persentase Overall Materiality') else 0.5
-                    pm_percent = float(row_dict.get('Persentase Performance Materiality', 75)) if row_dict.get('Persentase Performance Materiality') else 75
-                    materiality_basis = str(row_dict.get('Basis Perhitungan', 'revenue')).strip() if row_dict.get('Basis Perhitungan') else 'revenue'
+                    if mapping:
+                        mapping.write({
+                            'gl_account': gl_no,
+                            'gl_account_description': gl_desc,
+                            'account_balance': abs(balance), # Scoping usually uses absolute values
+                            'status': 'mapped'
+                        })
+                        updated_count += 1
+                    else:
+                        # Fallback: create a new mapping if FSLI template didn't have it
+                        self.env['icofr.account.mapping'].create({
+                            'materiality_id': self.id,
+                            'entity_code': entity,
+                            'fsl_item': fsli_code,
+                            'gl_account': gl_no,
+                            'gl_account_description': gl_desc,
+                            'account_balance': abs(balance),
+                            'name': f"{gl_no} -> {fsli_code}"
+                        })
+                        updated_count += 1
 
-                    # Validasi data
-                    if not fiscal_year or len(fiscal_year) != 4 or not fiscal_year.isdigit():
-                        raise ValidationError(f'Format Tahun Fiskal tidak valid di baris {row_idx + 1}. Harus format YYYY.')
+                except Exception:
+                    error_count += 1
 
-                    # Update data pada record materiality
-                    update_data = {
-                        'fiscal_year': fiscal_year,
-                        'revenue_amount': revenue,
-                        'total_assets_amount': total_assets,
-                        'net_income_amount': net_income,
-                        'overall_materiality_percent': om_percent,
-                        'performance_materiality_percent': pm_percent,
-                        'materiality_basis': materiality_basis,
-                    }
+            # Re-aggregate materiality totals based on mappings
+            # Assets = Neraca + Aset
+            # Revenue = Laba Rugi + Pendapatan
+            all_mappings = self.account_mapping_ids
+            self.total_assets_amount = sum(all_mappings.filtered(lambda m: m.kategori == 'Neraca' and m.sub_kategori == 'Aset').mapped('account_balance'))
+            self.revenue_amount = sum(all_mappings.filtered(lambda m: m.kategori == 'Laba Rugi' and 'Pendapatan' in (m.sub_kategori or '')).mapped('account_balance'))
+            self.total_expense_amount = sum(all_mappings.filtered(lambda m: m.kategori == 'Laba Rugi' and 'Beban' in (m.sub_kategori or '')).mapped('account_balance'))
+            self.total_liability_amount = sum(all_mappings.filtered(lambda m: m.kategori == 'Neraca' and m.sub_kategori == 'Kewajiban').mapped('account_balance'))
 
-                    self.write(update_data)
-
-                    # Recalculate materiality amounts
-                    self._compute_materiality_amounts()
-
-                    import_result['updated'] += 1
-
-                except Exception as e:
-                    import_result['errors'].append(f'Baris {row_idx + 1}: Error saat memproses data - {str(e)}')
-
-            # Return hasil import
-            result_message = f"Import data keuangan selesai:\n"
-            result_message += f"- Jumlah record diperbarui: {import_result['updated']}\n"
-
-            if import_result['errors']:
-                result_message += f"- Jumlah error: {len(import_result['errors'])}\n"
-                result_message += "Daftar error:\n" + "\n".join(f"  - {err}" for err in import_result['errors'])
+            self._compute_materiality_amounts()
 
             return {
                 'type': 'ir.actions.client',
                 'tag': 'display_notification',
                 'params': {
-                    'title': 'Import Data Keuangan Selesai',
-                    'message': result_message,
-                    'type': 'success' if not import_result['errors'] else 'warning',
+                    'title': 'Import GL Selesai',
+                    'message': f'Berhasil memproses {updated_count} baris GL. Totals telah diperbarui.',
+                    'type': 'success',
                 }
             }
 
-        except ValidationError as e:
-            raise e
         except Exception as e:
-            raise ValidationError(f"Error saat membaca file Excel: {str(e)}")
+            raise ValidationError(f"Error saat membaca General Ledger: {str(e)}")

@@ -8,6 +8,11 @@ The system implements the **Three Lines of Defense** model with hard-coded regul
 ### Key Compliance Features (Perfect Gold Standard)
 - **ELC Assessment (17 COSO Principles):** Structured kuesioner for qualitative evaluation of the entity-level control environment (Bab III).
 - **ITGC Maturity Scoring (COBIT 2019):** Maturity level 0-5 tracking for significant applications.
+- **Advanced Testing Workflow (TOE/TOD):** Comprehensive testing logs including **Line 1 Personnel Contacts** and detailed **ITAC Scenarios** (Lampiran 7 & 8).
+- **Unified Scoping Flags:** Automated logic for **Quantitative (Saldo > PM)**, **Qualitative (Risk based)**, and **In-Scope** status to eliminate redundancy.
+- **Advanced Data Import Logic:** Two-step mechanism for scoping:
+    1. **FSLI Structure:** Import from `Template Laporan` to build the hierarchy and map `entity_code`.
+    2. **GL Balances:** Import from `General Ledger` to populate balances and aggregate totals for Aturan 2/3.
 - **Audit Dossier Wizard (Lampiran 12):** One-click assembly of structured audit evidence (RCM, Flowcharts, TOD/TOE, DoD, Certifications).
 - **Service Org & Bridge Letters:** Full tracking of SOC reports with gap analysis and Bridge Letter verification (Hal 56).
 - **Industry Cluster Coverage:** Expanded Risk Control Matrix (RCM) including **Energy, Minerba, Pangan, Infra, Telco, Insurance, and Logistics**.
@@ -18,9 +23,11 @@ The system implements the **Three Lines of Defense** model with hard-coded regul
 ### Key Models
 - `icofr.control`: Master controls with EUC/IPE checklists and ITGC attributes.
 - `icofr.elc.assessment`: Structured evaluation of the 17 COSO principles.
-- `icofr.testing`: Precision sampling, **Roll-forward**, and **Remediation Lock** logic.
+- `icofr.testing`: Precision sampling, **Line 1 Personnel Log**, **ITAC Scenarios**, and **Remediation Lock** logic.
 - `icofr.application`: IT system management with **ITGC Maturity Scores**.
 - `icofr.materiality`: Scoping dashboard with **Aturan 2/3** and **SAD** threshold.
+- `icofr.account.mapping`: Linked GL-FSLI mappings with `entity_code`, unified scoping flags, and multi-company support.
+- `icofr.qualitative.assessment`: Detailed questionnaire-based risk assessment for accounts.
 - `icofr.finding.group`: Aggregated evaluation with **DoD Report** integration.
 
 ### Coding Standards

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Kalkulasi Materialitas Berbasis PDF (Induk) -->
+        <record id="demo_materiality_gold_standard" model="icofr.materiality">
+            <field name="name">Audit Scoping Simulation 2026</field>
+            <field name="fiscal_year">2026</field>
+            <field name="materiality_basis">net_income</field>
+            <field name="net_income_amount">219474921112.0</field>
+            <field name="revenue_amount">4400000000.0</field> <!-- Sample figures from PDF -->
+            <field name="total_assets_amount">1458596010223.0</field>
+            <field name="overall_materiality_percent">5.0</field>
+            <field name="performance_materiality_percent">65.0</field> <!-- 35% Haircut -->
+            <field name="sad_percent">3.0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- 2. Akun Signifikan Secara Kuantitatif (Saldo > PM) -->
+        <record id="mapping_demo_kas_quant" model="icofr.account.mapping">
+            <field name="name">Kas (Audit Scope - Kuantitatif)</field>
+            <field name="entity_code">0101</field>
+            <field name="gl_account">10006-000318</field>
+            <field name="fsl_item">01.01.00.00.00.00</field>
+            <field name="account_balance">23401247607.74</field>
+            <field name="materiality_id" ref="demo_materiality_gold_standard"/>
+            <field name="notes">Signifikan karena saldo > PM (Rp 7.1 Miliar)</field>
+        </record>
+
+        <!-- 3. Akun Signifikan Secara Kualitatif: Volume Tinggi -->
+        <record id="mapping_demo_aset_lain_volume" model="icofr.account.mapping">
+            <field name="name">Aset Lainnya (Audit Scope - Kualitatif: Volume)</field>
+            <field name="entity_code">0101</field>
+            <field name="gl_account">19045-000036</field>
+            <field name="fsl_item">01.99.00.00.00.00</field>
+            <field name="account_balance">2572555638.19</field> <!-- < PM -->
+            <field name="is_volume_high" eval="True"/>
+            <field name="materiality_id" ref="demo_materiality_gold_standard"/>
+            <field name="qualitative_justification">Saldo di bawah PM, namun volume transaksi per hari mencapai ribuan entri, sehingga berisiko tinggi.</field>
+        </record>
+
+        <!-- 4. Akun Signifikan Secara Kualitatif: Volatilitas -->
+        <record id="mapping_demo_tunda_volatile" model="icofr.account.mapping">
+            <field name="name">Rekening Tunda (Audit Scope - Kualitatif: Volatilitas)</field>
+            <field name="entity_code">0101</field>
+            <field name="gl_account">10127-000318</field>
+            <field name="fsl_item">01.17.00.00.00.00</field>
+            <field name="account_balance">523219392.77</field> <!-- < PM -->
+            <field name="is_volatile" eval="True"/>
+            <field name="materiality_id" ref="demo_materiality_gold_standard"/>
+            <field name="qualitative_justification">Saldo fluktuatif tajam setiap bulan, sering digunakan untuk jurnal penyesuaian sementara.</field>
+        </record>
+
+        <!-- 5. Akun Signifikan Secara Kualitatif: Karakteristik Khusus/Estimasi -->
+        <record id="mapping_demo_properti_char" model="icofr.account.mapping">
+            <field name="name">Properti Terbengkalai (Audit Scope - Kualitatif: Karakteristik)</field>
+            <field name="entity_code">0101</field>
+            <field name="gl_account">14122-000318</field>
+            <field name="fsl_item">01.15.00.00.00.00</field>
+            <field name="account_balance">6094000.00</field> <!-- Sangat Kecil -->
+            <field name="is_characteristic_specific" eval="True"/>
+            <field name="is_complex_estimate" eval="True"/>
+            <field name="materiality_id" ref="demo_materiality_gold_standard"/>
+            <field name="qualitative_justification">Meskipun saldo kecil, penilaian properti ini melibatkan estimasi wajar (Fair Value) yang sangat subjektif.</field>
+        </record>
+
+        <!-- 6. Akun Tidak Signifikan (Saldo < PM & No Qualitative Flags) -->
+        <record id="mapping_demo_furniture_minor" model="icofr.account.mapping">
+            <field name="name">Inventaris Kantor (Out of Scope)</field>
+            <field name="entity_code">0101</field>
+            <field name="gl_account">14011-000318</field>
+            <field name="fsl_item">01.14.01.00.00.00</field>
+            <field name="account_balance">2259457.84</field>
+            <field name="materiality_id" ref="demo_materiality_gold_standard"/>
+            <field name="notes">Tidak signifikan (Kuantitatif &amp; Kualitatif rendah)</field>
+        </record>
+
+    </data>
+</odoo>
