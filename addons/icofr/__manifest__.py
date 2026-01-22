@@ -46,6 +46,8 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/financial_data_import_wizard_views.xml",
         "views/population_pull_erp_wizard_views.xml",
         "views/copy_period_wizard_views.xml",
+        "wizard/icofr_test_roll_forward_wizard_views.xml",
+        "wizard/icofr_remediation_report_wizard_views.xml",
 
         # Views
         "views/audit_population_views.xml",
@@ -62,6 +64,7 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/coso_mapping_views.xml",
         "views/itgc_mapping_views.xml",
         "views/materiality_views.xml",
+        "views/company_scoping_views.xml",
         "views/pojk_report_views.xml",
         "views/csa_views.xml",
         "views/schedule_views.xml",
@@ -83,10 +86,14 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/icofr_registers_views.xml",
         "views/elc_assessment_views.xml",
         "views/audit_dossier_views.xml",
+        "views/ipe_euc_dashboard_views.xml",
+        "views/service_organization_views.xml",
 
         # Reports
         "reports/icofr_dod_report.xml",
         "reports/icofr_line3_report.xml",
+        "reports/icofr_remediation_report.xml",
+        "reports/icofr_statement_letter_report.xml",
 
         # Data
         "data/account_mapping_upload_data.xml",

@@ -35,6 +35,10 @@ providing a realistic demonstration of the system for training and evaluation pu
         'data/icofr_demo_industry_clusters_v2.xml',
         'data/gl_mapping_import.xml',
         'data/qualitative_scoping_demo.xml',
+        'data/holding_scoping_demo.xml',
+        'data/remediation_demo.xml',
+        'data/service_org_demo.xml',
+        'data/icofr_missing_features_demo.xml',
     ],
     'demo': [
         'icofr_demo_data.xml',

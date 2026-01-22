@@ -5,9 +5,8 @@
         <field name="name">icofr.service.organization.list</field>
         <field name="model">icofr.service.organization</field>
         <field name="arch" type="xml">
-            <list>
+            <list string="Organisasi Jasa (Service Organizations)">
                 <field name="name"/>
-                <field name="code"/>
                 <field name="contact_person"/>
                 <field name="email"/>
             </list>
@@ -27,18 +26,13 @@
                     </div>
                     <group>
                         <group>
-                            <field name="code"/>
                             <field name="contact_person"/>
                         </group>
                         <group>
                             <field name="email"/>
-                            <field name="phone"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Deskripsi Layanan" name="description">
-                            <field name="service_description"/>
-                        </page>
                         <page string="Laporan SOC" name="soc_reports">
                             <field name="soc_report_ids">
                                 <list editable="bottom">
@@ -46,7 +40,7 @@
                                     <field name="report_type"/>
                                     <field name="period_end"/>
                                     <field name="conclusion"/>
-                                    <field name="external_auditor"/>
+                                    <field name="auditor_firm"/>
                                 </list>
                             </field>
                         </page>

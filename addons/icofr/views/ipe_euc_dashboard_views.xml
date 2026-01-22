@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Filter for IPE/EUC -->
+    <record id="view_icofr_control_search_ipe_euc" model="ir.ui.view">
+        <field name="name">icofr.control.search.ipe.euc</field>
+        <field name="model">icofr.control</field>
+        <field name="arch" type="xml">
+            <search string="Cari IPE/EUC">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="owner_id"/>
+                <filter string="EUC (End User Computing)" name="filter_euc" domain="[('control_specific_type', '=', 'euc')]"/>
+                <filter string="IPE (Info Produced by Entity)" name="filter_ipe" domain="[('control_specific_type', '=', 'ipe')]"/>
+                <separator/>
+                <filter string="Kompleksitas Tinggi" name="filter_high_complexity" domain="[('euc_complexity', '=', 'high')]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Tree View for IPE/EUC Inventory -->
+    <record id="view_icofr_control_tree_ipe_euc" model="ir.ui.view">
+        <field name="name">icofr.control.tree.ipe.euc</field>
+        <field name="model">icofr.control</field>
+        <field name="arch" type="xml">
+            <list string="Inventaris IPE &amp; EUC" decoration-danger="euc_complexity == 'high'" decoration-warning="euc_complexity == 'medium'">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="control_specific_type" string="Kategori"/>
+                <field name="euc_complexity" string="Kompleksitas EUC" optional="show"/>
+                <field name="ipe_type" string="Tipe IPE" optional="show"/>
+                <field name="owner_id"/>
+                <!-- Checklist Status (Visual Indication) -->
+                <field name="euc_has_access_ctrl" string="Akses" widget="boolean_toggle" optional="hide"/>
+                <field name="euc_has_integrity_ctrl" string="Integritas" widget="boolean_toggle" optional="hide"/>
+                <field name="euc_has_backup_ctrl" string="Backup" widget="boolean_toggle" optional="hide"/>
+                <field name="status" widget="badge" decoration-success="status == 'active'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Pivot View for Dashboard -->
+    <record id="view_icofr_control_pivot_ipe_euc" model="ir.ui.view">
+        <field name="name">icofr.control.pivot.ipe.euc</field>
+        <field name="model">icofr.control</field>
+        <field name="arch" type="xml">
+            <pivot string="Analisis IPE &amp; EUC" display_quantity="true">
+                <field name="control_specific_type" type="row"/>
+                <field name="euc_complexity" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_icofr_ipe_euc_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard IPE &amp; EUC</field>
+        <field name="res_model">icofr.control</field>
+        <field name="view_mode">pivot,list,form</field>
+        <field name="search_view_id" ref="view_icofr_control_search_ipe_euc"/>
+        <field name="domain">[('control_specific_type', 'in', ['euc', 'ipe'])]</field>
+        <field name="context">{'search_default_group_by_type': 1, 'search_default_filter_euc': 1, 'search_default_filter_ipe': 1}</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_icofr_control_pivot_ipe_euc')}),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_icofr_control_tree_ipe_euc')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada data IPE (Information Produced by Entity) atau EUC (End User Computing).
+            </p>
+            <p>
+                Gunakan dashboard ini untuk memantau inventaris spreadsheet dan laporan sistem yang kritikal sesuai Tabel 14 &amp; 15 Juknis BUMN.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_icofr_ipe_euc_dashboard"
+              name="Inventaris IPE &amp; EUC"
+              parent="menu_icofr_operational"
+              action="action_icofr_ipe_euc_dashboard"
+              sequence="80"/>
+</odoo>

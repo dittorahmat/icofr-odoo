@@ -10,6 +10,8 @@
             <form string="Kalkulator Materialitas ICORF" create="false" edit="false">
                 <header>
                     <button name="action_calculate_materiality" type="object" string="Hitung Ulang Materialitas" class="oe_highlight"/>
+                    <button name="action_identify_significant_locations" type="object" string="Scoping Lokasi (Tabel 10)" class="btn-info" invisible="not is_group_consolidation" icon="fa-building-o"/>
+                    <button name="action_allocate_to_subsidiaries" type="object" string="Alokasi ke Anak Perusahaan" class="btn-warning" invisible="not is_group_consolidation" icon="fa-share-alt"/>
                     <button name="action_update_balances_from_erp" type="object" string="Tarik Saldo dari ERP" class="btn-success" icon="fa-refresh"/>
                     <button name="%(action_icofr_financial_data_import_wizard)d" type="action" string="Import Data Keuangan (Excel)" class="btn-primary" icon="fa-upload" context="{'default_materiality_id': id}"/>
                     <button name="action_export_materiality" type="object" string="Ekspor"/>
@@ -32,18 +34,21 @@
                             <field name="is_group_consolidation"/>
                             <field name="number_of_significant_locations" invisible="not is_group_consolidation"/>
                             <field name="group_multiplier" invisible="not is_group_consolidation"/>
+                            <field name="parent_materiality_id" invisible="is_group_consolidation or not parent_materiality_id"/>
                         </group>
                         <group>
                             <field name="materiality_basis"/>
                         </group>
                     </group>
-                    
+
                     <group string="Basis Perhitungan">
                         <group>
                             <field name="revenue_amount" widget="monetary"/>
                             <field name="total_assets_amount" widget="monetary"/>
                         </group>
                         <group>
+                            <field name="total_expense_amount" widget="monetary"/>
+                            <field name="total_liability_amount" widget="monetary"/>
                             <field name="net_income_amount" widget="monetary"/>
                         </group>
                     </group>
@@ -62,13 +67,17 @@
                         </group>
                     </group>
 
-                    <group string="Scoping Coverage Analysis (Aturan 2/3)" name="coverage_analysis" class="oe_edit_only">
-                        <group>
+                    <group string="Scoping Coverage Analysis (Aturan 2/3)" name="coverage_analysis">
+                        <group string="Cakupan Akun Signifikan">
                             <field name="coverage_revenue_percent" widget="progressbar"/>
                             <field name="coverage_assets_percent" widget="progressbar"/>
+                            <field name="coverage_expenses_percent" widget="progressbar"/>
+                            <field name="coverage_liabilities_percent" widget="progressbar"/>
                         </group>
-                        <group>
+                        <group string="Cakupan Lokasi &amp; Status Akhir">
+                            <field name="coverage_locations_percent" widget="progressbar" invisible="not is_group_consolidation"/>
                             <field name="coverage_status" widget="badge" decoration-success="coverage_status == 'pass'" decoration-danger="coverage_status == 'fail'"/>
+                            <field name="scoping_status" widget="badge" decoration-success="scoping_status == 'compliant'" decoration-danger="scoping_status == 'non_compliant'"/>
                         </group>
                     </group>
                     

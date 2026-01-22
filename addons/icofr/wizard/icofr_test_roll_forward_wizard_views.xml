@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_icofr_test_roll_forward_wizard_form" model="ir.ui.view">
+        <field name="name">icofr.test.roll.forward.wizard.form</field>
+        <field name="model">icofr.test.roll.forward.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Roll-forward Testing">
+                <group>
+                    <field name="test_id" readonly="1"/>
+                    <field name="roll_forward_date"/>
+                    <field name="roll_forward_period"/>
+                </group>
+                <footer>
+                    <button name="action_confirm" string="Konfirmasi Roll-forward" type="object" class="btn-primary"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_icofr_test_roll_forward_wizard" model="ir.actions.act_window">
+        <field name="name">Roll-forward Testing</field>
+        <field name="res_model">icofr.test.roll.forward.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

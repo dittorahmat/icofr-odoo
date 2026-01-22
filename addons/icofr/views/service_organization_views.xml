@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- SOC Report Form View (Inline) -->
+    <record id="view_icofr_soc_report_form" model="ir.ui.view">
+        <field name="name">icofr.soc.report.form</field>
+        <field name="model">icofr.soc.report</field>
+        <field name="arch" type="xml">
+            <form string="Laporan SOC">
+                <group>
+                    <group>
+                        <field name="name"/>
+                        <field name="report_type"/>
+                        <field name="auditor_firm"/>
+                        <field name="opinion_date"/>
+                    </group>
+                    <group>
+                        <field name="period_start"/>
+                        <field name="period_end"/>
+                        <field name="conclusion"/>
+                        <field name="bridge_letter_received"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="cuec_review" placeholder="Catat kontrol komplementer (CUEC) yang wajib dijalankan perusahaan..."/>
+                    <field name="attachment_id" widget="binary"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Service Org Form View -->
+    <record id="view_icofr_service_organization_form" model="ir.ui.view">
+        <field name="name">icofr.service.organization.form</field>
+        <field name="model">icofr.service.organization</field>
+        <field name="arch" type="xml">
+            <form string="Organisasi Jasa">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean_button" options="{'terminology': 'archive'}"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="service_type"/>
+                            <field name="contact_person"/>
+                            <field name="email"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Laporan SOC">
+                            <field name="soc_report_ids">
+                                <list editable="bottom">
+                                    <field name="period_end"/>
+                                    <field name="report_type"/>
+                                    <field name="auditor_firm"/>
+                                    <field name="conclusion" widget="badge" decoration-success="conclusion == 'unqualified'" decoration-danger="conclusion in ('adverse', 'disclaimer')"/>
+                                    <field name="bridge_letter_received" widget="boolean_toggle"/>
+                                    <field name="name" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Kontrol Terkait">
+                            <field name="control_ids" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter"/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Service Org Tree View -->
+    <record id="view_icofr_service_organization_tree" model="ir.ui.view">
+        <field name="name">icofr.service.organization.tree</field>
+        <field name="model">icofr.service.organization</field>
+        <field name="arch" type="xml">
+            <list string="Organisasi Jasa">
+                <field name="name"/>
+                <field name="service_type"/>
+                <field name="contact_person"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_icofr_service_organization" model="ir.actions.act_window">
+        <field name="name">Organisasi Jasa (Service Org)</field>
+        <field name="res_model">icofr.service.organization</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Tambahkan Organisasi Jasa pertama Anda!
+            </p><p>
+                Kelola data vendor outsourcing dan laporan audit SOC (Service Organization Control) mereka.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_icofr_service_organization"
+              name="Organisasi Jasa (SOC)"
+              parent="menu_icofr_master"
+              action="action_icofr_service_organization"
+              sequence="90"/>
+</odoo>

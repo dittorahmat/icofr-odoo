@@ -32,6 +32,14 @@ class ResCompany(models.Model):
         help='Kode unik entitas dari sistem eksternal (misal: 103, 114, 0101)'
     )
 
+    # Tabel 10: Faktor Kualitatif Lokasi (Hal 30)
+    has_prior_misstatements = fields.Boolean('Riwayat Salah Saji Terdeteksi')
+    has_fraud_risk = fields.Boolean('Kerentanan terhadap Fraud Tinggi')
+    has_significant_changes = fields.Boolean('Perubahan Signifikan (Sistem/Personel)')
+    has_operational_complexity = fields.Boolean('Kompleksitas Operasional Tinggi')
+
+    qualitative_scoping_notes = fields.Text('Justifikasi Kualitatif Lokasi')
+
     bumn_cluster_id = fields.Many2one(
         'icofr.industry.cluster',
         string='Klaster Industri BUMN',

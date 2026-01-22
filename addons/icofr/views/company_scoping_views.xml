@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form_icofr_scoping" model="ir.ui.view">
+        <field name="name">res.company.form.icofr.scoping</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Scoping ICORF (Tabel 10)" groups="icofr.group_icofr_line_2">
+                    <group>
+                        <group string="Status Signifikansi">
+                            <field name="is_significant_location"/>
+                            <field name="is_newly_acquired"/>
+                            <field name="entity_code"/>
+                            <field name="bumn_cluster_id"/>
+                        </group>
+                        <group string="Kontribusi Finansial (Aturan 2/3)">
+                            <field name="icofr_revenue_contribution"/>
+                            <field name="icofr_asset_contribution"/>
+                        </group>
+                    </group>
+                    <group string="Faktor Kualitatif Lokasi (Hal 30)">
+                        <group>
+                            <field name="has_prior_misstatements"/>
+                            <field name="has_fraud_risk"/>
+                        </group>
+                        <group>
+                            <field name="has_significant_changes"/>
+                            <field name="has_operational_complexity"/>
+                        </group>
+                    </group>
+                    <group string="Justifikasi">
+                        <field name="qualitative_scoping_notes" placeholder="Tuliskan alasan kualitatif jika lokasi ini masuk dalam ruang lingkup meskipun kontribusi finansial kecil..."/>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

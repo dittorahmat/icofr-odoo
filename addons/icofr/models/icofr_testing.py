@@ -138,6 +138,22 @@ class IcofrTesting(models.Model):
         string='Hasil Pengujian',
         help='Hasil dari pengujian kontrol'
     )
+
+    # Roll-forward Logic (Hal 51)
+    is_roll_forward = fields.Boolean(
+        string='Pengujian Roll-forward',
+        default=False,
+        help='Centang jika ini adalah pengujian pemutakhiran (Roll-forward) dari pengujian interim.'
+    )
+    original_test_id = fields.Many2one(
+        'icofr.testing',
+        string='Pengujian Interim Asal',
+        help='Referensi ke pengujian interim yang di-roll forward.'
+    )
+    roll_forward_period = fields.Char(
+        string='Periode Pemutakhiran',
+        help='Misal: Oktober - Desember'
+    )
     
     findings = fields.Text(
         string='Temuan',
@@ -206,6 +222,41 @@ class IcofrTesting(models.Model):
         store=True,
         help='Periode pengoperasian baru sebelum boleh diuji ulang sesuai Tabel 23.'
     )
+
+    @api.constrains('tester_id', 'control_id', 'test_date')
+    def _check_cooling_off_period(self):
+        """
+        Hal 19 Juknis BUMN: Prinsip Objektivitas & Integritas.
+        Auditor (Lini 3) dilarang melakukan audit terhadap aktivitas yang menjadi 
+        tanggung jawabnya (sebagai Lini 1) dalam waktu 1 (satu) tahun terakhir.
+        """
+        for record in self:
+            if record.test_type in ['tod', 'toe']:
+                # Cari riwayat log perubahan atau kepemilikan kontrol
+                # Cek jika tester pernah menjadi owner_id kontrol ini dalam 12 bulan terakhir
+                twelve_months_ago = record.test_date - timedelta(days=365)
+                
+                # 1. Cek owner saat ini (Jika tester adalah owner saat ini -> Pelanggaran)
+                if record.control_id.owner_id == record.tester_id:
+                    raise ValidationError(
+                        f"Pelanggaran Prinsip Objektivitas (Hal 19): Auditor {record.tester_id.name} "
+                        f"adalah Pemilik Pengendalian (Owner) saat ini. Auditor dilarang menguji kontrol milik sendiri."
+                    )
+                
+                # 2. Cek riwayat perubahan owner (jika ada model change log atau auditor tercatat di log)
+                past_changes = self.env['icofr.change.log'].search([
+                    ('control_id', '=', record.control_id.id),
+                    ('control_owner_id', '=', record.tester_id.id),
+                    ('date_effective', '>=', twelve_months_ago)
+                ])
+                
+                if past_changes:
+                    last_change = past_changes[0]
+                    raise ValidationError(
+                        f"Pelanggaran Cooling-off Period (Hal 19): Auditor {record.tester_id.name} "
+                        f"tercatat pernah mengelola/memiliki kontrol ini pada {last_change.date_effective}. "
+                        f"Auditor harus menunggu minimal 12 bulan sejak tanggal tersebut sebelum diperbolehkan menguji kembali."
+                    )
 
     @api.constrains('is_remediation_test', 'test_date', 'action_plan_id')
     def _check_remediation_wait_period(self):
@@ -555,6 +606,15 @@ class IcofrTesting(models.Model):
             'view_mode': 'form',
             'target': 'current',
         }
+
+    def action_complete_testing(self):
+        """Method untuk menandai pengujian sebagai selesai"""
+        self.ensure_one()
+        self.write({
+            'status': 'completed',
+            'completion_date': fields.Date.today()
+        })
+        return True
 
     def action_export_testing(self):
         """Method untuk membuka wizard ekspor pengujian"""

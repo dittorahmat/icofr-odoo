@@ -19,9 +19,10 @@
         <field name="name">icofr.testing.form</field>
         <field name="model">icofr.testing</field>
         <field name="arch" type="xml">
-            <form string="Pengujian Kontrol">
+            <form string="Pengujian Kontrol Internal">
                 <header>
-                    <field name="status" widget="statusbar"/>
+                    <button name="%(action_icofr_test_roll_forward_wizard)d" type="action" string="Roll-forward" class="btn-info" invisible="status not in ['completed', 'reviewed', 'approved'] or is_roll_forward" context="{'default_test_id': id}"/>
+                    <button name="action_complete_testing" type="object" string="Selesai" invisible="status != 'in_progress'" class="oe_highlight"/>
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Remediation Monitoring Demo Data (Lampiran 13) -->
+        
+        <!-- 1. Overdue Action Plan (Finance) -->
+        <record id="demo_action_plan_overdue_01" model="icofr.action.plan">
+            <field name="name">Perbaikan Rekonsiliasi Bank (Overdue)</field>
+            <field name="finding_id" ref="icofr_demo.demo_finding_pay_001"/>
+            <field name="action_owner_id" ref="icofr_demo.demo_user_finance_manager"/>
+            <field name="responsible_department">Finance</field>
+            <field name="target_completion_date" eval="(datetime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="status">in_progress</field>
+            <field name="description">Memperbaiki prosedur rekonsiliasi harian.</field>
+            <field name="notes">Terlambat karena kekurangan personel saat penutupan buku tahunan.</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- 2. On-Track Action Plan (IT) -->
+        <record id="demo_action_plan_ontrack_01" model="icofr.action.plan">
+            <field name="name">Patching Server ERP (On-Track)</field>
+            <field name="finding_id" ref="icofr_demo.demo_finding_pay_001"/>
+            <field name="action_owner_id" ref="icofr_demo.demo_user_it_manager"/>
+            <field name="responsible_department">IT</field>
+            <field name="target_completion_date" eval="(datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="status">in_progress</field>
+            <field name="description">Implementasi patch keamanan terbaru.</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- 3. Closed Action Plan (HR) -->
+        <record id="demo_action_plan_closed_01" model="icofr.action.plan">
+            <field name="name">Update SOP Payroll (Selesai)</field>
+            <field name="finding_id" ref="icofr_demo.demo_finding_pay_001"/>
+            <field name="action_owner_id" ref="icofr_demo.demo_user_hr_manager"/>
+            <field name="responsible_department">HR</field>
+            <field name="target_completion_date" eval="(datetime.now() - timedelta(days=20)).strftime('%Y-%m-%d')"/>
+            <field name="actual_completion_date" eval="(datetime.now() - timedelta(days=22)).strftime('%Y-%m-%d')"/>
+            <field name="status">completed</field>
+            <field name="description">Revisi SOP penggajian sesuai temuan audit.</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+         <!-- 4. Another Overdue Action Plan (Logistics) -->
+        <record id="demo_action_plan_overdue_02" model="icofr.action.plan">
+            <field name="name">Stock Opname Fisik (Overdue)</field>
+            <field name="finding_id" ref="icofr_demo.demo_finding_pay_001"/>
+            <field name="action_owner_id" ref="base.user_admin"/>
+            <field name="responsible_department">Logistics</field>
+            <field name="target_completion_date" eval="(datetime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="status">planned</field>
+            <field name="description">Melakukan stock opname menyeluruh.</field>
+            <field name="notes">Belum dimulai karena menunggu vendor auditor eksternal.</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+    </data>
+</odoo>

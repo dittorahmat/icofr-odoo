@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Perusahaan Anak A (Signifikan Kuantitatif) -->
+        <record id="demo_company_sub_a" model="res.company">
+            <field name="name">BUMN Anak Perusahaan A (Energi)</field>
+            <field name="entity_code">114</field>
+            <field name="icofr_asset_contribution">500000000000.0</field> <!-- 500M -->
+            <field name="icofr_revenue_contribution">100000000000.0</field> <!-- 100M -->
+            <field name="is_significant_location" eval="True"/>
+        </record>
+
+        <!-- 2. Perusahaan Anak B (Signifikan Kualitatif - Risiko Fraud) -->
+        <record id="demo_company_sub_b" model="res.company">
+            <field name="name">BUMN Anak Perusahaan B (Logistik)</field>
+            <field name="entity_code">115</field>
+            <field name="icofr_asset_contribution">50000000.0</field> <!-- Kecil -->
+            <field name="icofr_revenue_contribution">10000000.0</field> <!-- Kecil -->
+            <field name="is_significant_location" eval="True"/>
+            <field name="has_fraud_risk" eval="True"/>
+            <field name="qualitative_scoping_notes">Meskipun secara kuantitatif kecil, anak perusahaan ini mengelola gerbang logistik strategis yang rawan fraud.</field>
+        </record>
+
+        <!-- 3. Materialitas Induk (Holding) -->
+        <record id="demo_materiality_holding" model="icofr.materiality">
+            <field name="name">Materialitas Holding 2026 (Konsolidasi)</field>
+            <field name="fiscal_year">2026</field>
+            <field name="is_group_consolidation" eval="True"/>
+            <field name="total_assets_amount">2000000000000.0</field> <!-- 2 Triliun -->
+            <field name="revenue_amount">500000000000.0</field> <!-- 500M -->
+            <field name="materiality_basis">net_income</field>
+            <field name="net_income_amount">100000000000.0</field> <!-- 100M -->
+            <field name="overall_materiality_percent">5.0</field> <!-- OM = 5M -->
+            <field name="performance_materiality_percent">80.0</field> <!-- PM = 4M -->
+            <field name="number_of_significant_locations">3</field> <!-- Holding + 2 Sub -->
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- 4. Alokasi ke Anak A (Menggunakan Multiplier Tabel 25) -->
+        <!-- Jika n=3, Multiplier = 2.0x (Tabel 25). Maka Max Alokasi = 5M * 2.0 = 10M -->
+        <record id="demo_materiality_sub_a" model="icofr.materiality">
+            <field name="name">Materialitas Anak A 2026 (Alokasi)</field>
+            <field name="fiscal_year">2026</field>
+            <field name="parent_materiality_id" ref="demo_materiality_holding"/>
+            <field name="company_id" ref="demo_company_sub_a"/>
+            <field name="materiality_basis">hybrid</field>
+            <field name="revenue_amount">100000000000.0</field>
+            <field name="total_assets_amount">500000000000.0</field>
+            <field name="overall_materiality_percent">1.0</field> <!-- 500M * 1% = 5M (Equal to Parent OM) -->
+            <field name="performance_materiality_percent">75.0</field>
+        </record>
+
+        <!-- 5. Simulasi Agregasi Defisiensi (Tabel 17) -->
+        <record id="demo_finding_aggregate_cash" model="icofr.finding.group">
+            <field name="name">Evaluasi Agregasi: Defisiensi Kontrol Kas (Holding)</field>
+            <field name="fiscal_year">2026</field>
+            <field name="grouping_basis">account</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="description">Gabungan dari beberapa temuan kecil pada proses rekonsiliasi kas di berbagai departemen.</field>
+            <field name="finding_ids" eval="[(4, ref('icofr_demo.demo_finding_pay_001'))]"/>
+            <field name="evaluation_notes">Total dampak gabungan melebihi PM Holding, sehingga status dinaikkan menjadi Significant Deficiency.</field>
+        </record>
+
+    </data>
+</odoo>

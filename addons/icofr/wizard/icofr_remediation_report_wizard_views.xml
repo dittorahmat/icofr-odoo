@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_icofr_remediation_report_wizard_form" model="ir.ui.view">
+        <field name="name">icofr.remediation.report.wizard.form</field>
+        <field name="model">icofr.remediation.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Laporan Pemantauan Tindak Lanjut (Lampiran 13)">
+                <group>
+                    <group>
+                        <field name="report_date"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group>
+                        <field name="filter_by_department"/>
+                        <field name="department_names" invisible="not filter_by_department"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print_report" string="Cetak Laporan (PDF)" type="object" class="btn-primary" icon="fa-print"/>
+                    <button string="Batal" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_icofr_remediation_report_wizard" model="ir.actions.act_window">
+        <field name="name">Laporan Pemantauan Tindak Lanjut</field>
+        <field name="res_model">icofr.remediation.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Menu Item in Reporting -->
+    <menuitem id="menu_icofr_remediation_report"
+              name="Laporan Tindak Lanjut (Lampiran 13)"
+              parent="menu_icofr_line_reports"
+              action="action_icofr_remediation_report_wizard"
+              sequence="40"/>
+</odoo>

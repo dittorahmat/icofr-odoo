@@ -44,3 +44,4 @@ from . import icofr_itgc_mapping
 from . import icofr_application
 from . import icofr_additional_compliance
 from . import icofr_elc_assessment
+from . import icofr_service_organization

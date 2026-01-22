@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_icofr_statement_letter" model="ir.actions.report">
+        <field name="name">Surat Pernyataan Efektivitas (Lampiran 1)</field>
+        <field name="model">icofr.certification</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">icofr.report_statement_letter</field>
+        <field name="report_file">icofr.report_statement_letter</field>
+        <field name="binding_model_id" ref="model_icofr_certification"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_statement_letter">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Times New Roman', serif; font-size: 12pt;">
+                        <div class="text-center mb-5">
+                            <h3><strong>SURAT PERNYATAAN EFEKTIVITAS PENGENDALIAN INTERNAL</strong></h3>
+                            <h3><strong>ATAS PELAPORAN KEUANGAN</strong></h3>
+                        </div>
+
+                        <div class="mb-4">
+                            <p>Kami yang bertanda tangan di bawah ini:</p>
+                            <table class="table table-borderless table-sm">
+                                <tr>
+                                    <td style="width: 30%;">Nama</td>
+                                    <td>: <strong><span t-field="o.signer_ceo_id.name"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Jabatan</td>
+                                    <td>: Direktur Utama</td>
+                                </tr>
+                                <tr>
+                                    <td>Alamat Kantor</td>
+                                    <td>: <span t-field="o.company_id.street"/>, <span t-field="o.company_id.city"/></td>
+                                </tr>
+                            </table>
+                            <br/>
+                            <table class="table table-borderless table-sm">
+                                <tr>
+                                    <td style="width: 30%;">Nama</td>
+                                    <td>: <strong><span t-field="o.signer_cfo_id.name"/></strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Jabatan</td>
+                                    <td>: Direktur Keuangan</td>
+                                </tr>
+                                <tr>
+                                    <td>Alamat Kantor</td>
+                                    <td>: <span t-field="o.company_id.street"/>, <span t-field="o.company_id.city"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div class="mb-4 text-justify">
+                            <p>Menyatakan bahwa:</p>
+                            <ol>
+                                <li>Kami bertanggung jawab atas penyusunan dan penyajian laporan keuangan perusahaan;</li>
+                                <li>Laporan keuangan perusahaan telah disusun dan disajikan sesuai dengan Standar Akuntansi Keuangan di Indonesia;</li>
+                                <li>Kami bertanggung jawab atas pengendalian internal atas pelaporan keuangan perusahaan;</li>
+                                <li>Pengendalian internal atas pelaporan keuangan perusahaan dirancang untuk memberikan keyakinan memadai mengenai keandalan pelaporan keuangan dan penyusunan laporan keuangan untuk tujuan eksternal sesuai dengan Standar Akuntansi Keuangan di Indonesia;</li>
+                                <li>Kami telah mengevaluasi efektivitas pengendalian internal atas pelaporan keuangan perusahaan berdasarkan kerangka kerja pengendalian internal COSO; dan</li>
+                                <li>Berdasarkan evaluasi kami, kami menyimpulkan bahwa pengendalian internal atas pelaporan keuangan perusahaan pada tanggal <strong><span t-field="o.certification_date"/></strong> adalah <strong>EFEKTIF</strong>.</li>
+                            </ol>
+                        </div>
+
+                        <div class="mb-5 text-justify">
+                            <p>Demikian pernyataan ini dibuat dengan sebenarnya.</p>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-6 text-center">
+                                <p><span t-field="o.company_id.city"/>, <span t-field="o.certification_date"/></p>
+                                <br/><br/><br/><br/>
+                                <p><strong><u><span t-field="o.signer_ceo_id.name"/></u></strong></p>
+                                <p>Direktur Utama</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p><span t-field="o.company_id.city"/>, <span t-field="o.certification_date"/></p>
+                                <br/><br/><br/><br/>
+                                <p><strong><u><span t-field="o.signer_cfo_id.name"/></u></strong></p>
+                                <p>Direktur Keuangan</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-5" t-if="o.notes">
+                            <div class="col-12">
+                                <p><em>Catatan Tambahan:</em></p>
+                                <p t-field="o.notes"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

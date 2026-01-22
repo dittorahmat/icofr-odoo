@@ -19,18 +19,24 @@ The system implements the **Three Lines of Defense** model with hard-coded regul
 - **Aturan 2/3 Scoping Coverage:** Automated verification that significant accounts cover >= 66.7% of **Assets, Revenue, Expenses, and Liabilities** (Tabel 6).
 - **Remediation Lock (Tabel 23):** Hard validation preventing re-testing until mandatory minimum operating periods have passed.
 - **Audit Sampling Calculator:** Precision logic based on population size (Tabel 22) with **Mandatory December Sample** enforcement.
+- **Holding/Multi-Company Scoping (Tabel 10 & 25):** Proportional materiality allocation from Holding to Subsidiaries with automated multiplier logic and location significance identification.
+- **Roll-forward Testing Wizard (Hal 51):** Automated generation of update procedures for interim tests to cover the full fiscal year.
+- **Remediation Monitoring Report (Lampiran 13):** Dynamic PDF reporting for executive management to track action plan completion and overdue tasks per department.
+- **Statement Letter PDF (Lampiran 1 & 2):** One-click generation of the official CEO/CFO Statement of Effectiveness with mandatory legal wording.
 
 ### Key Models
-- `icofr.control`: Master controls with EUC/IPE checklists and ITGC attributes.
+- `icofr.control`: Master controls with EUC/IPE checklists, ITGC attributes, and Service Org links.
+- `icofr.service.organization`: Management of 3rd party vendors with **SOC 1/2/3 Report** tracking and **Bridge Letter** verification.
 - `icofr.elc.assessment`: Structured evaluation of the 17 COSO principles.
-- `icofr.testing`: Precision sampling, **Line 1 Personnel Log**, **ITAC Scenarios**, and **Remediation Lock** logic.
+- `icofr.testing`: Precision sampling, **Line 1 Personnel Log**, **ITAC Scenarios**, **Roll-forward** logic, and **Remediation Lock**.
 - `icofr.application`: IT system management with **ITGC Maturity Scores**.
-- `icofr.materiality`: Scoping dashboard with **Aturan 2/3** and **SAD** threshold.
+- `icofr.materiality`: Scoping dashboard with **Aturan 2/3**, **SAD** threshold, and **Holding Allocation** logic.
 - `icofr.account.mapping`: Linked GL-FSLI mappings with `entity_code`, unified scoping flags, and multi-company support.
 - `icofr.qualitative.assessment`: Detailed questionnaire-based risk assessment for accounts.
-- `icofr.finding.group`: Aggregated evaluation with **DoD Report** integration.
+- `icofr.finding.group`: Aggregated evaluation with **DoD Report** integration and total impact assessment.
 
 ### Coding Standards
 *   **Remediation Rule**: Prevents retest if `test_date - action_completion_date < min_days` (Tabel 23).
+*   **Objectivity Rule (Cooling-off)**: Prevents testing if `auditor` was the `owner` or participante in the last 12 months (Hal 19).
 *   **Financial Scoping Rule**: Coverage status fails if < 66.7% on ANY of the 4 metrics (Tabel 6).
 *   **Workflow**: `draft` -> `waiting_l1_approval` -> `under_review` -> `waiting_l2_approval` -> `active`.

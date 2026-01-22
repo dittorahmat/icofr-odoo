@@ -488,6 +488,46 @@ class IcofrMateriality(models.Model):
                 new_vals['name'] = f'Materialitas {fiscal_year} - {company_id}'
             return super(IcofrMateriality, self).create(new_vals)
 
+    def action_identify_significant_locations(self):
+        """
+        Automated Scoping Lokasi (Tabel 10 Juknis BUMN):
+        1. Kuantitatif: Jika Kontribusi Aset atau Revenue > Performance Materiality (PM).
+        2. Kualitatif: Jika memiliki bendera risiko kualitatif (Fraud, Salah Saji, dll).
+        """
+        self.ensure_one()
+        if not self.is_group_consolidation:
+            return
+
+        pm = self.performance_materiality_amount
+        companies = self.env['res.company'].search([('is_newly_acquired', '=', False)])
+        
+        count_in = 0
+        for comp in companies:
+            is_sig = False
+            
+            # A. Kuantitatif (Hal 30)
+            if comp.icofr_asset_contribution > pm or comp.icofr_revenue_contribution > pm:
+                is_sig = True
+            
+            # B. Kualitatif (Tabel 10)
+            if any([comp.has_prior_misstatements, comp.has_fraud_risk, 
+                    comp.has_significant_changes, comp.has_operational_complexity]):
+                is_sig = True
+                
+            comp.is_significant_location = is_sig
+            if is_sig:
+                count_in += 1
+                
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Scoping Lokasi Selesai',
+                'message': f'Berhasil mengidentifikasi {count_in} lokasi signifikan dari {len(companies)} entitas.',
+                'type': 'success',
+            }
+        }
+
     def action_allocate_to_subsidiaries(self):
         """
         Hal 115 Juknis BUMN: Menghitung alokasi materialitas secara proporsional 

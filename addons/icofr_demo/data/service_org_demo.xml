@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Service Organization (Outsourcing) -->
+        <record id="demo_service_org_payroll" model="icofr.service.organization">
+            <field name="name">PT Outsourcing Gaji Sejahtera</field>
+            <field name="service_type">Payroll &amp; HR Services</field>
+            <field name="contact_person">Budi Santoso</field>
+            <field name="email">budi@gajisejahtera.com</field>
+        </record>
+
+        <!-- 2. SOC Report (Unqualified) -->
+        <record id="demo_soc_report_payroll_2024" model="icofr.soc.report">
+            <field name="name">SOC-PAY-2024-001</field>
+            <field name="service_org_id" ref="demo_service_org_payroll"/>
+            <field name="report_type">soc1_type2</field>
+            <field name="auditor_firm">KAP Big Four Indonesia</field>
+            <field name="period_start" eval="(datetime.now() - timedelta(days=365)).strftime('%Y-01-01')"/>
+            <field name="period_end" eval="(datetime.now() - timedelta(days=365)).strftime('%Y-12-31')"/>
+            <field name="opinion_date" eval="time.strftime('%Y-02-15')"/>
+            <field name="conclusion">unqualified</field>
+            <field name="bridge_letter_received" eval="True"/>
+            <field name="cuec_review">Perusahaan pengguna wajib melakukan review atas jurnal gaji final sebelum diposting. Kontrol akses fisik ke token bank adalah tanggung jawab pengguna.</field>
+        </record>
+
+        <!-- 3. Control Outsourced (Payroll) -->
+        <record id="demo_ctrl_outsourced_payroll" model="icofr.control">
+            <field name="name">Validasi Laporan Penggajian Outsourcing</field>
+            <field name="code">CTRL-PAY-OUT-001</field>
+            <field name="control_type">detective</field>
+            <field name="frequency">monthly</field>
+            <field name="control_specific_type">service_org</field>
+            <field name="is_outsourced" eval="True"/>
+            <field name="service_org_id" ref="demo_service_org_payroll"/>
+            <field name="owner_id" ref="icofr_demo.demo_user_hr_manager"/>
+            <field name="description">HR Manager melakukan review atas rekap gaji yang dikirim oleh vendor sebelum otorisasi pembayaran. Memastikan CUEC (Complementary User Entity Controls) dijalankan.</field>
+            <field name="status">active</field>
+        </record>
+
+        <!-- 4. Control with Specialist (Actuary) -->
+        <record id="demo_ctrl_specialist_actuary" model="icofr.control">
+            <field name="name">Review Perhitungan Kewajiban Imbalan Pasca Kerja</field>
+            <field name="code">CTRL-HR-ACT-001</field>
+            <field name="control_type">detective</field>
+            <field name="frequency">yearly</field>
+            <field name="owner_id" ref="icofr_demo.demo_user_finance_manager"/>
+            <field name="involves_specialist" eval="True"/>
+            <field name="specialist_name">KJPP Aktuaria Mandiri</field>
+            <field name="specialist_credibility">Aktuaris beregister, anggota PAI, pengalaman > 10 tahun.</field>
+            <field name="specialist_assumption_validity">Asumsi tingkat diskonto dan kenaikan gaji telah direview dan disetujui oleh Direksi.</field>
+            <field name="specialist_fairness_justification">Hasil perhitungan dinilai wajar dan konsisten dengan tren historis.</field>
+            <field name="description">Finance Manager mereview laporan aktuaria untuk memastikan kewajaran asumsi dan input data yang digunakan.</field>
+            <field name="status">active</field>
+        </record>
+
+    </data>
+</odoo>
