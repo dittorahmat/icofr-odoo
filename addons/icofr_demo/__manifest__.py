@@ -38,6 +38,7 @@ providing a realistic demonstration of the system for training and evaluation pu
         'data/holding_scoping_demo.xml',
         'data/remediation_demo.xml',
         'data/service_org_demo.xml',
+        'data/elc_aggregated_demo.xml',
         'data/icofr_missing_features_demo.xml',
     ],
     'demo': [

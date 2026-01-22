@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. ELC Assessment Demo (17 COSO Principles) -->
+        <record id="demo_elc_2026" model="icofr.elc.assessment">
+            <field name="name">Evaluasi ELC Tahunan 2026</field>
+            <field name="fiscal_year">2026</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="evaluator_id" ref="icofr_demo.demo_user_risk_manager"/>
+            <field name="date_assessment" eval="time.strftime('%Y-01-20')"/>
+            <field name="state">done</field>
+            
+            <!-- Checklist Results -->
+            <field name="p1_integrity">effective</field>
+            <field name="p2_oversight">effective</field>
+            <field name="p3_structure">effective</field>
+            <field name="p4_competence">effective</field>
+            <field name="p5_accountability">effective</field>
+            <field name="p6_objectives">effective</field>
+            <field name="p7_risk_id">effective</field>
+            <field name="p8_fraud_risk">effective</field>
+            <field name="p9_change_id">effective</field>
+            <field name="p10_select_controls">effective</field>
+            <field name="p11_it_controls">effective</field>
+            <field name="p12_policies">effective</field>
+            <field name="p13_info_quality">effective</field>
+            <field name="p14_internal_comm">effective</field>
+            <field name="p15_external_comm">effective</field>
+            <field name="p16_ongoing_eval">effective</field>
+            <field name="p17_eval_deficiencies">effective</field>
+            
+            <field name="summary_notes">Berdasarkan kuesioner dan wawancara, lingkungan pengendalian tingkat entitas telah memadai. Dewan Komisaris aktif melakukan pengawasan melalui Komite Audit.</field>
+        </record>
+
+        <!-- 2. Aggregated Finding Demo (Tabel 17) -->
+        <!-- Skenario: 3 Temuan "Kekurangan Kontrol" kecil yang digabungkan -->
+        <record id="demo_finding_agg_01" model="icofr.finding">
+            <field name="name">Keterlambatan Rekonsiliasi Bank Cabang A</field>
+            <field name="code">FIND-AGG-001</field>
+            <field name="finding_type">control_deficiency</field>
+            <field name="severity_level">low</field>
+            <field name="quantitative_impact_amount">200000000.0</field> <!-- 200 Juta -->
+            <field name="owner_id" ref="icofr_demo.demo_user_finance_manager"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="status">open</field>
+            <field name="reported_to_ceo" eval="True"/>
+            <field name="reported_to_board" eval="True"/>
+            <field name="reported_to_audit_committee" eval="True"/>
+            <field name="reported_to_mgmt_assessment" eval="True"/>
+        </record>
+
+        <record id="demo_finding_agg_02" model="icofr.finding">
+            <field name="name">Keterlambatan Rekonsiliasi Bank Cabang B</field>
+            <field name="code">FIND-AGG-002</field>
+            <field name="finding_type">control_deficiency</field>
+            <field name="severity_level">low</field>
+            <field name="quantitative_impact_amount">300000000.0</field> <!-- 300 Juta -->
+            <field name="owner_id" ref="icofr_demo.demo_user_finance_manager"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="status">open</field>
+            <field name="reported_to_ceo" eval="True"/>
+            <field name="reported_to_board" eval="True"/>
+            <field name="reported_to_audit_committee" eval="True"/>
+            <field name="reported_to_mgmt_assessment" eval="True"/>
+        </record>
+
+        <record id="demo_finding_agg_03" model="icofr.finding">
+            <field name="name">Selisih Kurs Kecil yang Belum Disesuaikan</field>
+            <field name="code">FIND-AGG-003</field>
+            <field name="finding_type">control_deficiency</field>
+            <field name="severity_level">low</field>
+            <field name="quantitative_impact_amount">150000000.0</field> <!-- 150 Juta -->
+            <field name="owner_id" ref="icofr_demo.demo_user_finance_manager"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="status">open</field>
+            <field name="reported_to_ceo" eval="True"/>
+            <field name="reported_to_board" eval="True"/>
+            <field name="reported_to_audit_committee" eval="True"/>
+            <field name="reported_to_mgmt_assessment" eval="True"/>
+        </record>
+
+        <record id="demo_group_agg_cash" model="icofr.finding.group">
+            <field name="name">Agregasi Defisiensi Proses Kas &amp; Bank 2026</field>
+            <field name="fiscal_year">2026</field>
+            <field name="grouping_basis">process</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="finding_ids" eval="[(4, ref('demo_finding_agg_01')), (4, ref('demo_finding_agg_02')), (4, ref('demo_finding_agg_03'))]"/>
+            <field name="description">Gabungan temuan rekonsiliasi dari berbagai cabang. Secara individu rendah, namun secara kolektif menunjukkan kelemahan sistemik pada proses rekonsiliasi kas.</field>
+            <field name="evaluation_notes">Total dampak (650 Juta) melebihi PM (500 Juta), sehingga diklasifikasikan sebagai Significant Deficiency.</field>
+            <field name="state">evaluated</field>
+        </record>
+
+    </data>
+</odoo>

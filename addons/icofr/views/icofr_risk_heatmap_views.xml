@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Risk Heatmap Dashboard View -->
+    <record id="view_icofr_risk_heatmap_pivot" model="ir.ui.view">
+        <field name="name">icofr.risk.heatmap.pivot</field>
+        <field name="model">icofr.risk</field>
+        <field name="arch" type="xml">
+            <pivot string="Risk Heatmap (Likelihood vs Impact)" display_quantity="true">
+                <field name="likelihood" type="row"/>
+                <field name="impact" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_icofr_risk_heatmap_search" model="ir.ui.view">
+        <field name="name">icofr.risk.heatmap.search</field>
+        <field name="model">icofr.risk</field>
+        <field name="arch" type="xml">
+            <search string="Analisis Heatmap">
+                <field name="name"/>
+                <field name="risk_category"/>
+                <field name="industry_cluster_id"/>
+                <separator/>
+                <filter string="Risiko Tinggi" name="filter_high" domain="[('risk_level', '=', 'high')]"/>
+                <filter string="Risiko Sangat Tinggi" name="filter_very_high" domain="[('risk_level', '=', 'very_high')]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action for Heatmap -->
+    <record id="action_icofr_risk_heatmap" model="ir.actions.act_window">
+        <field name="name">Risk Heatmap 5x5</field>
+        <field name="res_model">icofr.risk</field>
+        <field name="view_mode">pivot,list,form</field>
+        <field name="search_view_id" ref="view_icofr_risk_heatmap_search"/>
+        <field name="view_ids" eval="[(5, 0, 0), 
+            (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_icofr_risk_heatmap_pivot')})]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Lihat pemetaan risiko Anda dalam Matriks 5x5.
+            </p>
+            <p>
+                Heatmap ini membantu memvisualisasikan konsentrasi risiko berdasarkan tingkat kemungkinan (Likelihood) dan Dampak (Impact) sesuai Bab III Juknis BUMN.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item in Operational -->
+    <menuitem id="menu_icofr_risk_heatmap"
+              name="Risk Heatmap (5x5)"
+              parent="menu_icofr_operational"
+              action="action_icofr_risk_heatmap"
+              sequence="15"/>
+</odoo>

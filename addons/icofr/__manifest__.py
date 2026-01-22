@@ -56,6 +56,7 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/control_views.xml",
         "views/application_views.xml",
         "views/risk_views.xml",
+        "views/icofr_risk_heatmap_views.xml",
         "views/testing_views.xml",
         "views/certification_views.xml",
         "views/workflow_views.xml",

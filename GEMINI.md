@@ -18,7 +18,8 @@ The system implements the **Three Lines of Defense** model with hard-coded regul
 - **Industry Cluster Coverage:** Expanded Risk Control Matrix (RCM) including **Energy, Minerba, Pangan, Infra, Telco, Insurance, and Logistics**.
 - **Aturan 2/3 Scoping Coverage:** Automated verification that significant accounts cover >= 66.7% of **Assets, Revenue, Expenses, and Liabilities** (Tabel 6).
 - **Remediation Lock (Tabel 23):** Hard validation preventing re-testing until mandatory minimum operating periods have passed.
-- **Audit Sampling Calculator:** Precision logic based on population size (Tabel 22) with **Mandatory December Sample** enforcement.
+- **Audit Sampling Calculator:** Precision logic based on population size (Tabel 22) with **Mandatory December Sample** enforcement and automated blocking.
+- **Visual Risk Heatmap (5x5 Matrix):** Interactive dashboard for mapping risks based on Likelihood and Impact zones (Bab III).
 - **Holding/Multi-Company Scoping (Tabel 10 & 25):** Proportional materiality allocation from Holding to Subsidiaries with automated multiplier logic and location significance identification.
 - **Roll-forward Testing Wizard (Hal 51):** Automated generation of update procedures for interim tests to cover the full fiscal year.
 - **Remediation Monitoring Report (Lampiran 13):** Dynamic PDF reporting for executive management to track action plan completion and overdue tasks per department.

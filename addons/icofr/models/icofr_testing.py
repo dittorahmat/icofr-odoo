@@ -490,16 +490,30 @@ class IcofrTesting(models.Model):
         help='Item populasi yang dipilih sebagai sampel untuk pengujian ini'
     )
     
-    @api.constrains('control_frequency', 'has_december_sample', 'status')
+    @api.constrains('control_frequency', 'has_december_sample', 'status', 'sample_ids')
     def _check_december_sampling(self):
         """
-        Validation according to Table 22:
-        Untuk pengendalian dengan frekuensi bulanan dan kuartalan, sampel pengujian harus mencakup Kuartal Keempat dan bulan Desember.
+        Validation according to Table 22 (Hal 97):
+        Untuk pengendalian dengan frekuensi bulanan dan kuartalan, sampel pengujian 
+        harus mencakup Kuartal Keempat dan bulan Desember.
         """
         for record in self:
-            if record.status == 'completed' and record.test_type == 'toe':
-                if record.control_frequency in ['monthly', 'quarterly'] and not record.has_december_sample:
-                    raise ValidationError("Sesuai Juknis BUMN Tabel 22, pengujian untuk frekuensi Bulanan/Kuartalan WAJIB menyertakan sampel dari bulan Desember/Kuartal IV!")
+            if record.status in ['completed', 'reviewed', 'approved'] and record.test_type == 'toe':
+                if record.control_frequency in ['monthly', 'quarterly']:
+                    # 1. Cek bendar (flag) manual
+                    if not record.has_december_sample:
+                        # 2. Cek riil di sample_ids jika ada data populasi
+                        dec_samples = record.sample_ids.filtered(lambda s: s.transaction_date and s.transaction_date.month == 12)
+                        if not dec_samples:
+                            raise ValidationError(
+                                f"Pelanggaran Juknis BUMN Tabel 22 (Hal 97): Pengujian untuk frekuensi "
+                                f"'{dict(record._fields['control_frequency'].selection).get(record.control_frequency)}' "
+                                f"WAJIB menyertakan minimal 1 sampel dari bulan Desember (Kuartal IV). "
+                                f"Silakan tambahkan sampel Desember sebelum menyelesaikan pengujian."
+                            )
+                        else:
+                            # Auto-set flag if found in samples
+                            record.has_december_sample = True
 
     # Hal 51: Prosedur Roll-forward untuk Pengujian Interim
     is_interim_test = fields.Boolean(

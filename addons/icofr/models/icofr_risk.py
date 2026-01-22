@@ -100,7 +100,7 @@ class IcofrRisk(models.Model):
         ('medium', 'Sedang'),
         ('high', 'Tinggi'),
         ('very_high', 'Sangat Tinggi')
-    ], string='Tingkat Risiko', compute='_compute_risk_level',
+    ], string='Tingkat Risiko', compute='_compute_risk_level', store=True,
        help='Tingkat risiko berdasarkan kemungkinan dan dampak')
     
     owner_id = fields.Many2one(
