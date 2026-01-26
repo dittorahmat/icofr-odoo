@@ -39,6 +39,7 @@ providing a realistic demonstration of the system for training and evaluation pu
         'data/remediation_demo.xml',
         'data/service_org_demo.xml',
         'data/elc_aggregated_demo.xml',
+        'data/bumn_final_scenarios_demo.xml',
         'data/icofr_missing_features_demo.xml',
     ],
     'demo': [

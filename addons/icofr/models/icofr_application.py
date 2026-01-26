@@ -49,6 +49,17 @@ class IcofrApplication(models.Model):
         ('5', '5 - Optimized')
     ], string='Maturity Level ITGC', default='1', help='Tingkat kematangan kontrol IT sesuai framework COBIT.')
     
+    itgc_maturity_numeric = fields.Integer(
+        string='Maturity Score (Numeric)',
+        compute='_compute_maturity_numeric',
+        store=True
+    )
+
+    @api.depends('itgc_maturity_score')
+    def _compute_maturity_numeric(self):
+        for record in self:
+            record.itgc_maturity_numeric = int(record.itgc_maturity_score or 0)
+
     last_itgc_assessment_date = fields.Date('Tanggal Penilaian ITGC Terakhir')
 
     company_id = fields.Many2one('res.company', string='Perusahaan', default=lambda self: self.env.company)

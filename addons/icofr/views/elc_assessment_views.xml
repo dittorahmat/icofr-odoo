@@ -86,10 +86,32 @@
         </field>
     </record>
 
+    <record id="view_icofr_elc_assessment_pivot" model="ir.ui.view">
+        <field name="name">icofr.elc.assessment.pivot</field>
+        <field name="model">icofr.elc.assessment</field>
+        <field name="arch" type="xml">
+            <pivot string="Analisis Kematangan ELC">
+                <field name="fiscal_year" type="row"/>
+                <field name="elc_maturity_score" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_icofr_elc_assessment_graph" model="ir.ui.view">
+        <field name="name">icofr.elc.assessment.graph</field>
+        <field name="model">icofr.elc.assessment</field>
+        <field name="arch" type="xml">
+            <graph string="Maturity Trend ELC" type="line">
+                <field name="fiscal_year"/>
+                <field name="elc_maturity_score" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
     <record id="action_icofr_elc_assessment" model="ir.actions.act_window">
         <field name="name">Evaluasi ELC (COSO 17)</field>
         <field name="res_model">icofr.elc.assessment</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,pivot,graph</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Mulai Evaluasi Entity Level Control pertama anda.

@@ -24,6 +24,8 @@ The system implements the **Three Lines of Defense** model with hard-coded regul
 - **Roll-forward Testing Wizard (Hal 51):** Automated generation of update procedures for interim tests to cover the full fiscal year.
 - **Remediation Monitoring Report (Lampiran 13):** Dynamic PDF reporting for executive management to track action plan completion and overdue tasks per department.
 - **Statement Letter PDF (Lampiran 1 & 2):** One-click generation of the official CEO/CFO Statement of Effectiveness with mandatory legal wording.
+- **Risk Control Matrix (RCM) Report (Lampiran 4):** Standardized PDF output joining Process, Risk, Control, Assertion, and IPO technical attributes.
+- **Maturity Radar Dashboards:** Visual trend analysis for **ITGC Maturity (COBIT 2019)** and **ELC 17 Principles** to track compliance improvements across fiscal years.
 
 ### Key Models
 - `icofr.control`: Master controls with EUC/IPE checklists, ITGC attributes, and Service Org links.

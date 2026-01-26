@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- 1. Newly Acquired Entity (FAQ 13) -->
+        <record id="demo_company_newly_acquired" model="res.company">
+            <field name="name">PT Anak Perusahaan Baru (Akuisisi 2026)</field>
+            <field name="entity_code">999</field>
+            <field name="is_newly_acquired" eval="True"/>
+            <field name="icofr_asset_contribution">300000000000.0</field> <!-- 300M -->
+            <field name="icofr_revenue_contribution">50000000000.0</field> <!-- 50M -->
+        </record>
+
+        <record id="demo_materiality_newly_acquired" model="icofr.materiality">
+            <field name="name">Materialitas Entitas Baru (FAQ 13 Disclosure)</field>
+            <field name="fiscal_year">2026</field>
+            <field name="company_id" ref="demo_company_newly_acquired"/>
+            <field name="is_new_acquisition" eval="True"/>
+            <field name="revenue_amount">50000000000.0</field>
+            <field name="total_assets_amount">300000000000.0</field>
+            <field name="notes">Entitas ini baru diakuisisi pada Juli 2026. Sesuai FAQ 13 Juknis BUMN, penilaian efektivitas ICOFR dikecualikan untuk tahun pertama namun wajib diungkapkan dalam laporan manajemen.</field>
+        </record>
+
+        <!-- 2. IPE Parameter Verification (Tabel 20) -->
+        <record id="demo_ctrl_ipe_verification" model="icofr.control">
+            <field name="name">Rekonsiliasi Pendapatan via Laporan BI-Tools</field>
+            <field name="code">CTRL-REV-IPE-001</field>
+            <field name="control_type">detective</field>
+            <field name="control_specific_type">ipe</field>
+            <field name="ipe_type">custom</field>
+            <field name="frequency">monthly</field>
+            <field name="owner_id" ref="icofr_demo.demo_user_finance_manager"/>
+            <field name="description">Review bulanan atas kesesuaian data pendapatan antara Ledger dan BI-Tools.</field>
+            <field name="status">active</field>
+        </record>
+
+        <record id="demo_test_ipe_valid" model="icofr.testing">
+            <field name="name">Uji IPE - BI-Tools Revenue Report</field>
+            <field name="control_id" ref="demo_ctrl_ipe_verification"/>
+            <field name="test_type">toe</field>
+            <field name="tester_id" ref="icofr_demo.demo_user_jane_smith"/>
+            <field name="test_date" eval="time.strftime('%Y-11-15')"/>
+            <field name="status" eval="'completed'"/>
+            <field name="effectiveness">effective</field>
+            <!-- Table 20 Verification -->
+            <field name="ipe_parameter_verified">pass</field>
+            <field name="ipe_extraction_valid">pass</field>
+            <field name="ipe_itgc_effective">pass</field>
+            <field name="test_results">Auditor telah memeriksa query SQL yang digunakan BI-Tools. Parameter tanggal (Start-End) dan Filter Status (Posted) telah sesuai dengan kebutuhan kontrol. Data extraction dari DB Source ke BI-Tools tidak mengalami distorsi.</field>
+        </record>
+
+        <!-- 3. Risk for Radar/Spider Chart Demo -->
+        <record id="demo_risk_it_01" model="icofr.risk">
+            <field name="name">Risiko Gangguan Integritas Data Ledger</field>
+            <field name="code">RISK-IT-001</field>
+            <field name="risk_category">operational</field>
+            <field name="risk_type">inherent</field>
+            <field name="likelihood">low</field>
+            <field name="impact">very_high</field>
+            <field name="potential_loss_amount">5000000000.0</field>
+            <field name="is_fraud_risk" eval="False"/>
+            <field name="owner_id" ref="icofr_demo.demo_user_it_manager"/>
+        </record>
+
+    </data>
+</odoo>

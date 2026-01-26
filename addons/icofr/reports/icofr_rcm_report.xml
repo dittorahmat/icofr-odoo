@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_icofr_rcm" model="ir.actions.report">
+        <field name="name">Risk Control Matrix (Lampiran 4)</field>
+        <field name="model">icofr.control</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">icofr.report_rcm_document</field>
+        <field name="report_file">icofr.report_rcm_document</field>
+        <field name="print_report_name">'RCM - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_icofr_control"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_rcm_document">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page" style="font-size: 8pt;">
+                    <div class="text-center mb-4">
+                        <h2><strong>RISK CONTROL MATRIX (RCM)</strong></h2>
+                        <h4>LAMPIRAN 4 - SK-5/DKU.MBU/11/2024</h4>
+                    </div>
+
+                    <table class="table table-bordered table-sm">
+                        <thead class="thead-light">
+                            <tr class="text-center align-middle">
+                                <th rowspan="2" style="width: 10%;">Proses Bisnis</th>
+                                <th rowspan="2" style="width: 15%;">Risiko</th>
+                                <th rowspan="2" style="width: 5%;">Fraud?</th>
+                                <th colspan="3">Aktivitas Pengendalian</th>
+                                <th colspan="5">Asersi Laporan Keuangan</th>
+                                <th colspan="4">IPO (IT Objective)</th>
+                            </tr>
+                            <tr class="text-center align-middle">
+                                <th>Nama Kontrol</th>
+                                <th>Tipe</th>
+                                <th>Frekuensi</th>
+                                <th title="Existence">E</th>
+                                <th title="Completeness">C</th>
+                                <th title="Accuracy">A</th>
+                                <th title="Valuation">V</th>
+                                <th title="Rights">R</th>
+                                <th title="Validity">V</th>
+                                <th title="Completeness">C</th>
+                                <th title="Accuracy">A</th>
+                                <th title="Restricted Access">RA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="o">
+                                <t t-foreach="o.risk_ids" t-as="risk">
+                                    <tr>
+                                        <td><span t-field="o.process_id.name"/></td>
+                                        <td><span t-field="risk.name"/></td>
+                                        <td class="text-center"><span t-esc="'Ya' if risk.is_fraud_risk else 'Tidak'"/></td>
+                                        <td><strong><span t-field="o.code"/></strong>: <span t-field="o.name"/></td>
+                                        <td><span t-field="o.control_type"/></td>
+                                        <td><span t-field="o.frequency"/></td>
+                                        <!-- Assertions -->
+                                        <td class="text-center"><span t-esc="'X' if o.assertion_existence else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.assertion_completeness else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.assertion_accuracy else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.assertion_valuation else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.assertion_authorization else ''"/></td> <!-- Mapped to Rights/Obligation contextually -->
+                                        <!-- IPO -->
+                                        <td class="text-center"><span t-esc="'X' if o.ipo_validity else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.ipo_completeness else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.ipo_accuracy else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.ipo_restricted_access else ''"/></td>
+                                    </tr>
+                                </t>
+                                <t t-if="not o.risk_ids">
+                                    <tr>
+                                        <td><span t-field="o.process_id.name"/></td>
+                                        <td class="text-muted">No Risk Linked</td>
+                                        <td class="text-center">-</td>
+                                        <td><strong><span t-field="o.code"/></strong>: <span t-field="o.name"/></td>
+                                        <td><span t-field="o.control_type"/></td>
+                                        <td><span t-field="o.frequency"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.assertion_existence else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.assertion_completeness else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.assertion_accuracy else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.assertion_valuation else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.assertion_authorization else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.ipo_validity else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.ipo_completeness else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.ipo_accuracy else ''"/></td>
+                                        <td class="text-center"><span t-esc="'X' if o.ipo_restricted_access else ''"/></td>
+                                    </tr>
+                                </t>
+                            </t>
+                        </tbody>
+                    </table>
+                    
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <p><strong>Legenda Asersi:</strong> E (Existence/Keberadaan), C (Completeness/Kelengkapan), A (Accuracy/Akurasi), V (Valuation/Valuasi), R (Rights &amp; Obligation/Hak &amp; Kewajiban)</p>
+                            <p><strong>Legenda IPO:</strong> V (Validity/Validitas), C (Completeness/Kelengkapan), A (Accuracy/Akurasi), RA (Restricted Access/Akses Terbatas)</p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -49,6 +49,31 @@ class IcofrElcAssessment(models.Model):
     p17_eval_deficiencies = fields.Selection([('effective', 'Efektif'), ('ineffective', 'Tidak Efektif')], string='P17: Evaluasi & Komunikasi Defisiensi')
 
     summary_notes = fields.Text('Ringkasan Kesimpulan ELC')
+    
+    elc_maturity_score = fields.Float(
+        string='ELC Maturity Score',
+        compute='_compute_elc_maturity_score',
+        store=True,
+        help='Skor rata-rata efektivitas 17 prinsip (1.0 = Efektif, 0.0 = Tidak Efektif)'
+    )
+
+    @api.depends('p1_integrity', 'p2_oversight', 'p3_structure', 'p4_competence', 'p5_accountability',
+                 'p6_objectives', 'p7_risk_id', 'p8_fraud_risk', 'p9_change_id',
+                 'p10_select_controls', 'p11_it_controls', 'p12_policies',
+                 'p13_info_quality', 'p14_internal_comm', 'p15_external_comm',
+                 'p16_ongoing_eval', 'p17_eval_deficiencies')
+    def _compute_elc_maturity_score(self):
+        for record in self:
+            principles = [
+                record.p1_integrity, record.p2_oversight, record.p3_structure, record.p4_competence, record.p5_accountability,
+                record.p6_objectives, record.p7_risk_id, record.p8_fraud_risk, record.p9_change_id,
+                record.p10_select_controls, record.p11_it_controls, record.p12_policies,
+                record.p13_info_quality, record.p14_internal_comm, record.p15_external_comm,
+                record.p16_ongoing_eval, record.p17_eval_deficiencies
+            ]
+            count_effective = len([p for p in principles if p == 'effective'])
+            record.elc_maturity_score = (count_effective / 17.0) * 5.0 # Scale to 5.0 like COBIT
+
     overall_conclusion = fields.Selection([
         ('effective', 'ELC Efektif'),
         ('material_weakness', 'Terdapat Kelemahan Material pada ELC')

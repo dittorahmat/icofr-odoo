@@ -95,6 +95,7 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "reports/icofr_line3_report.xml",
         "reports/icofr_remediation_report.xml",
         "reports/icofr_statement_letter_report.xml",
+        "reports/icofr_rcm_report.xml",
 
         # Data
         "data/account_mapping_upload_data.xml",
