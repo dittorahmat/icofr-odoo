@@ -1,0 +1,90 @@
+{
+  "workflow_version": "1.2.0",
+  "timestamps": {
+    "started": "2026-02-10T15:00:00.000Z",
+    "last_updated": "2026-02-11T16:00:00.000Z",
+    "completed": "2026-02-11T16:00:00.000Z"
+  },
+  "mode": "initial_scan",
+  "scan_level": "deep",
+  "project_root": "D:/development/icofr-odoo",
+  "output_folder": "D:/development/icofr-odoo/docs",
+  "completed_steps": [
+    {
+      "step": "step_1",
+      "status": "completed",
+      "timestamp": "2026-02-11T15:05:00.000Z",
+      "summary": "Classified as Odoo Addon Collection with 3 modules (icofr, icofr_demo, icofr_demo_new_features)"
+    },
+    {
+      "step": "step_2",
+      "status": "completed",
+      "timestamp": "2026-02-11T15:06:00.000Z",
+      "summary": "Found existing documentation (READMEs, User Guide, Demo Scenarios) and SOP/Policy PDFs"
+    },
+    {
+      "step": "step_3",
+      "status": "completed",
+      "timestamp": "2026-02-11T15:15:00.000Z",
+      "summary": "Tech stack analyzed: Odoo 19.0, Python, PostgreSQL. Architecture pattern: Odoo MVC."
+    },
+    {
+      "step": "step_4",
+      "status": "completed",
+      "timestamp": "2026-02-11T15:45:00.000Z",
+      "summary": "Deep dive into core models (control, risk, testing, materiality) and security roles completed."
+    },
+    {
+      "step": "step_12",
+      "status": "completed",
+      "timestamp": "2026-02-11T16:00:00.000Z",
+      "summary": "Full documentation suite generated (Overview, Architecture, Source Tree, Data Models, Dev/Deploy Guides, API Contracts)."
+    }
+  ],
+  "current_step": "completed",
+  "findings": {
+    "repository_type": "monolith",
+    "project_type_id": "backend",
+    "demo_scenarios": "Simulates 16 scenarios covering Line 1-3 interactions, audit cycles, and remediation.",
+    "source_tree_summary": "Core logic in icofr/models, UI in icofr/views, Demo data in icofr_demo/data.",
+    "security_roles": {
+      "Lini 1": "Business Unit - Can edit own controls, read-only risks, CSA participation.",
+      "Lini 2": "Risk/ICOFR Team - Master controllers, scoping, and methodology management.",
+      "Lini 3": "Internal Audit - Full access to testing, read-only elsewhere to ensure independence.",
+      "External Auditor": "Read-only access for auditing support."
+    },
+    "ui_features": {
+      "Risk Heatmap": "5x5 Likelihood vs Impact Matrix using Odoo Pivot.",
+      "Import Wizards": "XLSX Uploads for RCM, GL Mapping, and Audit Populations.",
+      "Line Reporting": "Segregated reporting views for Line 1, 2, and 3."
+    },
+    "data_models_summary": {
+      "icofr.control": "Master controls with EUC/IPE/MRC/ITGC logic and mandatory Table 14 validations.",
+      "icofr.risk": "5x5 Heatmap logic combining Table 10 (Quant) and Table 11 (Qual) factors.",
+      "icofr.testing": "Complex workflow supporting TOD/TOE, cooling-off (Hal 19), remediation lock (Tabel 23), and Dec sampling (Tabel 22).",
+      "icofr.materiality": "Scoping engine with 2/3 Rule (Tabel 6) and Group Multiplier (Tabel 25)."
+    },
+    "parts": [
+      { "id": "icofr", "path": "addons/icofr", "type": "odoo_module" },
+      { "id": "icofr_demo", "path": "addons/icofr_demo", "type": "odoo_data_module" },
+      { "id": "icofr_demo_new_features", "path": "addons/icofr_demo_new_features", "type": "odoo_data_module" }
+    ],
+    "existing_docs": [
+      "addons/icofr/README.md",
+      "addons/icofr/PANDUAN_PENGGUNA_ICORF.md",
+      "addons/icofr/ICORF_DEMO_SCENARIOS.md",
+      "addons/icofr_demo/README.md"
+    ]
+  },
+  "outputs_generated": [
+    "project-scan-report.json",
+    "index.md",
+    "project-overview.md",
+    "architecture.md",
+    "source-tree-analysis.md",
+    "data-models.md",
+    "development-guide.md",
+    "deployment-guide.md",
+    "api-contracts.md"
+  ]
+}

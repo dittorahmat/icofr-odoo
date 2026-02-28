@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_icofr_onboarding_wizard_form" model="ir.ui.view">
+        <field name="name">icofr.onboarding.wizard.form</field>
+        <field name="model">icofr.onboarding.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Enterprise ICORF Onboarding Engine">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="setup,fsli,gl,rcm,review,done"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Master Onboarding</h1>
+                    </div>
+
+                    <!-- Step 1: Setup -->
+                    <group invisible="state != 'setup'">
+                        <group string="Konfigurasi Dasar">
+                            <field name="company_id" options="{'no_create': True}"/>
+                            <field name="fiscal_year"/>
+                            <field name="sad_percent_override"/>
+                        </group>
+                        <div class="alert alert-info" role="alert">
+                            Langkah ini menentukan parameter dasar untuk perhitungan materialitas.
+                        </div>
+                    </group>
+
+                    <!-- Step 2: FSLI Upload -->
+                    <group invisible="state != 'fsli'">
+                        <group string="Upload Template Laporan (FSLI)">
+                            <field name="fsli_filename" invisible="1"/>
+                            <field name="fsli_file" filename="fsli_filename" widget="binary"/>
+                        </group>
+                        <div class="alert alert-warning" role="alert">
+                            Pastikan kolom <b>Kode_BSPL</b>, <b>FSLI</b>, dan <b>Kode_Entity</b> tersedia.
+                        </div>
+                    </group>
+
+                    <!-- Step 2.5: Entity Reconciliation -->
+                    <group invisible="state != 'reconcile_entities'">
+                        <div class="alert alert-danger" role="alert">
+                            <b>Entitas Baru Terdeteksi!</b> Beberapa Kode Entity dalam file Excel tidak ditemukan dalam database.
+                        </div>
+                        <p>Silakan periksa daftar di bawah ini. Anda dapat mendaftarkan entitas baru atau menyesuaikan file Excel Anda.</p>
+                        <field name="staging_error_ids" nolabel="1" readonly="1">
+                            <list>
+                                <field name="type"/>
+                                <field name="raw_data" string="Data Baris"/>
+                                <field name="error_log"/>
+                            </list>
+                        </field>
+                        <div class="alert alert-info" role="alert">
+                            Setelah Anda mendaftarkan entitas yang hilang di menu <b>Settings > Companies</b>, silakan tekan tombol <b>"Validasi Ulang"</b>.
+                        </div>
+                    </group>
+
+                    <!-- Step 3: GL Upload -->
+                    <group invisible="state != 'gl'">
+                        <group string="Upload General Ledger (Saldo)">
+                            <field name="gl_filename" invisible="1"/>
+                            <field name="gl_file" filename="gl_filename" widget="binary"/>
+                        </group>
+                        <div class="alert alert-info" role="alert">
+                            Sistem akan memproses saldo GL dan menghitung cakupan scoping (Aturan 2/3) secara otomatis.
+                        </div>
+                    </group>
+
+                    <!-- Step 4: RCM Mapping -->
+                    <group invisible="state != 'rcm'">
+                        <group string="Upload Risk-Control Matrix">
+                            <field name="rcm_filename" invisible="1"/>
+                            <field name="rcm_file" filename="rcm_filename" widget="binary"/>
+                        </group>
+                    </group>
+
+                    <!-- Step 5: Review -->
+                    <group invisible="state != 'review'">
+                        <group string="Ringkasan Onboarding">
+                            <field name="total_staging_lines" readonly="1"/>
+                            <field name="error_count" readonly="1" decoration-danger="error_count > 0"/>
+                        </group>
+                        <div class="alert alert-success" role="alert" invisible="error_count > 0">
+                            Semua data valid dan siap disinkronisasi ke tabel permanen.
+                        </div>
+                        <div class="alert alert-danger" role="alert" invisible="error_count == 0">
+                            Terdapat kesalahan data. Silakan periksa kembali file Anda.
+                        </div>
+                    </group>
+
+                    <!-- Step 6: Syncing -->
+                    <group invisible="state != 'syncing'">
+                        <div class="text-center">
+                            <h3>Sinkronisasi Sedang Berlangsung...</h3>
+                            <field name="progress_percent" widget="progressbar"/>
+                        </div>
+                    </group>
+
+                    <!-- Step 7: Done -->
+                    <group invisible="state != 'done'">
+                        <div class="text-center">
+                            <h2 class="text-success"><i class="fa fa-check-circle"/> Onboarding Selesai!</h2>
+                            <p>Seluruh data telah berhasil dipindahkan ke modul ICORF.</p>
+                        </div>
+                    </group>
+                </sheet>
+
+                <footer>
+                    <button name="action_start_session" string="Mulai" type="object" class="btn-primary" invisible="state != 'setup'"/>
+                    
+                    <button name="action_process_fsli" string="Validasi Ulang" type="object" class="btn-info" invisible="state != 'reconcile_entities'"/>
+
+                    <button name="action_previous" string="Kembali" type="object" class="btn-secondary" invisible="state in ['setup', 'done', 'syncing']"/>
+                    
+                    <button name="action_next" string="Lanjut" type="object" class="btn-primary" invisible="state in ['setup', 'review', 'done', 'syncing']"/>
+                    
+                    <button name="action_next" string="Finish &amp; Sync" type="object" class="btn-success" invisible="state != 'review'"/>
+                    
+                    <button name="action_cancel" string="Batalkan" type="object" class="btn-secondary" invisible="state == 'done'"/>
+                    
+                    <button string="Tutup" class="btn-secondary" special="cancel" invisible="state != 'done'"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_icofr_onboarding_wizard" model="ir.actions.act_window">
+        <field name="name">Master Onboarding Engine</field>
+        <field name="res_model">icofr.onboarding.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

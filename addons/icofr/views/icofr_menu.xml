@@ -35,6 +35,13 @@
               sequence="25"
               parent="menu_icofr_root"/>
 
+    <!-- Menu untuk Master Onboarding Engine -->
+    <menuitem id="menu_icofr_onboarding_wizard"
+              name="Master Onboarding Engine (Enterprise)"
+              sequence="5"
+              parent="menu_icofr_utilities"
+              action="action_icofr_onboarding_wizard"/>
+
     <!-- Menu untuk Upload Excel Pemetaan Akun -->
     <menuitem id="menu_icofr_account_mapping_upload_wizard"
               name="Upload Excel Pemetaan Akun"

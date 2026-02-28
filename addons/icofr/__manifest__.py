@@ -46,12 +46,14 @@ dan sertifikasi kontrol internal atas pelaporan keuangan.
         "views/financial_data_import_wizard_views.xml",
         "views/population_pull_erp_wizard_views.xml",
         "views/copy_period_wizard_views.xml",
+        "views/icofr_onboarding_wizard_views.xml",
         "wizard/icofr_test_roll_forward_wizard_views.xml",
         "wizard/icofr_remediation_report_wizard_views.xml",
 
         # Views
         "views/audit_population_views.xml",
         "views/disclosure_views.xml",
+        "views/icofr_onboarding_wizard_views.xml",
         "views/icofr_menu.xml",
         "views/control_views.xml",
         "views/application_views.xml",

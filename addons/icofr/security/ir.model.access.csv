@@ -131,3 +131,6 @@ access_icofr_testing_line1_contact,icofr.testing.line1.contact,model_icofr_testi
 access_icofr_testing_itac_scenario,icofr.testing.itac.scenario,model_icofr_testing_itac_scenario,group_icofr_line_2,1,1,1,1
 access_icofr_testing_line1_contact_l3,icofr.testing.line1.contact,model_icofr_testing_line1_contact,group_icofr_line_3,1,1,1,1
 access_icofr_testing_itac_scenario_l3,icofr.testing.itac.scenario,model_icofr_testing_itac_scenario,group_icofr_line_3,1,1,1,1
+access_icofr_onboarding_session,icofr.onboarding.session,model_icofr_onboarding_session,group_icofr_line_2,1,1,1,1
+access_icofr_onboarding_staging_line,icofr.onboarding.staging.line,model_icofr_onboarding_staging_line,group_icofr_line_2,1,1,1,1
+access_icofr_onboarding_wizard,icofr.onboarding.wizard,model_icofr_onboarding_wizard,base.group_user,1,1,1,1
